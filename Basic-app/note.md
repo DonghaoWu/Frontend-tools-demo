@@ -19,3 +19,7 @@ sass
 ```bash
 npm i node-sass
 ```
+
+- inline background image css in react component `(MenuItem.component.jsx)`
+
+- 
