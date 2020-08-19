@@ -183,7 +183,6 @@ export default MenuItem;
             </div>
         )
     }
-
 ```
 
 ```js
@@ -200,7 +199,69 @@ export default MenuItem;
     }
 ```
 
+- 8月20日，继续学习 ShopPage
 
+- 增加 `ShopPage.component.jsx`,`Collection-preview.component.jsx`, `Collection-item.component.jsx`
 
-- 8月20日，继续学习
+`Collection-preview.component.jsx`
 
+```jsx
+import React from 'react';
+
+import './Collection-preview.styles.scss';
+
+const CollectionPreview = ({ title, items }) => {
+    return (
+        <div className="collection-preview">
+            <h1 className='title'>{title.toUpperCase()}</h1>
+            <div className='preview'>
+                {
+                    items
+                        .filter((item, idx) => {
+                            return idx < 4
+                        })
+                        .map((item) => {
+                            return <div key={item.id}>{item.name}</div>
+                        })
+                }
+            </div>
+        </div>
+    )
+}
+
+export default CollectionPreview;
+```
+
+`ShopPage.component.jsx`
+
+```jsx
+import React from 'react';
+import SHOP_DATA from './shop.data';
+import CollectionPreview from '../../Components/Collection-preview/Collection-preview.component'
+
+class ShopPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            collections: SHOP_DATA
+        }
+    }
+
+    render() {
+        const { collections } = this.state;
+        return (
+            <div className='shop-page'>
+                {
+                    collections.map(({ id, ...otherSectionProps }) => {
+                        return <CollectionPreview key={id} {...otherSectionProps} />
+                    })
+                }
+            </div>
+        )
+    }
+}
+
+export default ShopPage;
+```
+
+- 
