@@ -264,4 +264,53 @@ class ShopPage extends React.Component {
 export default ShopPage;
 ```
 
-- 
+- 8月21日，在 header component 。 注意 Header 在app.js 中的位置是在 switch 上面的。
+
+- react form `Signin.component.jsx` `Register.component.jsx`
+
+- otherProps 的活用，把剩下的 property 全都放在一个叫做otherProps 的变量上面。
+
+`form-input`
+```jsx
+import React from 'react';
+
+import './Form-input.styles.scss';
+
+const FormInput = ({ handleChange, label, ...otherProps }) => {
+    return (
+        <div className='group'>
+            <input className='form-input' onChange={handleChange} {...otherProps} />
+            {label ? (
+                <label
+                    className={`${
+                        otherProps.value.length ? 'shrink' : ''
+                        } form-input-label`}
+                >
+                    {label}
+                </label>
+            ) : null}
+        </div>)
+};
+
+export default FormInput;
+```
+
+- 清楚 children 是什么, 这是一个特定词，用其他变量代替都不可以。
+
+```jsx
+import React from 'react';
+import './Custom-button.styles.scss';
+
+const CustomButton = ({ children, ...otherProps }) => {
+    return (
+        <button className="custom-button" {...otherProps}>
+            {children}
+        </button>
+    )
+}
+
+export default CustomButton;
+```
+
+- 这种传递 参数到下一层，而且直接在 button 中使用{...otherProps} 的方法第一次见。
+
