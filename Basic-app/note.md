@@ -635,22 +635,43 @@ export default firebase;
 - database rules publish tag
 
 ```js
-service cloud.firestore{
-    match /databases/{database}/documents{
-        match /{document=**}{
-            allow read, write;
-        }
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read;
+      allow write: if request.auth.uid == uid;
     }
+  }
 }
 ```
 
+```js
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+
+    match /{document=**} {
+
+      allow read, write: if false;
+
+    }
+
+  }
+
+}
+```
+
+- [rules](https://www.youtube.com/watch?v=QEuu9X9L-MU)
 - store user data in our app
 
 ```js
     componentDidMount() {
         this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
             if(userAuth){
-                const userRef = await createUserProfileDocument(userAuth);
+                const userRef = await loadUserDataFromFirestore(userAuth);
 
                 userRef.onSnapshot(snapshot =>{
                     console.log(snapshot.data());
@@ -682,7 +703,7 @@ import React from 'react';
 import FormInput from '';
 import Custombutton from '';
 
-import {auth, createUserProfileDocument} from '';
+import {auth, loadUserDataFromFirestore} from '';
 
 class SignUp extends React.Component{
     constructor(){
@@ -708,7 +729,7 @@ class SignUp extends React.Component{
         try{
             const {user} = await auth.createUserWIthEmailAndPassword(email,password);
 
-            await createuserProfileDocument(user,{displayName});
+            await loadUserDataFromFirestore(user,{displayName});
 
             this.setState({
                 displayName:'',

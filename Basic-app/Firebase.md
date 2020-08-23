@@ -1,438 +1,101 @@
-1. Register in firebase.
+1. register firebase, set up project name
 
-create project
+2. get firebase web config variable
 
-```js
-  var firebaseConfig = {
-    apiKey: "AIzaSyDN4tbAvlaC3zxQjN4vUw0bX8AmGFCa9co",
-    authDomain: "clothing-friends.firebaseapp.com",
-    databaseURL: "https://clothing-friends.firebaseio.com",
-    projectId: "clothing-friends",
-    storageBucket: "clothing-friends.appspot.com",
-    messagingSenderId: "602150897422",
-    appId: "1:602150897422:web:e7efaca1dff7f74802b95f",
-    measurementId: "G-8D7LR6M67M"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
+3. install firebase dependency
 
+4. firebase firestore auth 三个组件，其中 firestore 和 auth 没有用到。
+```diff
++ firebase -> initializeApp -> auth
++                           -> firestore
++                           -> provider
+
++ auth    
++ provider  ---> signInWithGoogle
 ```
+
+
+5. Firebase API: 
+```diff
+`firebase.utils.js`
++ firebase.auth.GoogleAuthProvider()
++ auth.signInWithPopup(provider)
++ firestore.doc(`users/${userAuth.uid}`) --> get document with uid
++ userRef.get() --> Get a snapShop
++ userRef.set() --> Create a snapShop
+``
+```
+
+6. firebase.utils.js 产生的几个变量：
+
+- firebase，需要配置 config
+- firestore，需要 firebase 已经配置好
+- auth，需要 firebase 已经配置好
+- signInWIthGoogle，需要 firebase API：
+```diff
++ new firebase.auth.GoogleAuthProvider()
++ provider.setCustomParameters({ prompt: 'select_account' });
++ auth.signInWithPopup(provider)
+```
+
+- loadUserDataFromFirestore, 两个参数，一个是 userAuth， 另外一个是 additionalData。
+
+- loadUserDataFromFirestore 执行逻辑：
+    - 如果第一参数为 null，则直接停止；
+    - 如果第一参数不为空，则取自带 key：`uid`
+    - 使用 `uid` 和 firebase 自带API `firestore.doc(`users/${userAuth.uid}`)`，查找对应 user data
+    - 无论有没有这个数据，都会返回 user data，返回的 user data 都会自带一个 firebase API：await userRef.get();
+    - snapShot 里面有一个变量：exists，如果有就返回 user data，如果没有就使用 firebase 自带 API 创造一个 user data。
+
+- 从上面看来，`firestore.doc` 返回一个`用户数据`，而验证这个用户数据是否真是存在就要使用 `.get` 从而产生 `snapShot`，snapShot 里面有一个变量 `exits` 可以证明这个用户数据是否存在在 firebase，如果存在就直接返回`用户数据`，如果不存在就使用 第一参数中的 `email, displayName`，还有另外的第二参数 additionalData，目前生成的 cretedAt 一并组成一个新的`用户数据`返回。
+
+- 所以第一参数 `userAuth` 里面是包含至少 3 个参数，分别是 uid，displayName，email。
+
+- 返回的 userData `userRef` 里面包含至少 3 个参数，分别是 displayName，email，createdAt。
 
 ```bash
-npm i firebase
+Public Methods
+public abstract void onAuthStateChanged (FirebaseAuth auth)
+This method gets invoked in the UI thread on changes in the authentication state:
+
+- Right after the listener has been registered
+- When a user is signed in
+- When the current user is signed out
+- When the current user changes
 ```
 
-- new folder: ./src/firebase.utils.js
+- 下面来讨论 loadUserDataFromFirestore 的应用场景：
 
-```js
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
+1. App.js
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDN4tbAvlaC3zxQjN4vUw0bX8AmGFCa9co",
-    authDomain: "clothing-friends.firebaseapp.com",
-    databaseURL: "https://clothing-friends.firebaseio.com",
-    projectId: "clothing-friends",
-    storageBucket: "clothing-friends.appspot.com",
-    messagingSenderId: "602150897422",
-    appId: "1:602150897422:web:e7efaca1dff7f74802b95f",
-    measurementId: "G-8D7LR6M67M"
-};
+- 使用情景：先使用 firebase API，auth.onAuthStateChanged 判断是否有参数，这是一个理解难点，关键这里要判断参数是从哪里来的，
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const firestore = firebase.firestore();
+- onAuthStateChanged 是一个 listener，当 firebase 侦测到有用户 登录、注册、登出、更换时，自带 API ：`auth.onAuthStateChanged` 都会被调用，结合本 App.js 在启动的时候在 `compoenntDidMount` 打开 `auth.onAuthStateChanged`是为了侦测对应的 `用户信息` 有没有改变，在这里的调用相当于向 firebase 查询有没有`登陆中的用户有没有更改状态`。
 
-const provider = new firebase.auth.GoogleAuthProvider();
+- 具体操作是这样，`auth.onAuthStateChanged`打开了侦测，如果有更改信息（登录，注册、更换）时，就使用该信息（userAuth）作为 loadUserDataFromFirestore 的参数，生成一个用户数据（userRef），
 
-provider.setCustomParameters({ prompt: 'select_account' });
-
-const signInWithGoogle = () => auth.signInWithPopup(provider);
-
-const createUserProfileDocument = async (userAuth, additionalData) => {
-    if (!userAuth) return;
-
-    const userRef = firestore.doc(`users/${userAuth.uid}`);
-
-    const snapShot = await userRef.get();
-
-    if (!snapShot.exists) {
-        const { displayName, email } = userAuth;
-        const createdAt = new Date();
-        try {
-            await userRef.set({
-                displayName,
-                email,
-                createdAt,
-                ...additionalData
-            });
-        } catch (error) {
-            console.log('error creating user', error.message);
-        }
-    }
-
-    return userRef;
-};
-
-export {
-    firebase,
-    auth,
-    firestore,
-    signInWithGoogle,
-    createUserProfileDocument
-}
+```diff
+有用户登录：
++ onAuthStateChanged 发现有用户登录了
++ onAuthStateChanged 有了第一参数
++ 调用 loadUserDataFromFirestore
++ 调用 firestore.doc 查找对应用户信息 userRef
++ 返回数据，使用 userRef.get() 返回 snapShot
++ 根据 snapShot.exists 判断用户信息是否存在在 firestore
++ 如果存在，则直接返回 userRef。
+- 上面这一步应该会用到
++ 如果不存在，则生成一个新的 userRef 返回，然后返回新的 userRef。
+- 上面这一步应该不会用到，要在注册用户的时候才会用到。
 ```
 
-- set up sign-in method (图)
+- 注意 componentDidMount 只执行一次。
 
-- App.js
+2. Sign-up.component.js
 
-```js
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
 
-import './App.css';
 
-import HomePage from './pages/homepage/homepage.component';
-import ShopPage from './pages/shop/shop.component';
-import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import Header from './components/header/header.component';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
-class App extends React.Component {
-  constructor() {
-    super();
 
-    this.state = {
-      currentUser: null
-    };
-  }
+- :star:8月21日，更新了 Header.component.jsx 和 App.js ，主要是增加 redirect 功能。
 
-  unsubscribeFromAuth = null;
-
-  componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-
-        userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
-              id: snapShot.id,
-              ...snapShot.data()
-            }
-          });
-        });
-      }
-
-      this.setState({ currentUser: userAuth });
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
-
-  render() {
-    return (
-      <div>
-        <Header currentUser={this.state.currentUser} />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/shop' component={ShopPage} />
-          <Route path='/signin' component={SignInAndSignUpPage} />
-        </Switch>
-      </div>
-    );
-  }
-}
-
-export default App;
-```
-
-- 注意 componentDidMount() 里面的 auth.onAuthStateChanged
-
-- 
-
-- Header.component.jsx
-
-```js
-import React from 'react';
-import { Link } from 'react-router-dom';
-
-import { auth } from '../../firebase/firebase.utils';
-
-import { ReactComponent as Logo } from '../../assets/crown.svg';
-
-import './header.styles.scss';
-
-const Header = ({ currentUser }) => (
-  <div className='header'>
-    <Link className='logo-container' to='/'>
-      <Logo className='logo' />
-    </Link>
-    <div className='options'>
-      <Link className='option' to='/shop'>
-        SHOP
-      </Link>
-      <Link className='option' to='/shop'>
-        CONTACT
-      </Link>
-      {currentUser ? (
-        <div className='option' onClick={() => auth.signOut()}>
-          SIGN OUT
-        </div>
-      ) : (
-        <Link className='option' to='/signin'>
-          SIGN IN
-        </Link>
-      )}
-    </div>
-  </div>
-);
-
-export default Header;
-```
-- 注意传递下来的 currentUser 还有 auth.signOut()
-
-- Signin.component.jsx
-
-```jsx
-import React from 'react';
-
-import FormInput from '../form-input/form-input.component';
-import CustomButton from '../custom-button/custom-button.component';
-
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
-
-import './sign-in.styles.scss';
-
-class SignIn extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      email: '',
-      password: ''
-    };
-  }
-
-  handleSubmit = async event => {
-    event.preventDefault();
-
-    const { email, password } = this.state;
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      this.setState({ email: '', password: '' });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  handleChange = event => {
-    const { value, name } = event.target;
-
-    this.setState({ [name]: value });
-  };
-
-  render() {
-    return (
-      <div className='sign-in'>
-        <h2>I already have an account</h2>
-        <span>Sign in with your email and password</span>
-
-        <form onSubmit={this.handleSubmit}>
-          <FormInput
-            name='email'
-            type='email'
-            handleChange={this.handleChange}
-            value={this.state.email}
-            label='email'
-            required
-          />
-          <FormInput
-            name='password'
-            type='password'
-            value={this.state.password}
-            handleChange={this.handleChange}
-            label='password'
-            required
-          />
-          <div className='buttons'>
-            <CustomButton type='submit'> Sign in </CustomButton>
-            <CustomButton onClick={signInWithGoogle} isGoogleSignIn>
-              Sign in with Google
-            </CustomButton>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
-
-export default SignIn;
-```
-
-- 注意 isGoogleSignIn, auth.signInWithEmailAndPassword(email, password);
-
-- CustomButton.component.jsx
-
-```jsx
-import React from 'react';
-
-import './custom-buttom.styles.scss';
-
-const CustomButton = ({ children, isGoogleSignIn, ...otherProps }) => (
-  <button
-    className={`${isGoogleSignIn ? 'google-sign-in' : ''} custom-button`}
-    {...otherProps}
-  >
-    {children}
-  </button>
-);
-
-export default CustomButton;
-```
-
-- 注意 isGoogleSignIn， 还有条件分配 style。
-
-- sign-up.component.jsx
-
-```jsx
-import React from 'react';
-
-import FormInput from '../form-input/form-input.component';
-import CustomButton from '../custom-button/custom-button.component';
-
-import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
-
-import './sign-up.styles.scss';
-
-class SignUp extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      displayName: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    };
-  }
-
-  handleSubmit = async event => {
-    event.preventDefault();
-
-    const { displayName, email, password, confirmPassword } = this.state;
-
-    if (password !== confirmPassword) {
-      alert("passwords don't match");
-      return;
-    }
-
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-      await createUserProfileDocument(user, { displayName });
-
-      this.setState({
-        displayName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  handleChange = event => {
-    const { name, value } = event.target;
-
-    this.setState({ [name]: value });
-  };
-
-  render() {
-    const { displayName, email, password, confirmPassword } = this.state;
-    return (
-      <div className='sign-up'>
-        <h2 className='title'>I do not have a account</h2>
-        <span>Sign up with your email and password</span>
-        <form className='sign-up-form' onSubmit={this.handleSubmit}>
-          <FormInput
-            type='text'
-            name='displayName'
-            value={displayName}
-            onChange={this.handleChange}
-            label='Display Name'
-            required
-          />
-          <FormInput
-            type='email'
-            name='email'
-            value={email}
-            onChange={this.handleChange}
-            label='Email'
-            required
-          />
-          <FormInput
-            type='password'
-            name='password'
-            value={password}
-            onChange={this.handleChange}
-            label='Password'
-            required
-          />
-          <FormInput
-            type='password'
-            name='confirmPassword'
-            value={confirmPassword}
-            onChange={this.handleChange}
-            label='Confirm Password'
-            required
-          />
-          <CustomButton type='submit'>SIGN UP</CustomButton>
-        </form>
-      </div>
-    );
-  }
-}
-
-export default SignUp;
-```
-
-- 注意 auth.createUserWithEmailAndPassword(email,password);
-
-- SignInSignUpPage.component.jsx
-
-```jsx
-import React from 'react';
-
-import SignIn from '../../components/sign-in/sign-in.component';
-import SignUp from '../../components/sign-up/sign-up.component';
-
-import './sign-in-and-sign-up.styles.scss';
-
-const SignInAndSignUpPage = () => (
-  <div className='sign-in-and-sign-up'>
-    <SignIn />
-    <SignUp />
-  </div>
-);
-
-export default SignInAndSignUpPage;
-```
-
-- enable allow write authentication.
-
-- Authentication tag -> email/password -> enable -> save
-
-- implement sign in with email and password
-
-- 
+- 完成上面的功能之后再探索 auth.onAuthStateChanged
