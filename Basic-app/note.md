@@ -848,4 +848,37 @@ handleSubmit = async (event)=>{
 }
 ```
 
+- 8月23日更新日记：
+    对原作者的 firebase function进行优化，原作者的思维是在 auth 有变化的时候调用 createUserProfileDocument，这个函数有多个应用场景，包括登录时会调用，注册时会调用，而各又有两种情况：
 
+    - email/password 登录：createUserProfileDocument 返回 userRef，然后直接读取 firestore 信息 setState。
+    - google 登录：createUserProfileDocument 返回 userRef，然后直接读取 firestore 信息 setState。
+
+    - email/password 注册：createUserProfileDocument 首先发现 snapShot.exists 为 false，然后收集资料在 firestore 创建 document，最后返回 userRef，接着返回直接读取 firestore 信息 setState。
+
+    - 这里有一个问题，`就是作者忽略了 auth.createUserWithEmailAndPassword 成功之后 App 的listener 会自动打开，然后直接执行注册：createUserProfileDocument，但是这种情况下是收集不了 displayName`，作者忽略这一点之后，就在`Sign-up 中再调用一次createUserProfileDocument，这次调用加入了 displayName`，这样的结果是调用了两次 createUserProfileDocument，一次没有 displayName，一次有 displayName，这里面最容易出问题的地方是这两次的调用 createUserProfileDocument 几乎是同时的，无法分前后就有可能出现数据丢失。
+
+    - google 注册：createUserProfileDocument 首先发现 snapShot.exists 为 false，然后收集资料在 firestore 创建 document，最后返回 userRef，接着返回直接读取 firestore 信息 setState。
+
+    - 要注意的是注册 firestore 需要3个变量，分别是 email，displayName，createdAt，其中 email 可以直接在 userAuth 中获得，createdAt 通过函数生成，最后剩下 displayName：
+
+        - 如果是由 google 注册，则直接是 userAuth.dispalyName
+        - 如果是 email/password 注册，displayName 则只能在 Sign-up 中的 state 获得，这就是作者在 Sign-up 中调用
+        createUserProfileDocument 的原因，但正如上面所说，这样做实际上已经一共调用了两次 createUserProfileDocument ，不是可靠的方案。
+
+    - 源代码最大的问题是没有处理好 `email/password 注册` 时收集`displayName`的步骤，而是使用两次调用 createUserProfileDocument 来覆盖。
+
+
+:star::star::star::star:
+- 修改方案，思路：对 displayName 进行统一管理。
+- 当用 google 注册时，`const displayName = userAuth.displayName`
+- 当用 email/password 注册时，此时 `userAuth.displayName` 为 null，这就需要在 App state 中增加新变量 displayNameFromSignUp，联通 Sign-up，当准备调用 auth.createUserWithEmailAndPassword 前 使用 `this.props.setDisplayName(displayName);`设定好 App 中的 displayNameFromSignUp ，这时 `const displayName = this.state.displayNameFromSignUp`
+
+- 以上也可以合并成：`const displayName = userAuth.displayName ||this.state.displayNameFromSignUp;`
+
+- 这个方案就可以很好处理 `google 注册` 和 `email/password 注册`时收集到 displayName，同时避免两次调用 createUserProfileDocument 可能出现的数据丢失。
+
+```diff
++ 原作者思路：origin.App.js ，origin.Sign-up.component.jsx, origin.firebase.utils.js
++ 修改思路：ed2.App.js ，ed2.Sign-up.component.jsx, ed2.firebase.utils.js
+```
