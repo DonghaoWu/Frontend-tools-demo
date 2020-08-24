@@ -1,9 +1,10 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDN4tbAvlaC3zxQjN4vUw0bX8AmGFCa9co",
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
   authDomain: "clothing-friends.firebaseapp.com",
   databaseURL: "https://clothing-friends.firebaseio.com",
   projectId: "clothing-friends",

@@ -11,16 +11,21 @@
 ### `Check Dependencies & Tools:`
 
 - firebase
+- dotenv
 
 ------------------------------------------------------------
 
 #### `本章背景：`
-- 
+1. 本章主要学习使用 firebase 作为 authentication 功能整合到 applicaiton 中去。
+2. 主要学习的内容包括注册 firebase， 连接 firebase，firestore，fire Auth，以及使用到的 Firebase 相关 API。
+3. 结合了自己对 Firebase 的理解后对原代码的 Authentication feature 部分有修改。
 
 ------------------------------------------------------------
-- 设计思路：
+- 主要使用到的 Firebase API:
 
-1. 
+```diff
++ 
+```
 ------------------------------------------------------------
 
 ### <span id="1.0">`Brief Contents & codes position`</span>
