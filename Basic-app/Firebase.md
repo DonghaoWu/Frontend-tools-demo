@@ -23,7 +23,7 @@
 ------------------------------------------------------------
 - Firebase authentication 设计思路:
 
-1. 在 App.js 中设置一个 listener，用来侦听登录、注册、登出时 auth state 的改变，然后调用函数 `checkDocOrCreateDocInFirestore` 查找相关 auth 信息是否在 firestore 中有相关数据。
+1. 在 App.js 中设置一个 listener，用来侦听登录、注册、登出时 auth state 的改变，然后调用函数 `checkDocOrCreateDocInFirestore` 查找相关 auth 信息是否在 firestore 中有相关数据。
 
 2. 如果有数据，则返回 auth 查询信息，如果不存在，则执行 firestore 的创建动作。在本 app 中创建 firestore 需要 3 个信息，分别是 `email`，`diaplayName`，`createdAt`。
 
