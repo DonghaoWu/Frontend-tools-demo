@@ -140,7 +140,7 @@
 
   -----------------------------------------------------------------
 
-  - Rule.
+  - Firestore Rule.
     ```js
     rules_version = '2';
     service cloud.firestore {
@@ -625,7 +625,7 @@ provider.setCustomParameters({ prompt: 'select_account' });
 const signInWithGoogle = () => auth.signInWithPopup(provider);
 ```
 
-3. 在使用 Google 登录的方法中在反悔的 auth info 中可以找到 `dispalyName`。
+3. 在使用 Google 登录的方法中在返回的 auth info 中可以找到 `dispalyName`。
 
 4. 综上可见，注册时 `displayName` 可以这样写：
 
