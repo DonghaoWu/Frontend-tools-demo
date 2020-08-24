@@ -619,11 +619,11 @@ export default SignUp;
 
   __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
 
-```js
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-const signInWithGoogle = () => auth.signInWithPopup(provider);
-```
+  ```js
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  const signInWithGoogle = () => auth.signInWithPopup(provider);
+  ```
 
 3. 在使用 Google 登录的方法中在返回的 auth info 中可以找到 `dispalyName`。
 
@@ -631,10 +631,10 @@ const signInWithGoogle = () => auth.signInWithPopup(provider);
 
   __`Location:./clothing-friends/src/App.js`__
 
-```js
-const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
-const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
-```
+  ```js
+  const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
+  const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
+  ```
 
 - 上面的代码意思是，如果有 `displayName` ，先收集，然后在执行 `checkDocOrCreateDocInFirestore` 过程中验证是否有对应 `Firestore` 数据，如果没有，就在 `checkDocOrCreateDocInFirestore` 中使用收集的信息`（包括 displayName）`创建 Firestore data。
 ------------------------------------------------------------
