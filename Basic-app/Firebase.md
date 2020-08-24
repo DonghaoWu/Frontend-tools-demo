@@ -613,28 +613,28 @@ export default SignUp;
 1. 这里看到的 `this.props.setDisplayName()` 是 bind 在 App.js 的 method，目的是为了传递 displayName 返回到 App.js 中的 state: displayNameFromSignUp 中，通过这个方式收集到 `dispalyName`。
 
 2. 使用 google 登录的代码
-```jsx                
-<CustomButton type='button' onClick={signInWithGoogle} google={true}>
-```
+    ```jsx                
+    <CustomButton type='button' onClick={signInWithGoogle} google={true}>
+    ```
 
-  __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
+  - __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
 
-  ```js
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  const signInWithGoogle = () => auth.signInWithPopup(provider);
-  ```
+    ```js
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const signInWithGoogle = () => auth.signInWithPopup(provider);
+    ```
 
 3. 在使用 Google 登录的方法中在返回的 auth info 中可以找到 `dispalyName`。
 
 4. 综上可见，注册时 `displayName` 可以这样写：
 
-  __`Location:./clothing-friends/src/App.js`__
+    __`Location:./clothing-friends/src/App.js`__
 
-  ```js
-  const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
-  const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
-  ```
+    ```js
+    const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
+    const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
+    ```
 
 - 上面的代码意思是，如果有 `displayName` ，先收集，然后在执行 `checkDocOrCreateDocInFirestore` 过程中验证是否有对应 `Firestore` 数据，如果没有，就在 `checkDocOrCreateDocInFirestore` 中使用收集的信息`（包括 displayName）`创建 Firestore data。
 ------------------------------------------------------------
