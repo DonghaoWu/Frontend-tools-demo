@@ -5,13 +5,13 @@ require('dotenv').config();
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
-  authDomain: "clothing-friends.firebaseapp.com",
-  databaseURL: "https://clothing-friends.firebaseio.com",
-  projectId: "clothing-friends",
-  storageBucket: "clothing-friends.appspot.com",
-  messagingSenderId: "602150897422",
-  appId: "1:602150897422:web:e7efaca1dff7f74802b95f",
-  measurementId: "G-8D7LR6M67M"
+  authDomain: "clothing-friends-2020.firebaseapp.com",
+  databaseURL: "https://clothing-friends-2020.firebaseio.com",
+  projectId: "clothing-friends-2020",
+  storageBucket: "clothing-friends-2020.appspot.com",
+  messagingSenderId: "489564068830",
+  appId: "1:489564068830:web:bdb4580c79782290be5b4f",
+  measurementId: "G-8V6CLYTZJR"
 };
 
 firebase.initializeApp(firebaseConfig);

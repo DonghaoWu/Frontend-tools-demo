@@ -16,7 +16,6 @@ create project
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
-
 ```
 
 ```bash

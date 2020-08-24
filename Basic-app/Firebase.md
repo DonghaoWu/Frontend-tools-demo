@@ -1,6 +1,6 @@
 # Front end development tools (Part 1)
 
-### `Key Word: Firebase, Firestore, Firebase Auth, authorization.`
+### `Key Word: Firebase, Firestore, Firebase Auth, authorization, componentWillUnmount, listener, load user.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -21,10 +21,38 @@
 3. 结合了自己对 Firebase 的理解后对原代码的 Authentication feature 部分有修改。
 
 ------------------------------------------------------------
+- Firebase authentication 设计思路:
+
+1. 在 App.js 中设置一个 listener，用来侦听登录、注册、登出时 auth state 的改变，然后调用函数 `checkDocOrCreateDocInFirestore` 查找相关 auth 信息是否在 firestore 中有相关数据。
+
+2. 如果有数据，则返回 auth 查询信息，如果不存在，则执行 firestore 的创建动作。在本 app 中创建 firestore 需要 3 个信息，分别是 `email`，`diaplayName`，`createdAt`。
+
+3. 引发 firestore 的创建动作是注册动作，而注册动作分为 `email/password` 和 `Sign up with Google`两种方法，用于创建的对应 3 个信息的收集也有点不一样，这个会在代码中解释。
+------------------------------------------------------------
 - 主要使用到的 Firebase API:
 
+- Firebase auth
 ```diff
-+ 
++ firebase.auth().onAuthStateChanged()
++ firebase.auth().signOut()
++ firebase.auth().signInWithEmailAndPassword()
++ firebase.auth().createUserWithEmailAndPassword()
+```
+
+- Firestore
+
+```diff
++ firebase.firestore().doc()
++ firebase.firestore().doc().get() --- <async>
++ firebase.firestore().doc().set() --- <async>
++ firebase.firestore().doc().get().data() --- <async>
++ firebase.firestore().doc().get().onSnapshot() --- <async>
+```
+
+- Firebase provider
+```diff
++ new firebase.auth.firebase.auth.GoogleAuthProvider();
++ firebase.auth().signInWithPopup(provider)
 ```
 ------------------------------------------------------------
 
@@ -32,578 +60,588 @@
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-- [1.1 Install dependencies (backend).](#1.1)
-- [1.2 Work on back end signin route.](#1.2)
-- [1.3 Store token and load user automatically in Front end.](#1.3)
-- [1.4 Middleware.](#1.4)
-- [1.5 Others.](#1.5)
+- [1.1 Register Firebase and install dependencies.](#1.1)
+- [1.2 Add Firebase listener in App.js.](#1.2)
+- [1.3 Handle sign in action in Sign-in page.](#1.3)
+- [1.4 Handle sign out action.](#1.4)
+- [1.5 Handle Sign up with email/password and Google.](#1.5)
 
 ------------------------------------------------------------
 
-### <span id="1.1">`Step1: Install dependencies (backend).`</span>
+### <span id="1.1">`Step1: Create project in Firebase and install dependencies.`</span>
 
 - #### Click here: [BACK TO CONTENT](#1.0)
 
-1. Install depenencies.
+1. Create project in Firebase.
+
+  - create a new project.
+
+  <p align="center">
+  <img src="../assets/fe-01.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Name your project.
+  <p align="center">
+  <img src="../assets/fe-02.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Click web app tag.
+  <p align="center">
+  <img src="../assets/fe-03.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Copy the configuration code.
+  <p align="center">
+  <img src="../assets/fe-04.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Enable email/password and Google sign-in methods.
+  <p align="center">
+  <img src="../assets/fe-05.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+2. Create Cloud Datastore (Firestore).
+
+  - Create cloud database.
+  <p align="center">
+  <img src="../assets/fe-06.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - You can select either option.
+  <p align="center">
+  <img src="../assets/fe-07.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Set Cloud Firestore location.
+  <p align="center">
+  <img src="../assets/fe-08.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Set up Cloud Firestore security rule.
+  <p align="center">
+  <img src="../assets/fe-09.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+  - Rule.
+    ```js
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /users/{uid} {
+          allow read;
+          allow write: if request.auth.uid == uid;
+        }
+      }
+    }
+    ```
+
+3. Install depenencies.
 
     ```bash
-    $ npm i jsonwebtoken
-    $ npm i redis
+    $ npm i firebase
+    $ npm i dotenv
     ```
 
-2. Apply
+4. Add Firebase APi key in .env file. 
 
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/controllers/signin.js`__
+    __`Location:./clothing-friends/.env`__
+
+    ```json
+    // <Replace the value with your Firebase api key.>
+
+    REACT_APP_FIREBASE_APIKEY=AIzaSyDN4tbAvlaC3zxQjN4vUw0bX8AmGFCa9co
+    ```
+
+    - :star::star::star: The `create-react-app` tool uses `REACT_APP_` to identify these variables. If you don't start your API key name with it, `create-react-app won't see it.`
+
+    - Add code in `.gitignore` file.
+    ```bash
+    /.env
+    ```
+
+5. Apply Firebase in app.
+
+    __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
 
     ```js
-    const jwt = require('jsonwebtoken');
-    const redis = require('redis');
+    import firebase from 'firebase/app';
+    import 'firebase/firestore';
+    import 'firebase/auth';
+    require('dotenv').config();
 
-    // setup Redis:
+    const firebaseConfig = {
+      apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+      authDomain: "clothing-friends-2020.firebaseapp.com",
+      databaseURL: "https://clothing-friends-2020.firebaseio.com",
+      projectId: "clothing-friends-2020",
+      storageBucket: "clothing-friends-2020.appspot.com",
+      messagingSenderId: "489564068830",
+      appId: "1:489564068830:web:bdb4580c79782290be5b4f",
+      measurementId: "G-8V6CLYTZJR"
+    };
 
-    const redisClient = redis.createClient(process.env.REDIS_URI);
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const signInWithGoogle = () => auth.signInWithPopup(provider);
+
+    const checkDocOrCreateDocInFirestore = async (userAuth, displayName) => {
+      if (!userAuth) return;
+      const userRef = firestore.doc(`users/${userAuth.uid}`);
+      const snapShot = await userRef.get();
+
+      if (snapShot.exists) return userRef;
+
+      else if (!snapShot.exists) {
+        const createdAt = new Date();
+        try {
+          await userRef.set({
+            displayName: displayName,
+            email: userAuth.email,
+            createdAt,
+          });
+        } catch (error) {
+          console.log('error creating user', error.message);
+        }
+        return userRef;
+      }
+    }
+
+    export {
+      firebase,
+      auth,
+      firestore,
+      signInWithGoogle,
+      checkDocOrCreateDocInFirestore
+    }
     ```
 
+    - Dotenv code in above code.
+    ```js
+    require('dotenv').config();
+
+    apiKey: process.env.REACT_APP_FIREBASE_APIKEY
+    ```
 
 #### `Comment:`
-1. redis 连接本地, 当然还要使用本地连接 redis 的命令 
+1. checkDocOrCreateDocInFirestore 后面分析。
 
-  ```js
-  const redisClient = redis.createClient({ host: '127.0.0.1' });
-  ```
-
-  - start local redis server:
-  ```bash
-  $ cd
-  $ cd redis-6.0.6 # depends on your redis version
-  $ src/redis-server
-  ```
-
-  - redis docker: 
-  ```js
-  const redisClient = redis.createClient(process.env.REDIS_URI);
-  ```
-
-  ```.env
-  REDIS_URI=redis://redis:6379
-  ```
-
-### <span id="1.2">`Step2: Work on back end signin route.`</span>
+### <span id="1.2">`Step2: Add Firebase listener in App.js.`</span>
 
 - #### Click here: [BACK TO CONTENT](#1.0)
 
-1.  Change the function name
+1. Add Firebase listener in App.js componentDidMount.
 
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/server.js`__
+    __`Location:./clothing-friends/src/App.js`__
 
+```jsx
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-```diff
-- app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) })
+import Header from './Components/Header/Header.component';
+import HomePage from './Pages/HomePage/HomePage.component';
+import ShopPage from './Pages/ShopPage/ShopPage.component';
+import SignInAndSignUpPage from './Pages/SignInSignUpPage/SignInAndSignUpPage.component';
 
-+ app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, db, bcrypt) })
-```
+import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils';
 
-2. Add the new function.
+import './App.css';
 
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/controllers/signin.js`__
-
-```js
-const signinAuthentication = (req, res, db, bcrypt) => {
-  const { authorization } = req.headers;
-  return authorization ? hasTokenAndGetIdFromRedis(req, res)
-    : noTokenSigninAndGetUser(req, res, db, bcrypt)
-      .then(data => {
-        return data.id && data.email ? createSession(data) : Promise.reject(data)
-      })
-      .then(session => {
-        return res.json(session);
-      })
-      .catch(err => {
-        return res.status(400).json(err)
-      });
-}
-```
-
-3. Add function hasTokenAndGetIdFromRedis. （有 token 的时候就用 token 在 redis 中取得 id。）
-
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/controllers/signin.js`__
-
-```js
-const hasTokenAndGetIdFromRedis = (req, res) => {
-  const { authorization } = req.headers;
-  return redisClient.get(authorization, (err, reply) => {
-    if (err || !reply) {
-      return res.status(400).json('Unauthorized.');
-    }
-    return res.json({ id: reply })
-  })
-}
-```
-
-4. Promise the handleSignin function, and change the name to noTokenSigninAndGetUser.（无 token 的时候先验证 email 和 password， 然后在 postgres database 中获得 email 和 id。）
-
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/controllers/signin.js`__
-
-```diff
-
--const handleSignin = (db, bcrypt) => (req, res) => {
--  const { email, password } = req.body;
--  if (!email || !password) {
--    return res.status(400).json('incorrect form submission');
--  }
--  db.select('email', 'hash').from('login')
--    .where('email', '=', email)
--    .then(data => {
--      const isValid = bcrypt.compareSync(password, data[0].hash);
--      if (isValid) {
--        return db.select('*').from('users')
--          .where('email', '=', email)
--          .then(user => {
--            res.json(user[0])
--          })
--          .catch(err => res.status(400).json('unable to get user'))
--      } else {
--        res.status(400).json('wrong credentials')
--      }
--    })
--    .catch(err => res.status(400).json('wrong credentials'))
--}
-
-
-+const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
-+  const { email, password } = req.body;
-+  if (!email || !password) {
-+    return Promise.reject('incorrect form submission');
-+  }
-+  return db.select('email', 'hash').from('login')
-+    .where('email', '=', email)
-+    .then(data => {
-+      const isValid = bcrypt.compareSync(password, data[0].hash);
-+      if (isValid) {
-+        return db.select('*').from('users')
-+          .where('email', '=', email)
-+          .then(user => {
-+            return Promise.resolve(user[0]);
-+          })
-+          .catch(err => Promise.reject('unable to get user'))
-+      } else {
-+        return Promise.reject('wrong credentials (wrong password)')
-+      }
-+    })
-+    .catch(err => Promise.reject('wrong credentials (wrong email)'))
-+}
-```
-
-5. Create session.（接上，获得 id 和 email 之后以 email 作为参数生成 token，然后储存在 redis 中，最后返回一个包含 id 和 token 等信息的 session data）。
-
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/controllers/signin.js`__
-
-```js
-const signToken = (email) => {
-  const jwtPayload = { email };
-  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '2 days' });
-}
-
-const setToken = (token, id) => {
-  return Promise.resolve(redisClient.set(token, id))
-}
-
-const createSession = (user) => {
-  const { email, id } = user;
-  const token = signToken(email);
-  return setToken(token, id)
-    .then(() => {
-      return {
-        success: 'true',
-        userId: id,
-        token: token
-      }
-    })
-    .catch(err => {
-      return Promise.reject(`creact session failed.`)
-    })
-}
-```
-------------------------------------------------------------
-
-#### `Comment:`
-1. 无论是有没有 token，经过 signin route 之后，所有成功的话都可以返回一个包含 user id 信息的 data。
-2. :star::star:至于为什么没有 token 的情况除了返回 id 之外还返回 token，因为前端成功 signin 之后需要拿 token 放在 window.localStorage 中作为缓存。
-
-3. 完整文件：
-
-```js
-const jwt = require('jsonwebtoken');
-const redis = require('redis');
-
-// setup Redis:
-const redisClient = redis.createClient(process.env.REDIS_URI);
-
-const noTokenSigninAndGetUser = (req, res, db, bcrypt) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return Promise.reject('incorrect form submission');
-  }
-  return db.select('email', 'hash').from('login')
-    .where('email', '=', email)
-    .then(data => {
-      const isValid = bcrypt.compareSync(password, data[0].hash);
-      if (isValid) {
-        return db.select('*').from('users')
-          .where('email', '=', email)
-          .then(user => {
-            return Promise.resolve(user[0]);
-          })
-          .catch(err => Promise.reject('unable to get user'))
-      } else {
-        return Promise.reject('wrong credentials (wrong password)')
-      }
-    })
-    .catch(err => Promise.reject('wrong credentials (wrong email)'))
-}
-
-const hasTokenAndGetIdFromRedis = (req, res) => {
-  const { authorization } = req.headers;
-  return redisClient.get(authorization, (err, reply) => {
-    if (err || !reply) {
-      return res.status(400).json('Unauthorized.');
-    }
-    return res.json({ id: reply })
-  })
-}
-
-const signToken = (email) => {
-  const jwtPayload = { email };
-  return jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '2 days' });
-}
-
-const setToken = (token, id) => {
-  return Promise.resolve(redisClient.set(token, id))
-}
-
-const createSession = (user) => {
-  const { email, id } = user;
-  const token = signToken(email);
-  return setToken(token, id)
-    .then(() => {
-      return {
-        success: 'true',
-        userId: id,
-        token: token
-      }
-    })
-    .catch(err => {
-      return Promise.reject(`creact session failed.`)
-    })
-}
-
-const signinAuthentication = (req, res, db, bcrypt) => {
-  const { authorization } = req.headers;
-  return authorization ? hasTokenAndGetIdFromRedis(req, res)
-    : noTokenSigninAndGetUser(req, res, db, bcrypt)
-      .then(data => {
-        return data.id && data.email ? createSession(data) : Promise.reject(data)
-      })
-      .then(session => {
-        return res.json(session);
-      })
-      .catch(err => {
-        return res.status(400).json(err)
-      });
-}
-
-module.exports = {
-  signinAuthentication: signinAuthentication
-}
-```
-
-### <span id="1.3">`Step3: Store token and load user automatically in Front end.`</span>
-
-- #### Click here: [BACK TO CONTENT](#1.0)
-
-1. Handle no token (Signin.js).
-
-    __`Location:./demo-apps/frontend-smart-brain-Auth/src/components/Signin/Signin.js`__
-
-
-```js
-  saveAuthTokenInSession = (token) => {
-    window.localStorage.setItem('token', token);
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      currentUser: null,
+      displayNameFromSignUp: ''
+    };
   }
 
-  onSubmitSignIn = () => {
-    fetch('http://localhost:4000/signin', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword
-      })
-    })
-      .then(response => response.json())
-      .then(session => {
-        if (session.userId && session.success === 'true') {
-          this.saveAuthTokenInSession(session.token);
-          fetch(`http://localhost:4000/profile/${session.userId}`, {
-            method: 'get',
-            headers: {
-              'Content-type': 'application/json',
-              'Authorization': session.token
-            }
-          })
-            .then(res => res.json())
-            .then(user => {
-              if (user && user.email) {
-                this.props.loadUser(user);
-                this.props.onRouteChange('home');
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            })
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
-```
-
-2. Handle token (App.js).
-
-    __`Location:./demo-apps/frontend-smart-brain-Auth/src/App.js`__
-
-```js
   componentDidMount() {
-    const token = window.localStorage.getItem('token');
-    if (token) {
-      fetch('http://localhost:4000/signin', {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': token
+    this.listener = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        try {
+          const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
+          const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
+          userRef.onSnapshot(snapShot => {
+            this.setState({
+              currentUser: {
+                id: snapShot.id,
+                ...snapShot.data()
+              },
+              displayNameFromSignUp: ''
+            });
+          });
         }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.id) {
-            fetch(`http://localhost:4000/profile/${data.id}`, {
-              method: 'get',
-              headers: {
-                'Content-type': 'application/json',
-                'Authorization': token
-              }
-            })
-              .then(res => res.json())
-              .then(user => {
-                if (user && user.email) {
-                  this.loadUser(user);
-                  this.onRouteChange('home');
-                }
-              })
-          }
-        })
-        .catch(err => {
-          console.log('failed');
-        })
-    }
+        catch (error) {
+          this.setState({ currentUser: null, displayNameFromSignUp: '' });
+          console.log('error creating user', error.message);
+        }
+      }
+      else {
+        this.setState({ currentUser: null, displayNameFromSignUp: '' });
+      }
+    })
   }
+
+  componentWillUnmount() {
+    this.listener();
+  }
+
+  setDisplayName = (displayName) => {
+    this.setState({ displayNameFromSignUp: displayName });
+  }
+
+  render() {
+    return (
+      <div>
+        <Header currentUser={this.state.currentUser} />
+        <Switch>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/shop' component={ShopPage} />
+          <Route exact path="/signin">{this.state.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage setDisplayName={this.setDisplayName} />}</Route>
+        </Switch>
+      </div>
+    );
+  }
+}
+
+export default App;
 ```
 
 #### `Comment:`
-1. 这就是 react 前端处理 authentication 的常用操作，当然一条 route 分两个 componet 公用的方法可以改善。
-2. :star::star::star:但上面用到的 componentDidMount 和 window.localStorage 的思路都是 authentication 里面必须的。
+1. Firebase API: auth.onAuthStateChanged
+  ```diff
+  + 当连接 Firebase 的 app 接收到 auth state 信息变化时，这个 listener 就会自动启动，接受的 auth state 作为自定义函数的第一参数。
 
-### <span id="1.4">`Step4: Middleware.`</span>
+  + Right after the listener has been registered (parameter: Firebase auth info)
+  + When a user is signed in (parameter: Firebase auth info)
+  + When the current user is signed out (parameter: null)
+  + When the current user changes (parameter: Firebase auth info)
+  ```
+
+2. 在 ComponentDidMount 注册这个 listener，目的是为了在 app 启动的时候使这个 listener 启动，在本 app 中，当这个 listener 发现 auth state 改变的时候会启动，:gem::gem::gem:`并调动自定义函数，且接受的 auth state 自动作为自定义函数的第一参数`。在本 app 中有 3 个 Firebase API 的调用可能会引起这个 listener 启动。
+
+  ```diff
+  + auth.signOut()
+  + auth.signInWithEmailAndPassword()
+  + auth.createUserWithEmailAndPassword()
+  ```
+
+3. 另外使用 componentWillUnmount 的用意是，当关闭访问 app 时也关闭 listener，这样在重新打开 app 的时候打开 listener，这时就可以调用一次它的自定义函数，:gem::gem::gem:相当于实现了用户离开然后返回仍然可以自动加载的`load user`功能。
+
+
+### <span id="1.3">`Step3: Handle sign in action in Sign-in page.`</span>
 
 - #### Click here: [BACK TO CONTENT](#1.0)
 
-1. Create a middleware.
+1. Handle Sign in.
 
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/middlewares/authorization.js`__
+    __`Location:./clothing-friends/src/Components/Sign-in/Sign-in.component.jsx`__
+
+```jsx
+import React from 'react';
+
+import FormInput from '../Form-input/Form-input.component';
+import CustomButton from '../Custom-button/Custom-button.component';
+
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+
+import './Sign-in.styles.scss';
+
+class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: ''
+    };
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { email, password } = this.state;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({ email: '', password: '' });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  handleChange = event => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  render() {
+    return (
+      <div className='sign-in'>
+        <h2>I already have an account</h2>
+        <span>Sign in with your email and password</span>
+
+        <form onSubmit={this.handleSubmit}>
+          <FormInput
+            name='email'
+            type='email'
+            handleChange={this.handleChange}
+            value={this.state.email}
+            label='email'
+            required
+          />
+          <FormInput
+            name='password'
+            type='password'
+            value={this.state.password}
+            handleChange={this.handleChange}
+            label='password'
+            required
+          />
+          <div className='buttons'>
+            <CustomButton type='submit'> Sign in </CustomButton>
+            <CustomButton type='button' onClick={signInWithGoogle} google={true}>
+              Sign in with Google
+            </CustomButton>
+          </div>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default SignIn;
+```
+
+#### `Comment:`
+1. `auth.signInWithEmailAndPassword(email, password);` 会查询 Firebase cloud auth，如果有符合的 auth record 就返回 auth info，并触发 listener `auth.onAuthStateChanged`，如果没有 record 就不返回也不触发。`向 listener 传递的参数为 auth info。`
+
+### <span id="1.4">`Step4: Handle sign out action.`</span>
+
+- #### Click here: [BACK TO CONTENT](#1.0)
+
+1. Handle Sign out.
+
+    __`Location:./clothing-friends/src/Components/Header/Header.component.jsx`__
+
+```jsx
+import React from 'react';
+import { Link, withRouter } from "react-router-dom";
+
+import { ReactComponent as Logo } from '../../assets/crown.svg';
+
+import { auth } from '../../firebase/firebase.utils';
+
+import './Header.styles.scss';
+
+const Header = ({ currentUser, history }) => {
+
+  const signOut = async () => {
+    await auth.signOut();
+    history.push("/signin");
+  }
+  return (
+    <div className='header'>
+      <Link className='logo-container' to='/'>
+        <Logo className='logo' />
+      </Link>
+      <div className='options'>
+        {
+          currentUser ? (
+            <span className='option'>{`Welcome, ${currentUser.displayName}`}</span>
+          ) :
+            null
+        }
+        <Link className='option' to='/shop'>
+          SHOP
+      </Link>
+        <Link className='option' to='/shop'>
+          CONTACT
+      </Link>
+        {currentUser ? (
+          <Link to='/signin'>
+            <div className='option' onClick={() => signOut()}>
+              SIGN OUT
+        </div>
+          </Link>
+        ) : (
+            <Link className='option' to='/signin'>
+              SIGN IN
+        </Link>
+          )}
+      </div>
+    </div>
+  )
+};
+
+export default withRouter(Header);
+```
+
+#### `Comment:`
+1. `auth.signOut();` 会注销 Firebase cloud auth 对应的 auth record 就返回 auth info，并触发 listener `auth.onAuthStateChanged`，`向 listener 传递的参数为 null。`
+
+### <span id="1.5">`Step5: Handle Sign up with email/password and Google.`</span>
+
+- #### Click here: [BACK TO CONTENT](#1.0)
+
+    __`Location:./clothing-friends/src/Components/Sign-up/Sign-up.component.jsx`__
+
+1. Handle email/password sign up and google.
+
+```jsx
+import React from 'react';
+
+import FormInput from '../Form-input/Form-input.component';
+import CustomButton from '../Custom-button/Custom-button.component';
+
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+
+import './Sign-up.styles.scss';
+
+class SignUp extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            displayName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        };
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+        const { displayName, email, password, confirmPassword } = this.state;
+        if (password !== confirmPassword) {
+            alert("passwords don't match");
+            return;
+        }
+
+        try {
+            this.props.setDisplayName(displayName);
+            await auth.createUserWithEmailAndPassword(email, password);
+            
+            this.setState({ displayName: '', email: '', password: '', confirmPassword: '' });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    handleChange = event => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+    };
+
+    render() {
+        const { displayName, email, password, confirmPassword } = this.state;
+        return (
+            <div className='sign-up'>
+                <h2 className='title'>I do not have a account</h2>
+                <span>Sign up with your email and password</span>
+                <form className='sign-up-form' onSubmit={this.handleSubmit}>
+                    <FormInput
+                        type='text'
+                        name='displayName'
+                        value={displayName}
+                        onChange={this.handleChange}
+                        label='Display Name'
+                        required
+                    />
+                    <FormInput
+                        type='email'
+                        name='email'
+                        value={email}
+                        onChange={this.handleChange}
+                        label='Email'
+                        required
+                    />
+                    <FormInput
+                        type='password'
+                        name='password'
+                        value={password}
+                        onChange={this.handleChange}
+                        label='Password'
+                        required
+                    />
+                    <FormInput
+                        type='password'
+                        name='confirmPassword'
+                        value={confirmPassword}
+                        onChange={this.handleChange}
+                        label='Confirm Password'
+                        required
+                    />
+                    <div className='buttons'>
+                        <CustomButton type='submit'> Sign Up </CustomButton>
+                        <CustomButton type='button' onClick={signInWithGoogle} google={true}>
+                            Sign Up with Google
+                        </CustomButton>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+}
+
+export default SignUp;
+```
+
+
+#### `Comment:`
+1. 这里看到的 `this.props.setDisplayName()` 是 bind 在 App.js 的 method，目的是为了传递 displayName 返回到 App.js 中的 state: displayNameFromSignUp 中，通过这个方式收集到 `dispalyName`。
+
+2. 使用 google 登录的代码
+```jsx                
+<CustomButton type='button' onClick={signInWithGoogle} google={true}>
+```
+
+  __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
 
 ```js
-const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URI);
-
-const requireAuth = (req, res, next) => {
-    const { authorization } = req.headers;
-    if (!authorization) {
-        return res.status(401).json('Unauthorized')
-    }
-    return redisClient.get(authorization, (err, reply) => {
-        if (err || !reply) {
-            return res.status(401).json('Unauthorized');
-        }
-        console.log('pass middleware');
-        return next();
-    })
-}
-
-module.exports = {
-    requireAuth,
-}
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
+const signInWithGoogle = () => auth.signInWithPopup(provider);
 ```
 
-2. Add middleware to routes.
+3. 在使用 Google 登录的方法中在反悔的 auth info 中可以找到 `dispalyName`。
 
-    __`Location:./demo-apps/backend-smart-brain-api-Auth/server.js`__
+4. 综上可见，注册时 `displayName` 可以这样写：
 
-```diff
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
-const cors = require('cors');
-const knex = require('knex');
-const morgan = require('morgan');
+  __`Location:./clothing-friends/src/App.js`__
 
-const register = require('./controllers/register');
-const signin = require('./controllers/signin');
-const profile = require('./controllers/profile');
-const image = require('./controllers/image');
-+ const auth = require('./middlewares/authorization');
-
-const db = knex({
-  client: process.env.POSTGRES_CLIENT,
-  connection: {
-    host: process.env.POSTGRES_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB
-  }
-});
-
-const app = express();
-
-app.use(morgan('tiny'));
-app.use(cors());
-app.use(bodyParser.json());
-
-app.get('/', (req, res) => { res.send(`This message is from server.js. You will get this message when visit http://localhost:4000/`) })
-app.post('/signin', (req, res) => { signin.signinAuthentication(req, res, db, bcrypt) })
-app.post('/register', (req, res) => { register.registerAuthentication(req, res, db, bcrypt) })
-+ app.get('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res, db) })
-+ app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db) });
-+ app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db) })
-+ app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) })
-
-app.listen(4000, () => {
-  console.log('app is running on port 4000');
-})
+```js
+const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
+const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
 ```
 
-3. Add header in Front end api call.
-
-    __`Location:./demo-apps/frontend-smart-brain-Auth/src/App.js`__
-
-```diff
-  onButtonSubmit = () => {
-+   const token = window.localStorage.getItem('token');
-+   if (!token) {
-+     this.setState(initialState);
-+     window.localStorage.removeItem('token');
-+     return;
-+   }
-    this.setState({ imageUrl: this.state.input });
-    fetch('http://localhost:4000/imageurl', {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json',
-+       'Authorization': token,
-      },
-      body: JSON.stringify({
-        input: this.state.input
-      })
-    }).then(response => response.json())
-      .then(response => {
-        if (response) {
-          fetch('http://localhost:4000/image', {
-            method: 'put',
-            headers: {
-              'Content-type': 'application/json',
-+             'Authorization': token,
-            },
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count }))
-            })
-            .catch(console.log)
-
-        }
-        this.displayFaceBox(this.calculateFaceLocations(response))
-      })
-      .catch(err => console.log(err));
-  }
-```
-
-
-__`Location:./demo-apps/frontend-smart-brain-Auth/src/components/Profile/Profile.js`__
-
-```diff
-    onProfileUpdate = (data) => {
-+       const token = window.localStorage.getItem('token');
-+       if (!token) {
-+           this.props.loadUser(this.props.initialState);
-+           window.localStorage.removeItem('token');
-+           this.props.onRouteChange('signin');
-+           this.props.toggleModal();
-+           return;
-+       }
-        fetch(`http://localhost:4000/profile/${this.props.user.id}`, {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json',
-+               'Authorization': token,
-            },
-            body: JSON.stringify({
-                formInput: data
-            })
-        }).then(resp => {
-            if (resp.status === 200 || resp.status === 304) {
-                this.props.toggleModal();
-                this.props.loadUser({ ...this.props.user, ...data });
-            }
-        }).catch(console.log)
-    }
-```
-
-#### `Comment:`
-1. 这个 middleware 的作用是从 req.headers 中提取 token，然后查询 redis，如果没有结果就停止进程 return，如果有就不用传输数据，直接进入 route 的下一步。
-
-2. :star::star:这个 middleware 可以加上一个 errorHandler 在 server.js 的，后面增加。
-
-3. 上面的前端代码增加了处理 token 无效或者手动删除 session 的情况。
-
-### <span id="1.5">`Step5: Others.`</span>
-
-- #### Click here: [BACK TO CONTENT](#1.0)
-
-1. 在 docker 中使用 redis cli：
-```bash
-$ docker-compose exec redis redis-cli
-```
-
-2. 查看正在运行的 redis 端口：
-
-```bash
-$ ps aux | grep redis
-```
-
-#### `Comment:`
-1. 
-
+- 上面的代码意思是，如果有 `displayName` ，先收集，然后在执行 `checkDocOrCreateDocInFirestore` 过程中验证是否有对应 `Firestore` 数据，如果没有，就在 `checkDocOrCreateDocInFirestore` 中使用收集的信息`（包括 displayName）`创建 Firestore data。
 ------------------------------------------------------------
 
 __`本章用到的全部资料：`__
 
-1. [Bearer token I](https://security.stackexchange.com/questions/108662/why-is-bearer-required-before-the-token-in-authorization-header-in-a-http-re)
-
-2. [Bearer token II](https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/)
+- null
 
 
 - #### Click here: [BACK TO CONTENT](#1.0)
