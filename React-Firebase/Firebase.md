@@ -162,7 +162,7 @@
 
 4. Add Firebase APi key in .env file. 
 
-    __`Location:./clothing-friends/.env`__
+    __`Location:./clothing-friends-firebase/.env`__
 
     ```json
     // <Replace the value with your Firebase api key.>
@@ -179,7 +179,7 @@
 
 5. Apply Firebase in app.
 
-    __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
+    __`Location:./clothing-friends-firebase/src/firebase/firebase.utils.js`__
 
     ```js
     import firebase from 'firebase/app';
@@ -253,7 +253,7 @@
 
 1. Add Firebase listener in App.js componentDidMount.
 
-    __`Location:./clothing-friends/src/App.js`__
+    __`Location:./clothing-friends-firebase/src/App.js`__
 
 ```jsx
 import React from 'react';
@@ -357,7 +357,7 @@ export default App;
 
 1. Handle Sign in.
 
-    __`Location:./clothing-friends/src/Components/Sign-in/Sign-in.component.jsx`__
+    __`Location:./clothing-friends-firebase/src/Components/Sign-in/Sign-in.component.jsx`__
 
 ```jsx
 import React from 'react';
@@ -443,7 +443,7 @@ export default SignIn;
 
 1. Handle Sign out.
 
-    __`Location:./clothing-friends/src/Components/Header/Header.component.jsx`__
+    __`Location:./clothing-friends-firebase/src/Components/Header/Header.component.jsx`__
 
 ```jsx
 import React from 'react';
@@ -505,7 +505,7 @@ export default withRouter(Header);
 
 - #### Click here: [BACK TO CONTENT](#1.0)
 
-    __`Location:./clothing-friends/src/Components/Sign-up/Sign-up.component.jsx`__
+    __`Location:./clothing-friends-firebase/src/Components/Sign-up/Sign-up.component.jsx`__
 
 1. Handle email/password sign up and google.
 
@@ -617,7 +617,7 @@ export default SignUp;
     <CustomButton type='button' onClick={signInWithGoogle} google={true}>
     ```
 
-  - __`Location:./clothing-friends/src/firebase/firebase.utils.js`__
+  - __`Location:./clothing-friends-firebase/src/firebase/firebase.utils.js`__
 
     ```js
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -629,7 +629,7 @@ export default SignUp;
 
 4. 综上可见，注册时 `displayName` 可以这样写：
 
-    __`Location:./clothing-friends/src/App.js`__
+    __`Location:./clothing-friends-firebase/src/App.js`__
 
     ```js
     const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
