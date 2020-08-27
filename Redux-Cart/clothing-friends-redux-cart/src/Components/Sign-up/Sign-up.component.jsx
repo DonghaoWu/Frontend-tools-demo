@@ -7,7 +7,7 @@ import CustomButton from '../Custom-button/Custom-button.component';
 
 import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 import { setDisplayName } from '../../redux/display-name/display-name.actions';
-import { selectCurrentDisplayName } from '../../redux/display-name/display-name.selectors';
+import { selectInputDisplayName } from '../../redux/display-name/display-name.selectors';
 
 import './Sign-up.styles.scss';
 
@@ -99,7 +99,7 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    displayName: selectCurrentDisplayName
+    displayName: selectInputDisplayName
 });
 
 const mapDispatchToProps = dispatch => ({

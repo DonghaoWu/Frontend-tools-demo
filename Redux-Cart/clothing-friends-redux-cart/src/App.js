@@ -16,7 +16,7 @@ import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils'
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { setDisplayName } from './redux/display-name/display-name.actions';
-import { selectCurrentDisplayName } from './redux/display-name/display-name.selectors';
+import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
 
 class App extends React.Component {
 
@@ -25,7 +25,7 @@ class App extends React.Component {
     this.listener = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         try {
-          const displayName = userAuth.displayName || this.props.selectCurrentDisplayName;
+          const displayName = userAuth.displayName || this.props.selectInputDisplayName;
           const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
           userRef.onSnapshot(snapShot => {
             setCurrentUser({
@@ -70,7 +70,7 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  displayName: selectCurrentDisplayName
+  displayName: selectInputDisplayName
 });
 
 const mapDispatchToProps = dispatch => ({
