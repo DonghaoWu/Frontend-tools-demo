@@ -9,7 +9,7 @@ import './SignInAndSignUpPage.styles.scss';
 const SignInAndSignUpPage = ({ setDisplayName }) => {
   return (<div className='sign-in-and-sign-up'>
     <SignIn />
-    <SignUp setDisplayName={setDisplayName} />
+    <SignUp />
   </div>)
 };
 

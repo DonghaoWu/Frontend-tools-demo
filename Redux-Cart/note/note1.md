@@ -294,7 +294,6 @@ npm i redux react-redux redux-logger
     - ./src/redux/cart/cart.reducer.js
     - ./src/Components/Checkout-item.component.jsx
     - ./src/redux/cart/cart.utils.js
-    - 
 
 
 

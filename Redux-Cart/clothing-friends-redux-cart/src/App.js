@@ -1,50 +1,49 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import './App.css';
 
 import HomePage from './Pages/HomePage/HomePage.component';
 import ShopPage from './Pages/ShopPage/ShopPage.component';
 import SignInAndSignUpPage from './Pages/SignInSignUpPage/SignInAndSignUpPage.component';
+import CheckoutPage from './Pages/CheckoutPage/CheckoutPage.component';
 import Header from './Components/Header/Header.component';
+
 import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      currentUser: null,
-      displayNameFromSignUp: ''
-    };
-  }
+import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { setDisplayName } from './redux/display-name/display-name.actions';
+import { selectCurrentDisplayName } from './redux/display-name/display-name.selectors';
 
-  setDisplayName = (displayName) => {
-    this.setState({ displayNameFromSignUp: displayName });
-  }
+class App extends React.Component {
 
   componentDidMount() {
+    const { setCurrentUser, setDisplayName } = this.props;
     this.listener = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         try {
-          const displayName = userAuth.displayName || this.state.displayNameFromSignUp;
+          const displayName = userAuth.displayName || this.props.selectCurrentDisplayName;
           const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
           userRef.onSnapshot(snapShot => {
-            this.setState({
-              currentUser: {
-                id: snapShot.id,
-                ...snapShot.data()
-              },
-              displayNameFromSignUp: ''
+            setCurrentUser({
+              id: snapShot.id,
+              ...snapShot.data()
             });
+            setDisplayName('');
           });
         }
         catch (error) {
-          this.setState({ currentUser: null, displayNameFromSignUp: '' });
+          setCurrentUser(null);
+          setDisplayName('');
           console.log('error creating user', error.message);
         }
       }
       else {
-        this.setState({ currentUser: null, displayNameFromSignUp: '' });
+        setCurrentUser(null);
+        setDisplayName('');
       }
     })
   }
@@ -54,17 +53,32 @@ class App extends React.Component {
   }
 
   render() {
+    const { currentUser } = this.props;
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header currentUser={currentUser} />
         <Switch>
+          <Route exact path="/signin">{currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}</Route>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          <Route exact path="/signin">{this.state.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage setDisplayName={this.setDisplayName} />}</Route>
+          <Route exact path='/checkout' component={CheckoutPage} />
         </Switch>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  displayName: selectCurrentDisplayName
+});
+
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
+  setDisplayName: displayName => dispatch(setDisplayName(displayName)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
