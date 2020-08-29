@@ -8,3 +8,6 @@
 - [Part2 - Redux-cart :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-Cart/Redux-cart.md) 
     - __`Key Word: Redux, Cart, reselect`__
 
+- [Part3 - Redux and advanced routing :gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-Cart/Redux-cart.md) 
+    - __`Key Word: reselect, redux-persist, :gem: nested routing, ownProps, data normalization.`__
+

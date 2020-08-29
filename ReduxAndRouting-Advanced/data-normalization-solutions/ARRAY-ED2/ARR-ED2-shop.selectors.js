@@ -12,7 +12,7 @@ export const selectCollection = collectionUrlParam => (
         [selectCollections],
         collections =>
             collections.find(
-                collection => collection.RouteName === collectionUrlParam
+                collcetion => collection.RouteName === collectionUrlParam
             )
     )
 )

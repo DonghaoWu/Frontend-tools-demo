@@ -28,12 +28,12 @@ dependencies: redux-persist
 
 3. [Collection state to Redux]
 
-    - ./src/redux/shop/shop.data.js
-    - ./src/redux/shop/shop.reducer.js
-    - ./src/redux/shop/shop.selectors.js
-    - ./src/redux/root-reducer.js
-    - ./src/Pages/ShopPage/ShopPage.component.js
-    - ./src/Pages/ShopPage/ShopPage.styles.scss
+    - ./clothing-friends-redux-routing-advanced/src/redux/shop/shop.data.js
+    - ./clothing-friends-redux-routing-advanced/src/redux/shop/shop.reducer.js
+    - ./clothing-friends-redux-routing-advanced/src/redux/shop/shop.selectors.js
+    - ./clothing-friends-redux-routing-advanced/src/redux/root-reducer.js
+    - ./clothing-friends-redux-routing-advanced/src/Pages/ShopPage/ShopPage.component.js
+    - ./clothing-friends-redux-routing-advanced/src/Pages/ShopPage/ShopPage.styles.scss
 
 4. [Add Collections-overview component]
 
