@@ -7,14 +7,13 @@ import { auth } from '../../firebase/firebase.utils';
 
 import CartIcon from '../Cart-icon/Cart-icon.component';
 import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
-import { selectCartHidden } from '../../redux/cart/cart.selectors';
+import { selectCurrentHiddenCart } from '../../redux/hide-cart/hide-cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearCart } from '../../redux/cart/cart.actions'
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './Header.styles.scss';
-import { persistor } from '../../redux/store';
 
 const Header = ({ currentUser, history, hidden, clearCart }) => {
 
@@ -36,6 +35,9 @@ const Header = ({ currentUser, history, hidden, clearCart }) => {
           ) :
             null
         }
+        <Link className='option' to='/'>
+          HOME
+      </Link>
         <Link className='option' to='/shop'>
           SHOP
       </Link>
@@ -62,7 +64,7 @@ const Header = ({ currentUser, history, hidden, clearCart }) => {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  hidden: selectCartHidden
+  hidden: selectCurrentHiddenCart
 });
 
 const mapDispatchToProps = dispatch => {

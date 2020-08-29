@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import CustomButton from '../Custom-button/Custom-button.component';
 import CartItem from '../Cart-item/Cart-item.component';
 import { selectCartItems } from '../../redux/cart/cart.selectors';
-import { toggleCartHidden } from '../../redux/cart/cart.actions.js';
+import { toggleCartHidden } from '../../redux/hide-cart/hide-cart.actions';
 
 import './Cart-dropdown.styles.scss';
 

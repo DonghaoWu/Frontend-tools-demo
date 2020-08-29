@@ -21,7 +21,7 @@ dependencies: redux-persist
 2. [Directory state to Redux]
 
     - ./src/redux/director/directory.reducer.js
-    - ./src/redux/director/directory.selector.js
+    - ./src/redux/director/directory.selectors.js
     - ./src/redux/root-reducer.js
     - ./src/Components/Directory/Directory.component.js
     - ./src/Components/Directory/Directory.styles.scss
@@ -30,7 +30,7 @@ dependencies: redux-persist
 
     - ./src/redux/shop/shop.data.js
     - ./src/redux/shop/shop.reducer.js
-    - ./src/redux/shop/shop.selector.js
+    - ./src/redux/shop/shop.selectors.js
     - ./src/redux/root-reducer.js
     - ./src/Pages/ShopPage/ShopPage.component.js
     - ./src/Pages/ShopPage/ShopPage.styles.scss
@@ -50,7 +50,7 @@ dependencies: redux-persist
     - ./src/Pages/CollectionPage/CollectionPage.component.jsx
     - ./src/Pages/CollectionPage/CollectionPage.styles.scss
 
-    - ./src/redux/shop/shop.selector.js <hash map>
+    - ./src/redux/shop/shop.selectors.js <hash map>
     - ./src/Pages/CollectionPage/CollectionPage.component.jsx <ownProps>
     - new dependency: load.memoize
 
@@ -61,13 +61,13 @@ dependencies: redux-persist
     - ./src/Pages/CollectionPage/CollectionPage.styles.scss
 
     - ./src/redux/shop/shop.data.js <change array to object>
-    - ./src/redux/shop/shop.selector.js
+    - ./src/redux/shop/shop.selectors.js
 
 7. [Data Flow in our app]
 
-    - ./src/redux/shop/shop.selector.js <collections-overview still getting a array and render the first four item, will occur error>
+    - ./src/redux/shop/shop.selectors.js 
     - ./src/Components/Collections-overview/Collections-overview.component.jsx
-    <collections-overview still getting a array of all items, will occur error>
+    <collections-overview still getting a array and render the first four item, will occur error>
     - ./src/Components/Collections-preview/Collections-preview.component.jsx
 
 8. 
