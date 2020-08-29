@@ -1,6 +1,6 @@
 # Front end development tools (Part 3)
 
-### `Key Word: reselect, redux-persist, :gem: nested routing, ownProps, data normalization.`
+### `Key Word: reselect, redux-persist, nested routing, ownProps, data normalization.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -33,7 +33,7 @@
 - [3.1 Set up redux-persist.](#3.1)
 - [3.2 Add tow new states to Redux.](#3.2)
 - [3.3 Reconstruct ShopPage component.](#3.3)
-- [3.4 Change SHOP_DATA types.](#3.4)
+- [3.4 Change SHOP_DATA type.](#3.4)
 
 ------------------------------------------------------------
 
@@ -184,7 +184,7 @@
 +          -> url = '/shop/collectionId' -> CollectionPage -> CollectionItem
 ```
 
-3. :gem:gem:gem: nested routing.
+3. :gem::gem::gem: nested routing.
 
     __`Location:./clothing-friends-redux-routing-advanced/src/Pages/ShopPage/ShopPage.component.js`__
 
@@ -286,7 +286,7 @@ export const selectCollection = collectionUrlParam => {
 
 2. 以上的 nested routing 是通过两个数据（ directory 和 collection ）的联动进行传递的 -> `directory data` 的 linkUrl 数据作为 Directoryitem.component.js 的跳转 url，先传递到 ShopPage 中 再分配到 CollectionPage 中，CollectionPage 拿到 linkUrl 的后半部分 :collectionId 作为参数查询 `shop.data object 的对应 key 数据`。
 
-### <span id="3.4">`Step4: Change SHOP_DATA types.`</span>
+### <span id="3.4">`Step4: Change SHOP_DATA type.`</span>
 
 - #### Click here: [BACK TO CONTENT](#3.0)
 
@@ -435,7 +435,7 @@ const SHOP_DATA_OBJECT = {
 
 __`本章用到的全部资料：`__
 
-- null
+- [redux-persist npm](https://www.npmjs.com/package/redux-persist)
 
 - #### Click here: [BACK TO CONTENT](#3.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)

@@ -9,5 +9,5 @@
     - __`Key Word: Redux, Cart, reselect`__
 
 - [Part3 - Redux and advanced routing :gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-Advanced-Routing/Redux-Advanced-Routing.md) 
-    - __`Key Word: reselect, redux-persist, :gem: nested routing, ownProps, data normalization.`__
+    - __`Key Word: reselect, redux-persist, nested routing, ownProps, data normalization.`__
 
