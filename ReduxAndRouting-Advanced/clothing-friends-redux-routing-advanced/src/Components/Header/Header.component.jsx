@@ -9,15 +9,18 @@ import CartIcon from '../Cart-icon/Cart-icon.component';
 import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { clearCart } from '../../redux/cart/cart.actions'
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './Header.styles.scss';
+import { persistor } from '../../redux/store';
 
-const Header = ({ currentUser, history, hidden }) => {
+const Header = ({ currentUser, history, hidden, clearCart }) => {
 
   const signOut = async () => {
     await auth.signOut();
+    clearCart();
     history.push("/signin");
   }
 
@@ -62,4 +65,10 @@ const mapStateToProps = createStructuredSelector({
   hidden: selectCartHidden
 });
 
-export default withRouter(connect(mapStateToProps)(Header));
+const mapDispatchToProps = dispatch => {
+  return {
+    clearCart: () => dispatch(clearCart())
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));
