@@ -1,300 +1,73 @@
-redux - stage management
+dependencies: redux-persist 
 
-1. single source of truth
-2. state is read only
-3. changes using pure functions. 
+1. [use library to store redux state data]
 
-- action -> reducer -> store -> DOM changes
-
-- flux pattern 
-    - action -> dispatcher -> store -> view
-
-- MVC
-    - action -> controller -> model -> view
-
-
-- Setting up redux
-
-- install dependencies
-
-```bash
-npm i redux react-redux redux-logger
-```
-
-- files:
-
-- 前期步骤：
-    1. install dependencies
-    2. Provider
-    3. store and middlewares
-    4. root reducer
-    5. individual reducer
-    6. action types
-    7. initial state
-    8. actions
-
-    9. connect()
-    10. mapDispatchToProps
-    11. mapStateToProps
-    12. 
-
-    - ./src/redux/root-reducer.js
-    ```js
-    import { combineReducers } from 'redux';
-
-    import userReducer from './user/user.reducer';
-
-    export default combineReducers({
-        user: userReducer;
-    })
-    ```
-    - ./src/redux/user
-    - ./src/redux/user/user.reducer.js - Initial state, userReducer
-
-    ```js
-    const userReducer = (state = INITIAL_STATE, action) =>{
-        const {type, payload} = action;
-        switch(type){
-            case SET_CURRENT_USER:
-                return {
-                    ...state,
-                    currentUser: action.payload
-                };
-            default:
-            return state;
-        }
-    };
-
-    export default userReducer;
+    - Install dependency:
+    ```bash
+    $ npm i redux-persist
     ```
 
     - ./src/redux/store.js
-
-    ```js
-    import { createStore, applyMiddleware } from 'redux';
-    import logger from 'redux-logger';
-
-    import rootReducer from './root-reducer';
-
-    const middlewares =[logger];
-
-    const store = createStore(rootReducer, applyMiddleware(...middlewares));
-
-    export default store;
-    ```
-
-    - ./src/redux/user/user.actions.js
-    - ./src/redux/user/user.types.js
-
-    ```js
-    const SET_CURRENT_USER = 'SET_CURRENT_USER';
-    export const setCurrentUser = (user) => ({
-        type: SET_CURRENT_USER,
-        payload: user
-    })
-    ```
-
-    - App.js
-        - Provider, <react-redux>
-        - Redirect
-
-- Cart component
-
-    - [Create cart logo component]
-    - ./src/assets/shopping-bag.svg
-    - ./src/Components/Cart-icon/Cart-icon.component.jsx
-    - ./src/Components/Cart-icon/Cart-icon.styles.scss
-
-    - [Create cart dropdown]
-    - ./src/Components/Cart-dropdown/Cart-dropdown.component.jsx
-    - ./src/Components/Cart-dropdown/Cart-dropdown.styles.scss
-    - ./src/redux/cart/cart.reducer.js
-    - ./src/redux/cart/cart.actions.js
-    - ./src/redux/cart/cart.types.js
+        - persistStore
+        - persistor
     - ./src/redux/root-reducer.js
+        - storage
+        - persistReducer
+        - persistConfig
+        - persistReducer
+    - ./src/index.js
+        - PersistGate
 
-    - [style button]
-    - ./src/Components/Custom-button/Custom-button.styles.scss
-    - ./src/Components/Custom-button/Custom-button.component.jsx
-    - ./src/Components/Collection-item/Collection-item.component.jsx
+2. [Directory state to Redux]
 
-    - [Add item to cart]
-    - ./src/redux/cart/cart.reducer.js
-    - ./src/redux/cart/cart.actions.js
-    - ./src/redux/cart/cart.types.js
-    - ./src/Components/Collection-preview/Collection-preview.component.jsx
-    - ./src/Components/Collection-item/Collection-item.component.jsx
+    - ./src/redux/director/directory.reducer.js
+    - ./src/redux/director/directory.selector.js
+    - ./src/redux/root-reducer.js
+    - ./src/Components/Directory/Directory.component.js
+    - ./src/Components/Directory/Directory.styles.scss
 
-    - [Add mutiple items to cart.]
-    - ./src/redux/cart/cart.utils.js
-    ```js
-    export const addItemToCart = (cartItems, cartItemToAdd)=>{
-        const existingCartItem = cartItems.find(
-            cartItem => cartItem.id === cartItemToAdd.id
-        )
+3. [Collection state to Redux]
 
-        if(existingCartItem){
-            return cartItems.map(cartItem =>{
-                cartItem.id === cartItemToAdd.id
-                ? {...cartItem, quantity: cartItem.quantity + 1}
-                : cartItem
-            })
-        }
+    - ./src/redux/shop/shop.data.js
+    - ./src/redux/shop/shop.reducer.js
+    - ./src/redux/shop/shop.selector.js
+    - ./src/redux/root-reducer.js
+    - ./src/Pages/ShopPage/ShopPage.component.js
+    - ./src/Pages/ShopPage/ShopPage.styles.scss
 
-        return [...cartItems, {...cartItemToAdd, quantity: 1}];
-    }
-    ```
+4. [Add Collections-overview component]
 
-    - ./src/redux/cart/cart.reducer.js
-    - ./src/Pages/ShopPage/shop.data.js <replace with new data>
+    - `Change ShopPage component to a route component`
 
-    - [Cart Item component]
-    - ./src/Components/Cart-item/Cart-item.component.jsx
-    - ./src/Components/Cart-item/Cart-item.styles.scss
-    - ./src/Components/Cart-dropdown/Cart-dropdown.styles.scss
+    - ./src/Pages/ShopPage/ShopPage.component.jsx
+    - ./src/Pages/ShopPage/ShopPage.styles.scss
+    - ./src/Components/Collections-overview/Collections-overview.component.jsx
+    - ./src/Components/Collections-overview/Collections-overview.styles.scss
 
-    - [Selectors in redux]
-    - ./src/Components/Cart-icon/Cart-icon.component.jsx (reduce method) --> store the value instead
-    - 在这里提出一个问题，就是 redux 可以储存 cart 里面的数据，但这是暂时性的，真正需要做的应该是把数据储存在 database，并连接对应用户，每次读取用户的时候把购物车的数据读出来。
+5. [Nested routing in ShopPage.component] <nested route>
 
-    - [Memorization]
-    - npm i reselect
-    - ./src/redux/cart/cart.selectors.js
-    ```js
-    import { createSelector } from 'reselect';
+    - ./src/Pages/ShopPage/ShopPage.component.jsx
+    - ./src/Pages/CollectionPage/CollectionPage.component.jsx
+    - ./src/Pages/CollectionPage/CollectionPage.styles.scss
 
-    const selectCart = state => stete.cart;
+    - ./src/redux/shop/shop.selector.js <hash map>
+    - ./src/Pages/CollectionPage/CollectionPage.component.jsx <ownProps>
+    - new dependency: load.memoize
 
-    export const selectCatrItems = creatSelector(
-        [selectCart],
-        (cart) => cart.cartItems;
-    )
+6. [Data normalization and Collection Page]
 
-    export const selectCartHidden = createSelector(
-        [selectCart],
-        cart => cart.hidden
-    )
+    - ./src/Components/Collections-item/Collections-item.styles.scss
+    - ./src/Pages/CollectionPage/CollectionPage.component.jsx
+    - ./src/Pages/CollectionPage/CollectionPage.styles.scss
 
-    export const selectCartItemCount = createSelector(
-        [selectCartItems],
-        (cartItems) =>{
-            return cartItems.reduce(
-                (accumalateQuantity, cartItem) =>{
-                    return accumalateQuantity + cartItem.quantity, 
-                    0
-                }
-            )
-        }
-    )
-    ```
-    - ./src/Components/Cart-icon/Cart-icon.component.jsx
-    - ./src/Components/Cart-dropdown/Cart-dropdown.component.jsx
-    - `[it's still valuable to memoize it with a selector to save us running duplicate logic to get the same output.]`
-    - 对于这个有一点疑问。
+    - ./src/redux/shop/shop.data.js <change array to object>
+    - ./src/redux/shop/shop.selector.js
 
-    - [user selector]
-    - ./src/redux/user/user.selectors.js
+7. [Data Flow in our app]
 
-    ```js
-    import {createSelector} from 'reselect';
-    const selectUser = state => state.user;
+    - ./src/redux/shop/shop.selector.js <collections-overview still getting a array and render the first four item, will occur error>
+    - ./src/Components/Collections-overview/Collections-overview.component.jsx
+    <collections-overview still getting a array of all items, will occur error>
+    - ./src/Components/Collections-preview/Collections-preview.component.jsx
 
-    export const selectCurrentUser = createSelector(
-        [selectUser],
-        (user) => user.currentUser
-    )
-    ```
-
-    - ./src/Components/Header/Header.component.jsx
-    ```jsx
-    import { createStructuredSelector } from 'reselect';
-    import { selectCartHidden } from '../../redux/cart/cart.selectors';
-    import { selectCurrentUser } from '../../redux/user/user.selectors';
-
-    const mapStateToProps = state => {
-        return {
-            currentUser: selectCurrentUser(state),
-            hidden: selectHidden(state)
-        }
-    }
-
-    const mapStateToProps = createStructuredSelector({
-            currentUser: selectCurrentUser,
-            hidden: selectCartHidden
-    })
-    ```
-
-    - ./src/App.jsx
-    - 总的疑问是为什么要使用 reselector ？
-
-    - [checkout page]
-    - ./src/Components/Cart-dropdown.component.jsx
-    ```jsx
-
-    ```
-    - ./src/Pages/Checkout.component.jsx
-    ```jsx
-    import React from 'react';
-    import './checkout.styles.scss';
-
-    const CheckoutPage = () => {
-        return (
-            <div>
-                checkout page
-            </div>
-        )
-    }
-
-    export default ChekcoutPage;
-    ```
-    - ./src/Pages/Checkout.styles.scss
-    - ./src/App.jsx <add a new route>
-    - ./src/Components/Cart-dropdown.component.jsx
-    ```jsx
-    import { withRouter } from 'react-router-dom';
-
-    <CustomButton onClick={() => history.push('/checkout')}> Go to checkout page </CustomButton>
-    export default withRouter(connect(mapStateToProps)(CartDropdown));
-    ```
-
-    - [Chekcout page functionality and styles]
-    - ./src/Pages/Checkout.component.jsx
-    - ./src/redux/cart/cart.selectors.js
-    ```js
-    export const selectCartTotal = createSelector(
-        [selectCartItems],
-        cartItems =>
-            cartItems.reduce(
-                (accumulatedQuantity, cartItem) =>
-                    accumulatedQuantity + cartItem.quantity * cartItem.price
-            )
-    )
-    ```
-
-    - [triger a hidden toggle when click the go to checkout button]
-
-    - ./src/Components/Cart-dropdown.component.jsx
-        - <一种不需要写 mapDispatchToProps 的简单写法>。
-
-    - [checkout Item in checkout page]
-    - ./src/Components/Checkout-item.component.jsx
-    - ./src/Components/Checkout-item.styles.scss
-    - ./src/Pages/Checkout.component.jsx
-
-    - [remove checkout items]
-    - ./src/redux/cart/cart.types.js
-    - ./src/redux/cart/cart.actions.js
-    - ./src/redux/cart/cart.reducer.js
-
-    - ./src/Components/Checkout-item.component.jsx
-
-    - [increase and decrease quantity]
-    - ./src/redux/cart/cart.types.js
-    - ./src/redux/cart/cart.actions.js
-    - ./src/redux/cart/cart.reducer.js
-    - ./src/Components/Checkout-item.component.jsx
-    - ./src/redux/cart/cart.utils.js
-
-
-
-
+8. 
