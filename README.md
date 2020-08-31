@@ -11,3 +11,5 @@
 - [Part3 - Redux and advanced routing :gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-Advanced-Routing/Redux-Advanced-Routing.md) 
     - __`Key Word: reselect, redux-persist, nested routing, ownProps, data normalization.`__
 
+- [Part4 - Stripe and heroku full stack deploy. :gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Stripe-Deploy/Stripe-Deploy.md) 
+    - __`Key Word: Heroku, stripe front end, stripe back end, full stack deploy, remove dependencies in production mode.`__
