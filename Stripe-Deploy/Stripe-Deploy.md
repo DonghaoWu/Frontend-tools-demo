@@ -48,7 +48,7 @@
 1. Final files structure.
 
   <p align="center">
-  <img src="../assets/fe-p4-02.png" width=90%>
+  <img src="../assets/fe-p4-02.png" width=70%>
   </p>
 
   -----------------------------------------------------------------
@@ -200,7 +200,7 @@
 - #### Click here: [BACK TO CONTENT](#4.0)
 
   <p align="center">
-  <img src="../assets/fe-p4-03.png" width=90%>
+  <img src="../assets/fe-p4-03.png" width=70%>
   </p>
 
   -----------------------------------------------------------------
@@ -397,7 +397,6 @@ $ touch server.js
     ```bash
     $ git init
     $ heroku login
-    $ heroku apps
     $ heroku create <your app name>
     $ heroku git:remote -a <your app name>
     $ git add .
