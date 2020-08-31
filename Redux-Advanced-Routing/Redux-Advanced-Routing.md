@@ -4,7 +4,7 @@
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-## `Section: Redux & advanced React-router .` (Basic)
+## `Section: Redux & advanced React-router .` (Advanced)
 
 ### `Summary`: In this documentation, we reconstructure some components and data types, also apply redux-persist and nested-routing.
 
