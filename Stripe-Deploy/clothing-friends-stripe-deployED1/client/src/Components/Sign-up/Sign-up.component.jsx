@@ -1,13 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import FormInput from '../Form-input/Form-input.component';
 import CustomButton from '../Custom-button/Custom-button.component';
 
 import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 import { setDisplayName } from '../../redux/display-name/display-name.actions';
-import { selectInputDisplayName } from '../../redux/display-name/display-name.selectors';
 
 import './Sign-up.styles.scss';
 
@@ -32,7 +30,6 @@ class SignUp extends React.Component {
         }
 
         try {
-            console.log(this.props)
             this.props.setDisplayName(displayName);
             await auth.createUserWithEmailAndPassword(email, password);
 
@@ -98,15 +95,11 @@ class SignUp extends React.Component {
     }
 }
 
-const mapStateToProps = createStructuredSelector({
-    displayName: selectInputDisplayName
-});
-
 const mapDispatchToProps = dispatch => ({
     setDisplayName: input => dispatch(setDisplayName(input)),
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(SignUp);

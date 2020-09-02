@@ -1,5 +1,11 @@
 # FrontEnd-tools-demo
 
+- Kill a port service.
+```bash
+lsof -i :5000
+kill -9 <PID>
+```
+
 ### Navigation:
 
 - [Part1 - Firebase :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/React-Firebase/Firebase.md) 

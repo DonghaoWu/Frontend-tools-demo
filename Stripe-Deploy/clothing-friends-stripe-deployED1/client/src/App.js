@@ -25,7 +25,7 @@ class App extends React.Component {
     this.listener = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         try {
-          const displayName = userAuth.displayName || this.props.selectInputDisplayName;
+          const displayName = userAuth.displayName || this.props.displayName;
           const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
           userRef.onSnapshot(snapShot => {
             setCurrentUser({
