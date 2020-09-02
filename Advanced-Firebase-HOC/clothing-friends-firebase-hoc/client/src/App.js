@@ -14,7 +14,7 @@ import { selectCurrentUser } from './redux/user/user.selectors';
 import { setDisplayName } from './redux/display-name/display-name.actions';
 import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
 
-import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils';
+import { auth, checkOrCreateUserDocInFirestore } from './firebase/firebase.utils';
 
 import './App.css';
 
@@ -26,7 +26,7 @@ class App extends React.Component {
       if (userAuth) {
         try {
           const displayName = userAuth.displayName || this.props.displayName;
-          const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
+          const userRef = await checkOrCreateUserDocInFirestore(userAuth, displayName);
           userRef.onSnapshot(snapShot => {
             setCurrentUser({
               id: snapShot.id,

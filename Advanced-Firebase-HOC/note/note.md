@@ -51,9 +51,13 @@ export const amy = (collecitonKey, objectsToAdd) =>{
 ```
 
 - ./src/App.js <add state to App.js> <run the code once then delete>
-    - componentDidMount: amy('collections',collectionsArray.map(({title, items}) => {
+    - 
+    ```js
+    componentDidMount: amy('collections',collectionsArray.map(({title, items}) => {
         return {title, items}
     }))
+    ```
+
 - ./client/src/firebase/firebase.utils.js
     < concertCollectionsSnapShotToMap >
 
@@ -61,11 +65,87 @@ export const amy = (collecitonKey, objectsToAdd) =>{
 
 - ./src/Pages/ShopPage/ShopPage.compoennt.jsx <fetch data here>
 - change to class component
+- ./client/src/firebase/firebase.utils.js
 
 
-3. [Adding shopo data to redux]
+3. [Adding shop data to redux]
 
+- ./client/src/firebase/firebase.utils.js
 - ./redux/shop/shop.types.js
 - ./redux/shop/shop.actions.js
-- ./src/Pages/ShopPage.compoennt.jsx 
+- ./src/Pages/SHopPage/ShopPage.compoennt.jsx 
 - 
+
+
+4. Firebase security
+
+```js
+service cloud.firestore {
+    match /databases/{database}/documents{
+        match /{document=**}{
+            allow read, write: if true
+        }
+    }
+}
+```
+
+```js
+service cloud.firestore {
+    match /databases/{database}/documents{
+        match /{document=**}{
+            allow read, write: if false
+        }
+    }
+}
+```
+
+```js
+service cloud.firestore {
+    match /databases/{database}/documents{
+        match /users/{userId}{
+            allow read, write: if request.auth != null && request.auth.uid == userId
+        }
+    }
+}
+```
+
+```diff
++ get
++ users/uid
++ custom
++ uid, 
++ run
+```
+
+- Authenticated off === (request.auth === null)
+
+- user security 2
+
+```js
+service cloud.firestore {
+    match /databases/{database}/documents{
+        match /users/{userId}{
+            allow get: if request.auth != null && request.auth.uid == userId;
+            allow create: if request.auth != null && request.auth.uid == userId;
+        }
+    }
+}
+```
+
+- collections security
+
+```js
+service cloud.firestore {
+    match /databases/{database}/documents{
+        match /users/{userId}{
+            allow get, write: if request.auth != null && request.auth.uid == userId;
+        }
+    }
+    match /collections/{collectionId}{
+        allow read;
+        allow write: if request.auth != null && request.auth.uid == 'admin uid'
+    }
+}
+```
+
+- add cart security challenge

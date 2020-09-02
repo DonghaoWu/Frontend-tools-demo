@@ -24,7 +24,7 @@ provider.setCustomParameters({ prompt: 'select_account' });
 
 const signInWithGoogle = () => auth.signInWithPopup(provider);
 
-const checkDocOrCreateDocInFirestore = async (userAuth, displayName) => {
+const checkOrCreateUserDocInFirestore = async (userAuth, displayName) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapShot = await userRef.get();
@@ -46,7 +46,7 @@ const checkDocOrCreateDocInFirestore = async (userAuth, displayName) => {
   }
 }
 
-export const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
+const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
   const collectionRef = firestore.collection(collectionKeyToCreate);
   const batch = firestore.batch();
 
@@ -58,10 +58,30 @@ export const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, 
   return await batch.commit();
 }
 
+const convertCollectionsSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data();
+
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    };
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
+};
+
 export {
   firebase,
   auth,
   firestore,
   signInWithGoogle,
-  checkDocOrCreateDocInFirestore
+  checkOrCreateUserDocInFirestore,
+  createCollectionAndDocsInFirestore,
+  convertCollectionsSnapshotToMap
 }
