@@ -16,7 +16,7 @@
 #### `本章背景：`
 1. Firestore security rules.
 2. Firestore 的数据上传与获取。
-3. higher order component. (Spinner)
+3. Higher order component. (Spinner)
 
 ------------------------------------------------------------
 
@@ -557,7 +557,7 @@ export const selectCollection = collectionUrlParam => {
     ```jsx
     import React from 'react';
 
-    import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles';
+    import { SpinnerContainer, SpinnerOverlay } from './With-spinner.styles';
 
     const WithSpinner = WrappedComponent => {
         const Spinner = ({ isLoading, ...otherProps }) => {
@@ -683,7 +683,7 @@ export const selectCollection = collectionUrlParam => {
 />
 ```
 
-2. 以下这样写是会出现错误的，上面的写法是为了传递参数。
+2. 以下这样写是会出现错误的，上面的写法是为了传递参数到 CollectionsOverviewWithSpinner component。
 ```jsx
 <Route exact path={`${match.path}`} component={CollectionsOverviewWithSpinner isLoading={loading} }/>
 ```
