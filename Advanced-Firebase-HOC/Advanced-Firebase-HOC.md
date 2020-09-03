@@ -204,7 +204,7 @@ const selectCollectionsForPreview = [
 ]
 ```
 
-- Code: `firebase.utils.js`
+- :gem::gem::gem: Code: `firebase.utils.js`
 ```js
 const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
   const collectionRef = firestore.collection(collectionKeyToCreate);
@@ -278,6 +278,7 @@ const obj = {
   <p align="center">
   <img src="../assets/fe-p6-02.png" width=90%>
   </p>
+
   -----------------------------------------------------------------
 
 #### `Comment:`
@@ -336,7 +337,7 @@ const obj = {
     export default shopReducer;
     ```
 
-4. Dispatch the action in ShopPage.component.jsx and convert the data.
+4. :gem::gem::gem: Dispatch the action in ShopPage.component.jsx and convert the data.
 
     __`Location:./clothing-friends-firebase-hoc/client/src/firebase/firebase.utils.js`__
 
@@ -371,7 +372,7 @@ const obj = {
 
     - Data flow:
 
-    - transformedCollection
+    - transformedCollection ---> `Array`
     ```js
     const transformedCollection = [
         {
@@ -390,7 +391,7 @@ const obj = {
     ]
     ```
 
-    - res
+    - res ---> `Object`
     ```js
     const res = {
         hats: {
@@ -411,7 +412,7 @@ const obj = {
 
     __`Location:./clothing-friends-firebase-hoc/client/src/Pages/ShopPage/ShopPage.js`__
 
-    ```js
+    ```jsx
     import React from 'react';
     import { Route } from 'react-router-dom';
     import { connect } from 'react-redux';
@@ -425,26 +426,26 @@ const obj = {
 
     class ShopPage extends React.Component {
 
-    componentDidMount() {
-        const { updateCollections } = this.props;
-        const collectionRef = firestore.collection('collections');
+        componentDidMount() {
+            const { updateCollections } = this.props;
+            const collectionRef = firestore.collection('collections');
 
-        collectionRef.get().then(snapshot => {
+            collectionRef.get().then(snapshot => {
             const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
             updateCollections(collectionsMap);
             console.log('collections', collectionsMap)
-        });
-    }
+            });
+        }
 
-    render() {
-        const { match } = this.props;
-        return (
-            <div className='shop-page'>
-                <Route exact path={`${match.path}`} component={CollectionsOverview} />
-                <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
-            </div>
+        render() {
+            const { match } = this.props;
+            return (
+                <div className='shop-page'>
+                    <Route exact path={`${match.path}`} component={CollectionsOverview} />
+                    <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
+                </div>
             )
-        }   
+        }
     }
 
     const mapDispatchToProps = dispatch => ({
@@ -455,9 +456,9 @@ const obj = {
     ```
 
 #### `Comment:`
-1. :gem::gem::gem: 从上一章开始，处理的 shop data 数据都是以 object 的形式出现，参看上面 res 的例子。
+1. :gem: 从上一章开始，处理的 shop data 数据都是以 object 的形式出现，参看上面 res 的例子。
 
-2. :gem::gem::gem: 相比 upload API，download API 更加常用。
+2. :gem: 相比 upload API，download API 更加常用。
 
 3. 使用到的 firebase API:
 
@@ -467,7 +468,7 @@ const obj = {
 + doc.data() <获得实际存储数据>
 ```
 
-4. :gem::gem::gem: 到目前为止，ShopPage component 从 firestore 获得了 object data，而且把 data dispatch 回到 shop reducer，而 shop reducer 的原始数据还是本地 object data，接下来是删除本地 object data，并使用 spinner 过渡 fetch data 过程。
+4. :gem: 到目前为止，ShopPage component 从 firestore 获得了 object data，而且把 data dispatch 回到 shop reducer，而 shop reducer 的原始数据还是本地 object data，接下来是删除本地 object data，并使用 spinner 过渡 fetch data 过程。
 
 ### <span id="5.4">`Step4: Delete local data and some code.`</span>
 
