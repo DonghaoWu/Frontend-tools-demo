@@ -10,7 +10,7 @@
 
 ### `Check Dependencies & Tools:`
 
-- 
+- styled-components
 ------------------------------------------------------------
 
 #### `本章背景：`
@@ -431,9 +431,9 @@ const obj = {
             const collectionRef = firestore.collection('collections');
 
             collectionRef.get().then(snapshot => {
-            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-            updateCollections(collectionsMap);
-            console.log('collections', collectionsMap)
+                const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+                updateCollections(collectionsMap);
+                console.log('collections', collectionsMap)
             });
         }
 
@@ -470,9 +470,71 @@ const obj = {
 
 4. :gem: 到目前为止，ShopPage component 从 firestore 获得了 object data，而且把 data dispatch 回到 shop reducer，而 shop reducer 的原始数据还是本地 object data，接下来是删除本地 object data，并使用 spinner 过渡 fetch data 过程。
 
-### <span id="5.4">`Step4: Delete local data and some code.`</span>
+### <span id="5.4">`Step4: Delete local data and change some code.`</span>
 
 - #### Click here: [BACK TO CONTENT](#5.0)
+
+1. Delete local data.
+
+    ```diff
+    - ./clothing-friends-firebase-hoc/client/src/redux/shop/shop.data.js
+    ```
+
+2. Delete some code.
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/redux/shop/shop.reducer.js`__
+
+```diff
+- import SHOP_DATA from './shop.data';
+import { UPDATE_COLLECTIONS } from './shop.types';
+
+const INITIAL_STATE = {
+-  collections: SHOP_DATA
++  collections: null
+};
+
+const shopReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case UPDATE_COLLECTIONS:
+      return {
+        ...state,
+        collections: action.payload
+      };
+    default:
+      return state;
+  }
+};
+
+export default shopReducer;
+```
+
+3. Add some code.
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/redux/shop/shop.selectors.js`__
+
+```diff
+import { createSelector } from 'reselect';
+
+const selectShop = state => state.shop;
+
+export const selectCollections = createSelector(
+    [selectShop],
+    shop => shop.collections
+);
+
+export const selectCollectionsForPreview = createSelector(
+    [selectCollections],
+    collections =>
++        collections ? Object.keys(collections).map(key => collections[key]) : []
+);
+
+export const selectCollection = collectionUrlParam => {
+    return createSelector(
+        [selectCollections],
++        collections => (collections ? collections[collectionUrlParam] : null)
+    );
+}
+```
 
 #### `Comment:`
 1. 
@@ -481,11 +543,151 @@ const obj = {
 
 - #### Click here: [BACK TO CONTENT](#5.0)
 
-1. 
+1. Install css dependency.
+
+    ```bash
+    $ cd client
+    $ npm i styled-components
+    ```
+
+2. Create a HOC spinner component.
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/Components/With-spinner/With-spinner.component.jsx`__
+
+    ```jsx
+    import React from 'react';
+
+    import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles';
+
+    const WithSpinner = WrappedComponent => {
+        const Spinner = ({ isLoading, ...otherProps }) => {
+            return isLoading ? (
+            <SpinnerOverlay>
+                <SpinnerContainer />
+            </SpinnerOverlay>
+            ) : (
+            <WrappedComponent {...otherProps} />
+            );
+        };
+        return Spinner;
+    };
+
+    export default WithSpinner;
+    ```
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/Components/With-spinner/With-spinner.styles.scss`__
+
+    ```jsx
+    import styled from 'styled-components';
+
+    export const SpinnerOverlay = styled.div`
+        height: 60vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+
+    export const SpinnerContainer = styled.div`
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(195, 195, 195, 0.6);
+        border-radius: 50%;
+        border-top-color: #636767;
+        animation: spin 1s ease-in-out infinite;
+        -webkit-animation: spin 1s ease-in-out infinite;
+        @keyframes spin {
+            to {
+            -webkit-transform: rotate(360deg);
+            }
+        }
+        @-webkit-keyframes spin {
+            to {
+            -webkit-transform: rotate(360deg);
+            }
+        }
+    `;
+    ```
+
+2. Apply the HOC in ShopPage component
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/Pages/ShopPage/ShopPage.component.jsx`__
+
+    ```jsx
+    import React from 'react';
+    import { Route } from 'react-router-dom';
+    import { connect } from 'react-redux';
+
+    import CollectionsOverview from '../../Components/Collections-overview/Collections-overview.component';
+    import CollectionPage from '../CollectionPage/CollectionPage.component';
+    import WithSpinner from '../../Components/With-spinner/With-spinner.component';
+
+    import { updateCollections } from '../../redux/shop/shop.actions';
+
+    import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils.js';
+
+    const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
+    const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+
+    class ShopPage extends React.Component {
+        state = {
+            loading: true
+        };
+
+        componentDidMount() {
+            const { updateCollections } = this.props;
+            const collectionRef = firestore.collection('collections');
+
+            collectionRef.get().then(snapshot => {
+                const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+                updateCollections(collectionsMap);
+                this.setState({ loading: false });
+            });
+        }
+
+        render() {
+            const { match } = this.props;
+            const { loading } = this.state;
+            return (
+                <div className='shop-page'>
+                    <Route exact path={`${match.path}`}
+                        render={props => (
+                            <CollectionsOverviewWithSpinner isLoading={loading} {...props} />
+                        )}
+                    />
+                    <Route path={`${match.path}/:collectionId`}
+                        render={props => (
+                            <CollectionPageWithSpinner isLoading={loading} {...props} />
+                        )}
+                    />
+                </div>
+            );
+        }
+    }
+
+    const mapDispatchToProps = dispatch => ({
+    updateCollections: collectionsMap =>
+        dispatch(updateCollections(collectionsMap))
+    });
+
+    export default connect(null, mapDispatchToProps)(ShopPage);
+    ```
 
 #### `Comment:`
-1. 
+1. :gem::gem::gem: HOC 新用法：
+```jsx
+<Route exact path={`${match.path}`}
+    render={props => (
+        <CollectionsOverviewWithSpinner isLoading={loading} {...props} />
+    )}
+/>
+```
 
+2. 以下这样写是会出现错误的，上面的写法是为了传递参数。
+```jsx
+<Route exact path={`${match.path}`} component={CollectionsOverviewWithSpinner isLoading={loading} }/>
+```
 ------------------------------------------------------------
 
 __`本章用到的全部资料：`__

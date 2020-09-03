@@ -9,7 +9,6 @@ import { selectCollectionsForPreview } from '../../redux/shop/shop.selectors';
 import './Collections-overview.styles.scss';
 
 const CollectionsOverview = ({ collections }) => {
-    console.log(collections);
     return (
         <div className='collections-overview'>
             {collections.map(({ id, ...otherCollectionProps }) => (

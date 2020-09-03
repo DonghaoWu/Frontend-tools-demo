@@ -73,11 +73,10 @@ export const amy = (collecitonKey, objectsToAdd) =>{
 - ./client/src/firebase/firebase.utils.js
 - ./redux/shop/shop.types.js
 - ./redux/shop/shop.actions.js
-- ./src/Pages/SHopPage/ShopPage.compoennt.jsx 
-- 
+- ./src/Pages/ShopPage/ShopPage.compoennt.jsx 
 
 
-4. Firebase security
+4. [Firebase security]
 
 ```js
 service cloud.firestore {
@@ -149,3 +148,72 @@ service cloud.firestore {
 ```
 
 - add cart security challenge
+
+5. [HOC]
+
+- shop.reducer.js <collections: null>
+- SHopPage.component.jsx
+- shop.selectors.js
+- CollectionPage.component.jsx
+- Components/with-spinner/with-spinner.component.jsx
+
+```jsx
+import React from 'react';
+
+import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles.scss';
+
+const WithSpinner = (WrappedComponent) => {
+    const Spinner = ({ isLoading, ...otherProps }) => {
+        isLoadig ? (
+            <SpinnerOverlay>
+                <SPinnerContainer />
+            </SpinnerOverlay>
+        ) : (
+                <WrappedComponent {...otherProps} />
+            )
+    }
+    return Spinner;
+}
+
+export default WithSpinner;
+```
+- Components/with-spinner/with-spinner.styles.scss
+- ShopPage.component.jsx
+
+```jsx
+import WithSpinner from './';
+const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
+const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+
+    class ShopPage extends React.Component {
+        constructor(){
+            super();
+
+            this.state = {
+                loading:true
+            }
+        }
+
+        componentDidMount() {
+            const { updateCollections } = this.props;
+            const collectionRef = firestore.collection('collections');
+
+            collectionRef.get().then(snapshot => {
+                const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+                updateCollections(collectionsMap);
+                this.setState({ loading: false });
+            });
+        }
+
+        render() {
+            const { match } = this.props;
+            const {loading} = this.state;
+            return (
+                <div className='shop-page'>
+                    <Route exact path={`${match.path}`} render={(props) => <CollectionsOverviewWithSpinner isLoading={loading} {...props}/>}/>
+                    <Route path={`${match.path}/:collectionId`} render={(props) => <CollectionPageWithSpinner isLoading={loading} {...props}/>} />
+                </div>
+            )
+        }
+    }
+```

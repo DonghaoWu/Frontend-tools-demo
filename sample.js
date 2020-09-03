@@ -9,3 +9,20 @@ const obj = {
         }
     ]
 }
+
+import React from 'react';
+
+import { SpinnerContainer, SpinnerOverlay } from './with-spinner.styles.scss';
+
+const WithSpinner = (WrappedComponent) => {
+    const Spinner = ({ isLoading, ...otherProps }) => {
+        isLoadig ? (
+            <SpinnerOverlay>
+                <SPinnerContainer />
+            </SpinnerOverlay>
+        ) : (
+                <WrappedComponent {...otherProps} />
+            )
+    }
+    return Spinner;
+}
