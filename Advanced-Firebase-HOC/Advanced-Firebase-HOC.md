@@ -667,8 +667,7 @@ export const selectCollection = collectionUrlParam => {
     }
 
     const mapDispatchToProps = dispatch => ({
-    updateCollections: collectionsMap =>
-        dispatch(updateCollections(collectionsMap))
+        updateCollections: collectionsMap => dispatch(updateCollectio(collectionsMap))
     });
 
     export default connect(null, mapDispatchToProps)(ShopPage);
