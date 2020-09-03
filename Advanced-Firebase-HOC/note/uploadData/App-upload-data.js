@@ -15,7 +15,7 @@ import { setDisplayName } from './redux/display-name/display-name.actions';
 import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
 import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
-import { auth, checkDocOrCreateDocInFirestore, createCollectionAndDocsInFirestore } from './firebase/firebase.utils';
+import { auth, checkOrCreateUserDocInFirestore, createCollectionAndDocsInFirestore } from './firebase/firebase.utils';
 
 import './App.css';
 
@@ -27,7 +27,7 @@ class App extends React.Component {
             if (userAuth) {
                 try {
                     const displayName = userAuth.displayName || this.props.displayName;
-                    const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
+                    const userRef = await checkOrCreateUserDocInFirestore(userAuth, displayName);
                     userRef.onSnapshot(snapShot => {
                         setCurrentUser({
                             id: snapShot.id,
@@ -46,9 +46,13 @@ class App extends React.Component {
                 setCurrentUser(null);
                 setDisplayName('');
             }
-            createCollectionAndDocsInFirestore('collections', collectionsArr.map(({ title, items }) => {
-                return { title, items }
-            }))
+            const targetDataArr = collectionsArr.map(category => {
+                return {
+                    title: category.title,
+                    items: category.items
+                }
+            })
+            createCollectionAndDocsInFirestore('collections', targetDataArr);
         })
     }
 

@@ -27,8 +27,8 @@
 - [5.1 Set up Firestore security rules.](#5.1)
 - [5.2 Upload the shop data to Firestore.](#5.2)
 - [5.3 Fetch the shop data from Firestore.](#5.3)
-- [5.4 Set up other files.](#5.4)
-- [5.5 Deploy on Heroku.](#5.5)
+- [5.4 Delete local data and some code.](#5.4)
+- [5.5 Add spinner in HOC pattern.](#5.5)
 
 ------------------------------------------------------------
 
@@ -81,7 +81,7 @@ service cloud.firestore {
     }
     match /collections/{collectionId} {
         allow read;
-        allow write: if request.auth != null && request.auth.uid == 'sw9C9veKXFdC4PNjaXwFeLgmr8k2'
+        allow write: if request.auth != null && request.auth.uid == 'Your admin user uid here'
     }
   }
 }
@@ -89,7 +89,6 @@ service cloud.firestore {
 
 #### `Comment:`
 1. Challenge: set up cart security rules.
-
 
 ### <span id="5.2">`Step2: Upload the shop data to Firestore.`</span>
 
@@ -101,24 +100,25 @@ service cloud.firestore {
 
     ```js
     const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
-    const collectionRef = firestore.collection(collectionKeyToCreate);
-    const batch = firestore.batch();
+        const collectionRef = firestore.collection(collectionKeyToCreate);
+        const batch = firestore.batch();
 
-    objectsToAdd.forEach(obj => {
-        const newDocRef = collectionRef.doc();
-        batch.set(newDocRef, obj);
-    });
+        objectsToAdd.forEach(obj => {
+            const newDocRef = collectionRef.doc();
+            batch.set(newDocRef, obj);
+        });
 
-    return await batch.commit();
+        return await batch.commit();
     }
     ```
 
 2. Upload the data to Firestore.
 
     Option 1: Run the function in App.js componentDidMount part one time.
-    - check here: `./note/uploadData/App-up-load-data.js`
+    - check here: `./note/uploadData/App-upload-data.js`
 
-    Option 2: Run the seed file.
+    Option 2: Run the seed file. `(without set up any firebase security rules)`
+
     - check here: `./clothing-friends-firebase-hoc/client/src/firebase/seed.js`
     - command:
     ```bash
@@ -127,107 +127,363 @@ service cloud.firestore {
 
 3. :gem::gem::gem: Data flow:
 
-    - Original data:
-    ```json
+- Data: `origin` ----> `<Object>`
+```diff
+const SHOP_DATA = {
++    hats: {
++        id: 1,
++        title: 'Hats',
++        routeName: 'hats',
++        items: [
++            {
++                id: 1,
++                name: 'Brown Brim',
++                imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
++                price: 25
++            }
++        ]
++    },
+    sneakers: {
+        id: 2,
+        title: 'Sneakers',
+        routeName: 'sneakers',
+        items: [
+            {
+                id: 10,
+                name: 'Adidas NMD',
+                imageUrl: 'https://i.ibb.co/0s3pdnc/adidas-nmd.png',
+                price: 220
+            }
+        ]
+    }
+}
+```
 
-    ```
+- Code: `shop.selectors.js`
+```js
+export const selectCollections = createSelector(
+    [selectShop],
+    shop => shop.collections
+);
 
+export const selectCollectionsForPreview = createSelector(
+    [selectCollections],
+    collections => Object.keys(collections).map(key => collections[key])
+);
+```
+
+- Data: `selectCollectionsForPreview` ----> `<Array>`
+```diff
+const selectCollectionsForPreview = [
++    {
++        id: 1,
++        title: 'Hats',
++        routeName: 'hats',
++        items: [
++            {
++                id: 1,
++                name: 'Brown Brim',
++                imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
++                price: 25
++            }
++        ]
++    },
+    {
+        id: 2,
+        title: 'Sneakers',
+        routeName: 'sneakers',
+        items: [
+            {
+                id: 10,
+                name: 'Adidas NMD',
+                imageUrl: 'https://i.ibb.co/0s3pdnc/adidas-nmd.png',
+                price: 220
+            }
+        ]
+    }
+]
+```
+
+- Code: `firebase.utils.js`
+```js
+const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
+  const collectionRef = firestore.collection(collectionKeyToCreate);
+  const batch = firestore.batch();
+
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+
+  return await batch.commit();
+}
+```
+
+- Code: `App.js`
+```js
+const targetDataArr = collectionsArr.map(category => {
+    return {
+        title: category.title,
+        items: category.items
+    }
+})
+createCollectionAndDocsInFirestore('collections', targetDataArr);
+```
+
+- Data: `targetDataArr / objectsToAdd` ----> `<Array>`
+```diff
+const objectsToAdd = [
++    {
++        title: 'Hats',
++        items: [
++            {
++                id: 1,
++                name: 'Brown Brim',
++                imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
++                price: 25
++            }
++        ]
++    },
+    {
+        title: 'Sneakers',
+        items: [
+            {
+                id: 10,
+                name: 'Adidas NMD',
+                imageUrl: 'https://i.ibb.co/0s3pdnc/adidas-nmd.png',
+                price: 220
+            }
+        ]
+    }
+]
+```
+
+- Data: `obj` ----> `<object>`
+```js
+const obj = {
+    title: 'Hats',
+    items: [
+        {
+            id: 1,
+            name: 'Brown Brim',
+            imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+            price: 25
+        }
+    ]
+}
+```
+
+- Data store in firestore.
+
+  <p align="center">
+  <img src="../assets/fe-p6-02.png" width=90%>
+  </p>
+  -----------------------------------------------------------------
 
 #### `Comment:`
-1. 
+1. Data types: object -> array -> array.
+
 
 ### <span id="5.3">`Step3: Fetch the shop data from Firestore.`</span>
 
 - #### Click here: [BACK TO CONTENT](#5.0)
 
+1. Add redux shop types.
 
-#### `Comment:`
-1. 
-
-
-
-
-
-
-### <span id="5.4">`Step4: Set up other files.`</span>
-
-- #### Click here: [BACK TO CONTENT](#5.0)
-
-1. Replace with new favicon.
-
-    __`Location:./clothing-friends-stripe-deployED1/public/favicon.ico`__
-
-2. Change App index.html title tag.
-
-    __`Location:./clothing-friends-stripe-deployED1/public/index.html`__
-
-3. Remove redux-logger in production mode.
-
-    __`Location:./clothing-friends-stripe-deployED1/src/redux/store.js`__
+    __`Location:./clothing-friends-firebase-hoc/client/src/redux/shop/shop.types.js`__
 
     ```js
-    import { createStore, applyMiddleware } from 'redux';
-    import { persistStore } from 'redux-persist';
-    import logger from 'redux-logger';
+    export const UPDATE_COLLECTIONS = 'UPDATE_COLLECTIONS';
+    ```
 
-    import rootReducer from './root-reducer';
+2. Add redux shop actions.
 
-    const middlewares = [];
+    __`Location:./clothing-friends-firebase-hoc/client/src/redux/shop/shop.actions.js`__
 
-    if (process.env.NODE_ENV === 'development') {
-        middlewares.push(logger);
+    ```js
+    import { UPDATE_COLLECTIONS } from './shop.types';
+
+    export const updateCollections = collectionsMap => ({
+        type: UPDATE_COLLECTIONS,
+        payload: collectionsMap
+    });
+    ```
+
+3. Add redux shop reducer.
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/redux/shop/shop.reducer.js`__
+
+    ```js
+    import SHOP_DATA from './shop.data';
+    import { UPDATE_COLLECTIONS } from './shop.types';
+
+    const INITIAL_STATE = {
+        collections: SHOP_DATA
+    };
+
+    const shopReducer = (state = INITIAL_STATE, action) => {
+        switch (action.type) {
+            case UPDATE_COLLECTIONS:
+            return {
+                ...state,
+                collections: action.payload
+            };
+            default:
+            return state;
+        }
+    };
+
+    export default shopReducer;
+    ```
+
+4. Dispatch the action in ShopPage.component.jsx and convert the data.
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/firebase/firebase.utils.js`__
+
+    ```js
+    const convertCollectionsSnapshotToMap = collections => {
+        const transformedCollection = collections.docs.map(doc => {
+            const { title, items } = doc.data();
+
+            return {
+                routeName: encodeURI(title.toLowerCase()),
+                id: doc.id,
+                title,
+                items
+            };
+        });
+
+        return transformedCollection.reduce((accumulator, collection) => {
+            accumulator[collection.title.toLowerCase()] = collection;
+            return accumulator;
+        }, {});
+
+        /*
+        let res = {};
+
+        for(let i = 0; i < transformedCollection.length; i++){
+            res[transformedCollection[i].title.toLowerCase()] = transformedCollection[i];
+        }
+        return res;
+        */
+    };
+    ```
+
+    - Data flow:
+
+    - transformedCollection
+    ```js
+    const transformedCollection = [
+        {
+            id: "c1OinzJxtASgfT7VQSTA",
+            routeName: "hats",
+            title: "Hats",
+            items: [
+                {
+                    id: 1
+                    imageUrl: "https://i.ibb.co/ZYW3VTp/brown-brim.png"
+                    name: "Brown Brim"
+                    price: 25
+                }
+            ]
+        }   
+    ]
+    ```
+
+    - res
+    ```js
+    const res = {
+        hats: {
+            id: "c1OinzJxtASgfT7VQSTA",
+            routeName: "hats",
+            title: "Hats",
+            items: [
+                {
+                    id: 1
+                    imageUrl: "https://i.ibb.co/ZYW3VTp/brown-brim.png"
+                    name: "Brown Brim"
+                    price: 25
+                }
+            ]
+        }
+    }
+    ```
+
+    __`Location:./clothing-friends-firebase-hoc/client/src/Pages/ShopPage/ShopPage.js`__
+
+    ```js
+    import React from 'react';
+    import { Route } from 'react-router-dom';
+    import { connect } from 'react-redux';
+
+    import CollectionsOverview from '../../Components/Collections-overview/Collections-overview.component';
+    import CollectionPage from '../CollectionPage/CollectionPage.component';
+
+    import { updateCollections } from '../../redux/shop/shop.actions';
+
+    import { firestore, convertCollectionsSnapshotToMap } from '../../firebase/firebase.utils.js';
+
+    class ShopPage extends React.Component {
+
+    componentDidMount() {
+        const { updateCollections } = this.props;
+        const collectionRef = firestore.collection('collections');
+
+        collectionRef.get().then(snapshot => {
+            const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+            updateCollections(collectionsMap);
+            console.log('collections', collectionsMap)
+        });
     }
 
-    export const store = createStore(rootReducer, applyMiddleware(...middlewares));
+    render() {
+        const { match } = this.props;
+        return (
+            <div className='shop-page'>
+                <Route exact path={`${match.path}`} component={CollectionsOverview} />
+                <Route path={`${match.path}/:collectionId`} component={CollectionPage} />
+            </div>
+            )
+        }   
+    }
 
-    export const persistor = persistStore(store);
+    const mapDispatchToProps = dispatch => ({
+        updateCollections: collectionsMap => dispatch(updateCollections(collectionsMap))
+    });
 
-    export default { store, persistStore };
+    export default connect(null, mapDispatchToProps)(ShopPage);
     ```
+
+#### `Comment:`
+1. :gem::gem::gem: 从上一章开始，处理的 shop data 数据都是以 object 的形式出现，参看上面 res 的例子。
+
+2. :gem::gem::gem: 相比 upload API，download API 更加常用。
+
+3. 使用到的 firebase API:
+
+```diff
++ const collections = firestore.collection(collectionKey);  <获得 collection 数据>
++ const snapShot = collections.docs; <获得 collection 数据并以 array 形式出现>
++ doc.data() <获得实际存储数据>
+```
+
+4. :gem::gem::gem: 到目前为止，ShopPage component 从 firestore 获得了 object data，而且把 data dispatch 回到 shop reducer，而 shop reducer 的原始数据还是本地 object data，接下来是删除本地 object data，并使用 spinner 过渡 fetch data 过程。
+
+### <span id="5.4">`Step4: Delete local data and some code.`</span>
+
+- #### Click here: [BACK TO CONTENT](#5.0)
 
 #### `Comment:`
 1. 
 
-### <span id="5.5">`Step5: Deploy on Heroku.`</span>
+### <span id="5.5">`Step5: Add spinner in HOC pattern.`</span>
 
 - #### Click here: [BACK TO CONTENT](#5.0)
 
-1. Deploy on Heroku - `<In app root directory>`:
-
-    ```bash
-    $ git init
-    $ heroku login
-    $ heroku create <your app name>
-    $ heroku git:remote -a <your app name>
-    $ git add .
-    $ git commit -m'something'
-    $ git push heroku master --force
-    ```
-
-2. Add stripe secret key in Heroku.
-
-  <p align="center">
-  <img src="../assets/fe-p5-05.png" width=90%>
-  </p>
-
-  -----------------------------------------------------------------
-
-3. Add firebase Authorized domain.
-
-  <p align="center">
-  <img src="../assets/fe-p5-05.png" width=90%>
-  </p>
-
-  -----------------------------------------------------------------
-
-5. Unhide firebase publish api key.
+1. 
 
 #### `Comment:`
-1. Other commands:
-    ```diff
-    + $ heroku apps
-    + $ git remote
-    ```
+1. 
 
 ------------------------------------------------------------
 
