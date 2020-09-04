@@ -19,3 +19,6 @@ kill -9 <PID>
 
 - [Part4 - Stripe and Heroku full stack deploy. :gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Stripe-Deploy/Stripe-Deploy.md) 
     - __`Key Word: Heroku, stripe front end, stripe back end, full stack deploy, remove dependencies in production mode.`__
+
+- [Part5 - Advanced Firebase and HOC spinner. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Advanced-Firebase-HOC/Advanced-Firebase-HOC.md) 
+    - __`Key Word: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`__
