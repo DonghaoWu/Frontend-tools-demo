@@ -6,6 +6,8 @@ lsof -i :5000
 kill -9 <PID>
 ```
 
+- command + z  & command + shift + z
+
 ### Navigation:
 
 - [Part1 - Firebase :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/React-Firebase/Firebase.md) 
