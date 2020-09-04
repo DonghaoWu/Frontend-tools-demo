@@ -1,10 +1,10 @@
 # Front end development tools (Part 5)
 
-### `Key Word: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component, firestore batch & collection query.`
+### `Key Word: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-## `Section: Advanced Firebase and higher order component.` (Basic)
+## `Section: Advanced Firebase and higher order component.` (Advanced)
 
 ### `Summary`: In this documentation, we learn to set firestore security data flow and higher order component.
 
@@ -39,7 +39,7 @@
 1. Set up here:
 
   <p align="center">
-  <img src="../assets/fe-p6-01.png" width=90%>
+  <img src="../assets/fe-p5-01.png" width=90%>
   </p>
 
   -----------------------------------------------------------------
@@ -276,7 +276,7 @@ const obj = {
 - Data store in firestore.
 
   <p align="center">
-  <img src="../assets/fe-p6-02.png" width=90%>
+  <img src="../assets/fe-p5-02.png" width=90%>
   </p>
 
   -----------------------------------------------------------------
@@ -537,13 +537,13 @@ export const selectCollection = collectionUrlParam => {
 ```
 
 #### `Comment:`
-1. 
+1. 到这步为止， ColletionPage component 仍然会报错，主要是 `cannot read ... of null`。
 
 ### <span id="5.5">`Step5: Add spinner in HOC pattern.`</span>
 
 - #### Click here: [BACK TO CONTENT](#5.0)
 
-1. Install css dependency.
+1. Install a dependency.
 
     ```bash
     $ cd client
@@ -562,11 +562,11 @@ export const selectCollection = collectionUrlParam => {
     const WithSpinner = WrappedComponent => {
         const Spinner = ({ isLoading, ...otherProps }) => {
             return isLoading ? (
-            <SpinnerOverlay>
-                <SpinnerContainer />
-            </SpinnerOverlay>
+                <SpinnerOverlay>
+                    <SpinnerContainer />
+                </SpinnerOverlay>
             ) : (
-            <WrappedComponent {...otherProps} />
+                <WrappedComponent {...otherProps} />
             );
         };
         return Spinner;
@@ -674,7 +674,7 @@ export const selectCollection = collectionUrlParam => {
     ```
 
 #### `Comment:`
-1. :gem::gem::gem: HOC 新用法：
+1. :gem::gem::gem: HOC 传递参数方法：
 ```jsx
 <Route exact path={`${match.path}`}
     render={props => (
@@ -684,10 +684,33 @@ export const selectCollection = collectionUrlParam => {
 ```
 
 2. 以下这样写是会出现错误的，上面的写法是为了传递参数到 CollectionsOverviewWithSpinner component。
-```jsx
-<Route exact path={`${match.path}`} component={CollectionsOverviewWithSpinner isLoading={loading} }/>
+```diff
+- <Route exact path={`${match.path}`} component={CollectionsOverviewWithSpinner isLoading={loading} }/>
 ```
-------------------------------------------------------------
+
+3. HOC data flow:
+
+  <p align="center">
+  <img src="../assets/fe-p5-03.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+4. HOC 优点：1. 数据处理； 2. 通用性好，可重用；
+
+- EXTRA: HOC
+
+- 可以在 `./note/hoc-example` 查看详细代码：
+
+- hoc-example data flow:
+
+  <p align="center">
+  <img src="../assets/fe-p5-04.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+- :gem::gem::gem: 要注意上面两张图对 HOC 传递的参数方法不相同。
 
 __`本章用到的全部资料：`__
 
