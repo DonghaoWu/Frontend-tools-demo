@@ -18,8 +18,6 @@ class ShopPage extends React.Component {
     loading: true
   };
 
-  snapshotListener = null;
-
   componentDidMount() {
     const { updateCollections } = this.props;
     const collectionRef = firestore.collection('collections');
@@ -29,12 +27,6 @@ class ShopPage extends React.Component {
       updateCollections(collectionsMap);
       this.setState({ loading: false });
     });
-
-    // this.snapshotListener = collectionRef.onSnapshot(snapshot => {
-    //   const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
-    //   updateCollections(collectionsMap);
-    //   this.setState({ loading: false });
-    // });
   }
 
   render() {
