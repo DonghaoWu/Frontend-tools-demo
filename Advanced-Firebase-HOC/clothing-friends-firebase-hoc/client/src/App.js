@@ -20,6 +20,8 @@ import './App.css';
 
 class App extends React.Component {
 
+  listener = null;
+
   componentDidMount() {
     const { setCurrentUser, setDisplayName } = this.props;
     this.listener = auth.onAuthStateChanged(async userAuth => {
