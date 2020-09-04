@@ -672,7 +672,9 @@ export const selectCollection = collectionUrlParam => {
 #### `Comment:`
 1. :gem::gem::gem: HOC 传递参数方法：
 ```jsx
-<Route exact path={`${match.path}`} render={ props => (<CollectionsOverviewWithSpinner isLoading={loading} {...props} /> )} />
+<Route exact path={`${match.path}`} 
+    render={ props => (<CollectionsOverviewWithSpinner isLoading={loading} {...props} />) } 
+/>
 ```
 
 2. 以下这样写是会出现错误的，上面的写法是为了传递参数到 CollectionsOverviewWithSpinner component。
