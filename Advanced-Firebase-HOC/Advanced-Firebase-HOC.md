@@ -696,11 +696,11 @@ export const selectCollection = collectionUrlParam => {
 
 - hoc-example data flow:
 
-  <p align="center">
-  <img src="../assets/fe-p5-04.png" width=100%>
-  </p>
+<p align="center">
+<img src="../assets/fe-p5-04.png" width=100%>
+</p>
 
-  -----------------------------------------------------------------
+-----------------------------------------------------------------
 
 - :gem::gem::gem: 要注意上面两张图对 HOC 传递的参数方法不相同。
 
