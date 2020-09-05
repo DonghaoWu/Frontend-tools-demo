@@ -1,6 +1,6 @@
 # Front end development tools (Part 6)
 
-### `Key Word: redux-thunk, container pattern, throw error, async fetching data initial state bug.`
+### `Key Word: redux-thunk, container + HOC pattern, throw error, async fetching data initial state bug.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -304,15 +304,101 @@
 
 #### `Comment:`
 1. :gem::gem::gem: 这个错误很常见，在 front end 进行 async 动作时需要处理数据原始状态的问题。
+2. :gem::gem::gem: 在这里补充一点思路：上面的方案是使用一个开关 `isFetching` 去控制对应的 component 是否 mount，而只有 component 执行 mount 动作的时候才会索取数据，所以这是一个很好的解决方案，通过变量控制 mount 动作，而变量是跟数据一同绑定。
 
 ### <span id="6.3">`Step3: Container pattern.`</span>
 
 - #### Click here: [BACK TO CONTENT](#6.0)
 
-1. 
+1. 本小节展示如何把 ShopPage 分成两部分，做出一个 container pattern 的形式。
+
+    __`Location:./clothing-friends-thunk-container/client/src/Pages/ShopPage/ShopPage.component.jsx`__
+
+```jsx
+import React from 'react';
+import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import CollectionsOverviewContainer from '../../Components/Collections-overview/Collections-overview.container';
+import CollectionPageContainer from '../CollectionPage/CollectionPage.container';
+
+import { fetchCollectionAsync } from '../../redux/shop/shop.actions';
+
+class ShopPage extends React.Component {
+  componentDidMount() {
+    this.props.fetchCollectionAsync();
+  }
+
+  render() {
+    const { match } = this.props;
+    return (
+      <div className='shop-page'>
+        <Route exact path={`${match.path}`} component={CollectionsOverviewContainer} />
+        <Route path={`${match.path}/:collectionId`} component={CollectionPageContainer} />
+      </div>
+    );
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  fetchCollectionAsync: () => dispatch(fetchCollectionAsync()),
+});
+
+export default connect(null, mapDispatchToProps)(ShopPage);
+```
+
+2. 在 CollectionsOverview 和 CollectionPage 的基础上通过 HOC 和 container 的包装。
+
+    __`Location:./clothing-friends-thunk-container/client/src/Components/Collections-overview/Collections-overview.container.jsx`__
+
+    ```jsx
+    import { connect } from 'react-redux';
+    import { createStructuredSelector } from 'reselect';
+    import { compose } from 'redux';
+
+    import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+    import WithSpinner from '../With-spinner/With-spinner.component';
+    import CollectionsOverview from './Collections-overview.component';
+
+    const mapStateToProps = createStructuredSelector({
+        isLoading: selectIsCollectionFetching
+    });
+
+    const CollectionsOverviewContainer = compose(
+        connect(mapStateToProps),
+        WithSpinner
+    )(CollectionsOverview);
+
+    export default CollectionsOverviewContainer;
+    ```
+
+    __`Location:./clothing-friends-thunk-container/client/src/Pages/CollectionPage/CollectionPage.container.jsx`__
+
+    ```jsx
+    import { connect } from 'react-redux';
+    import { compose } from 'redux';
+    import { createStructuredSelector } from 'reselect';
+
+    import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+    import WithSpinner from '../../Components/With-spinner/With-spinner.component';
+    import CollectionPage from './CollectionPage.component';
+
+    const mapStateToProps = createStructuredSelector({
+        isLoading: selectIsCollectionFetching
+    });
+
+    const CollectionPageContainer = compose(
+        connect(mapStateToProps),
+        WithSpinner
+    )(CollectionPage);
+
+    export default CollectionPageContainer;
+    ```
+
 
 #### `Comment:`
-1. 
+1. :gem: 这里需要注意 compose 的应用。
+2. :gem: 目前来看， HOC 模式的作用在于条件应用的组件，通用性比较强。Contianer 模式的作用就是把传递的参数和组件打包整理，相当于增加一个中间层组件将一些功能打包，当然这种模式适用于 redux，react 不适用。
 
 -----------------------------------------------------------------
 
