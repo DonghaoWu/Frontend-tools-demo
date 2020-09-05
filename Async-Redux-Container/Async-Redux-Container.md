@@ -304,7 +304,7 @@
 
 #### `Comment:`
 1. :gem::gem::gem: 这个错误很常见，在 front end 进行 async 动作时需要处理数据原始状态的问题。
-2. :gem::gem::gem: 在这里补充一点思路：上面的方案是使用一个开关 `isFetching` 去控制对应的 component 是否 mount，而只有 component 执行 mount 动作的时候才会索取数据，所以这是一个很好的解决方案，通过变量控制 mount 动作，而变量是跟数据一同绑定。
+2. :gem::gem::gem: 在这里补充一点思路：上面的方案是使用一个开关 `isFetching` 去控制对应的 component 是否 render，而只有 component 执行 render 动作的时候才会索取数据，所以这是一个很好的解决方案，通过变量控制 render 动作，而开关变量是跟数据一同绑定，所以这个方案的关键是 :key: `开关变量绑定数据一同改变 + 开关变量控制获取数据的组件 render`。
 
 ### <span id="6.3">`Step3: Container pattern.`</span>
 
