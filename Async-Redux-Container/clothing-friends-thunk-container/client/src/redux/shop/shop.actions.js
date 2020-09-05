@@ -21,7 +21,7 @@ export const fetchCollectionAsync = () => dispatch => {
 
     collectionRef.get()
         .then(snapshot => {
-            if (true) throw new Error('This is a test from CardList component.');
+            // if (true) throw new Error('This is a test from CardList component.');
             const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
             dispatch(fetchCollectionsSuccess(collectionsMap));
         })
