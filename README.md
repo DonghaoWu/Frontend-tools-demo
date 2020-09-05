@@ -24,3 +24,6 @@ kill -9 <PID>
 
 - [Part5 - Advanced Firebase and HOC spinner. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Advanced-Firebase-HOC/Advanced-Firebase-HOC.md) 
     - __`Key Word: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`__
+
+- [Part6 - Redux thunk and container pattern. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Async-Redux-Container/Async-Redux-Container.md) 
+    - __`Key Word: redux-thunk, container pattern, throw error, async fetching data initial state bug.`__

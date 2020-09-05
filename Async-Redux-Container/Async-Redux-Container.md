@@ -1,6 +1,6 @@
 # Front end development tools (Part 6)
 
-### `Key Word: redux-thunk, container pattern, throw error, solution for null bug.`
+### `Key Word: redux-thunk, container pattern, throw error, async fetching data initial state bug.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
