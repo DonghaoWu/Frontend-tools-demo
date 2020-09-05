@@ -404,7 +404,10 @@
 
 __`本章用到的全部资料：`__
 
-- null
+- :gem::gem::gem:关于 ShopPage 的不同形式，可以参考：
+    - ./note/ShopPage.original.component.jsx : 原始模式 HOC。
+    - ./note/ShopPage.thunk.component.jsx : HOC + redux-thunk 模式。
+    - ./note/ShopPage.container.component.jsx : HOC + redux-thunk + container 模式。
 
 - #### Click here: [BACK TO CONTENT](#6.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
