@@ -26,3 +26,5 @@ const WithSpinner = (WrappedComponent) => {
     }
     return Spinner;
 }
+
+
