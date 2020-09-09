@@ -292,3 +292,456 @@ ComponentDidMount(){
 - [Email sign in into sagas]
 
 - 
+
+```js
+import {googleSignInStart, emailSignInStart } from '../../redux/user/user.actions.js'
+
+handleSubmit = async event =>{
+    event.preventDefault();
+
+    const {email, password} = this.state;
+
+    const {emailSIgnInStart} = this.props;
+    emailSignInStart(email, password);
+}
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        googleSignInStart: () => dispatch(googleSignInStart),
+        emailSignInStart: (email, password) => disaptch(emailSignInStart({email, password})),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SignIn)
+```
+
+```js
+import {takeLatest, put} from 'redux-saga/effects';
+
+import { auth, googleProvider, createUserProfileDocument } from '../../firebase/firebase.utils';
+
+import { googleSignInSuccess, googleSignInFailure, emailSignInSuccess, emailSignInFailure,  } from './user/user.actions.js';
+
+export function* signInWithGoogle(){
+    try{
+        const userAuth = yield auth.signInWithPopup(googleProvider);
+        const user = userAuth.user;
+        console.log(userRef);
+
+        const userRef = yield call(createUserProfileDocument, user);
+
+        const userSnapshot = yield userRef.get();
+        yield put(googleSignInSuccess({
+            id: userSnapshot.id, ...userSnapshot.data()
+        }));
+    }catch(error){
+        yield put(googleSignInFailure(error));
+    }
+}
+
+export function* signInWIthEmail(action){
+    const payload = action.payload;
+    const {email, password} = payload;
+    try{
+        const userAuth = yield auth.signInWithEmailAndPassword(email, password);
+        const user = userAuth.user;
+        const userRef = yield call(createUserProfileDocument, user);
+        const userSnapshot = yield userRef.get();
+        yield put(emailSignInSuccess({
+            id: userSnapshot.id, ...userSnapshot.data()
+        }));
+    }catch(error){
+        yield put(emailSignInFailure(error));
+    }
+}
+
+export function* onGoogleSignInStart(){
+    yield takeLatest(GOOGLE_SIGN_IN_START, signInWithGoogle);
+}
+
+export function* onEmailSignInStart(){
+    yield takeLatest(EMAIL_SIGN_IN_START, signInWithEmail);
+}
+
+export function* userSagas(){
+    yield all([call(onGoogleSignInStart), call(onEmailSignInStart)]);
+}
+```
+
+- refactor code
+
+- Recreating Persistence
+
+```js
+export const CHECK_USER_SESSION = 'CHECK_USER_SESSION';
+
+```
+
+```js
+export const checkUserSession = () =>{
+    return {
+        type: CHECK_USER_SESSION,
+    }
+}
+```
+
+```js
+export  { checkUserSession } from '../redux/user/user.actions.js';
+
+componentDidMount(){
+    const { checkUserSession } = this.props;
+    checkUserSession();
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        checkUserSession: dispatch(checkUserSession()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+```
+
+```js
+import { getCurrentUser } from '../../firebase/firebase.utils';
+
+export function* isUserAuthenticated = () =>{
+    try{
+        const userAuth = yield getCurrentUser();
+        if(userAuth){
+            yield getSnapshotFromUserAuth(userAuth);
+        }
+        else{
+            return;
+        }
+    }catch(error){
+        yield put(signInFailure(error));
+    }
+}
+
+export function* onCheckUserSession(){
+    yield takeLatest(CHECK_USER_SESSION, isUserAuthenticated)
+}
+
+export function* userSagas(){
+    yield all([
+        call(onGoogleSignInStart), 
+        call(onEmailSignInStart),
+        call(onCheckUserSession),
+        ]);
+}
+```
+
+```js
+export const getCurrentUser = () =>{
+    return new Promise((resoleve, reject) =>{
+        const unsubscribe = auth.onAuthStateChanged(userAuth =>{
+            unsubscribe();
+            resolve(userAuth);
+        }, reject)
+    })
+}
+```
+
+
+- [sign out]
+
+```js
+export const SIGN_OUT_START = 'SIGN_OUT_START';
+export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
+export const SIGN_OUT_FAILURE = 'SIGN_OUT_FAILURE';
+```
+
+```js
+export const signOutStart = () =>{
+    return {
+        type: SIGN_OUT_START,
+    }
+}
+
+export const signOutSuccess= () =>{
+    return {
+        type: SIGN_OUT_SUCCESS,
+    }
+}
+
+export const signOutFailure = (error) =>{
+    return {
+        type: SIGN_OUT_FAILURE,
+        payload: error
+    }
+}
+```
+
+```js
+const INITIAL_STATE = {
+    currentUser: null,
+    error: null
+}
+
+const userReducer = (state = INITIAL_STATE, action) =>{
+    switch (action.type){
+        case GOOGLE_SIGN_IN_SUCCESS:
+        case EMAIL_SIGN_IN_SUCCESS:
+            return {
+                ...state,
+                currentUser: action.payload,
+                error: null
+            };
+        case SIGN_OUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: null,
+                error: null
+            }
+        case GOOGLE_SIGN_IN_FAILURE:
+        case EMAIL_SIGN_IN_FAILURE:
+        case SIGN_OUT_FAILURE:
+            return {
+                ...state,
+                error: action.payload
+            }
+        default:
+            return state;
+    }
+}
+```
+
+```js
+export  { signOutStart } from '../redux/user/user.actions.js';
+
+const { signOutStart } = this.props;
+
+onClick={signOutStart}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signOutStart: () => dispatch(signOutStart()),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
+```
+
+```js
+export function* signOut(){
+    try{
+        yield auth.signOut();
+        yield put(signOutSuccess());
+    }catch(error){
+        yield put(signOutFailure(error));
+    }
+}
+
+export function* onSignOutStart(){
+    yield takeLatest(SIGN_OUT_START, signOut);
+}
+
+export function* userSagas(){
+    yield all([
+            call(onGoogleSignInStart), 
+            call(onEmailSignInStart),
+            call(onCheckUserSession),
+            call(onSignOutStart),
+        ]);
+}
+```
+
+```js
+export const getCurrentUser = () =>{
+    return new Promise((resoleve, reject) =>{
+        const unsubscribe = auth.onAuthStateChanged(userAuth =>{
+            unsubscribe();
+            resolve(userAuth);
+        }, reject)
+    })
+}
+```
+
+- [clear cart saga]
+
+```js
+export const CLEAR_CART = 'CLEAR_CART';
+```
+
+```js
+export const clearCart = () =>({
+    type: CLEAR_CART
+})
+```
+
+```js
+import { all, call, takeLatest, put } from 'redux-saga/effects';
+import CLEAR_CART from './cart.types';
+import { clearCart } from './cart.actions';
+
+export function* clearCartOnSignOut(){
+    yield put(clearCart());
+}
+
+export function* onSignOutSuccess(){
+    yield takeLatest(SIGN_OUT_SUCCESS, cleatCartOnSignOut)
+}
+
+export function* cartSagas(){
+    yield all([
+        call(onSignOutSuccess),
+
+    ])
+}
+```
+
+```js
+import { cartSagas } from './cart.sagas';
+
+export default function* rootSaga(){
+    yield all([
+        call(fetchCollectionsStart),
+        call(userSagas),
+        call(cartSagas),
+    ])
+}
+```
+
+```js
+case CLEAR_CART:
+    return {
+        ...state,
+        cartItems:[]
+    }
+```
+
+
+- [sign up]
+
+```js
+export const SIGN_UP_START = 'SIGN_UP_START';
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+```
+
+```js
+export const signUpStart = (userCredentials) =>{
+    return {
+        type: SIGN_UP_START,
+        payload: userCredentials
+    }
+}
+
+export const signUpSuccess= ({user, addtionalData}) => {
+    return {
+        type: SIGN_UP_SUCCESS,
+        payload: { user, addtionalData }
+    }
+}
+
+export const signUpFailure = (error) =>{
+    return {
+        type: SIGN_UP_FAILURE,
+        payload: error
+    }
+}
+```
+
+```js
+
+export function* signUp(userCredential){
+    const {payload} = userCredential;
+    const { email, password, displayName } = payload;
+
+    try{
+        const { user } = yield auth.createUserWithEmaiAndPassword(
+            email, password
+        );
+        yield put(signUpSuccess({ user, additionalData: { displayName}}));
+    }catch(error){
+        yield put(signUpFailure(error));
+    }
+}
+
+export function* signInAfterSignUp({payload:{user, additionalData}}){
+    yield getSnapshotFromUserAuth(user, additionalData);
+}
+
+export function* onSignUpStart(){
+    yield takeLatest(SIGN_UP_START, signUp)
+}
+
+export function* onSignUpSuccess(){
+    yield takeLatest(SIGN_UP_SUCCESS, signInAfterSignUp)
+}
+
+export function* userSagas(){
+    yield all([
+            call(onGoogleSignInStart), 
+            call(onEmailSignInStart),
+            call(onCheckUserSession),
+            call(onSignOutStart),
+            call(onSignUpStart),
+            call(onSignUpSuccess)
+        ]);
+}
+```
+
+```js
+import { signUpStart } from '../redux/user/user.actions.js'
+
+
+
+handleSubmit = async event =>{
+    event.preventDefault();
+    const { signUpStart } = this.props;
+
+    const { displayName, email, password, confirmPassword } = this.props;
+
+    if(password !== confirmPassword){
+        alert("passwords don't match");
+        return;
+    }
+
+    signUpStart({displayName, email, password});
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SignUp);
+```
+
+```js
+const INITIAL_STATE = {
+    currentUser: null,
+    error: null
+}
+
+const userReducer = (state = INITIAL_STATE, action) =>{
+    switch (action.type){
+        case GOOGLE_SIGN_IN_SUCCESS:
+        case EMAIL_SIGN_IN_SUCCESS:
+            return {
+                ...state,
+                currentUser: action.payload,
+                error: null
+            };
+        case SIGN_OUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: null,
+                error: null
+            }
+        case GOOGLE_SIGN_IN_FAILURE:
+        case EMAIL_SIGN_IN_FAILURE:
+        case SIGN_OUT_FAILURE:
+        case SIGN_UP_FAILURE:
+            return {
+                ...state,
+                error: action.payload
+            }
+        default:
+            return state;
+    }
+}
+```
