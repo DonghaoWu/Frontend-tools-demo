@@ -1,14 +1,5 @@
-// import { SET_CURRENT_USER } from './user.types';
-
-// export const setCurrentUser = user => {
-//     return {
-//         type: SET_CURRENT_USER,
-//         payload: user
-//     }
-// };
-
 import {
-    GOOGLE_SIGN_IN_START,
+    GOOGLE_SIGN_IN_SIGN_UP_START,
     EMAIL_SIGN_IN_START,
     SIGN_IN_SUCCESS,
     SIGN_IN_FAILURE,
@@ -16,13 +7,13 @@ import {
     SIGN_OUT_START,
     SIGN_OUT_SUCCESS,
     SIGN_OUT_FAILURE,
-    SIGN_UP_START,
-    SIGN_UP_FAILURE,
-    SIGN_UP_SUCCESS,
+    EMAIL_SIGN_UP_START,
+    EMAIL_SIGN_UP_FAILURE,
+    EMAIL_SIGN_UP_SUCCESS,
 } from './user.types'
 
 export const googleSignInOrSignUpStart = () => ({
-    type: GOOGLE_SIGN_IN_START
+    type: GOOGLE_SIGN_IN_SIGN_UP_START
 });
 
 export const emailSignInStart = emailAndPassword => ({
@@ -35,10 +26,13 @@ export const signInSuccess = user => ({
     payload: user
 });
 
-export const signInFailure = error => ({
-    type: SIGN_IN_FAILURE,
-    payload: error
-});
+export const signInFailure = error => {
+    console.log(error)
+    return {
+        type: SIGN_IN_FAILURE,
+        payload: error
+    }
+};
 
 export const checkUserSession = () => ({
     type: CHECK_USER_SESSION
@@ -57,24 +51,24 @@ export const signOutFailure = error => ({
     payload: error
 });
 
-export const signUpStart = (userCredentials) => {
+export const emailSignUpStart = (userCredentials) => {
     return {
-        type: SIGN_UP_START,
+        type: EMAIL_SIGN_UP_START,
         payload: userCredentials
     }
 }
 
-export const signUpSuccess = ({ user, displayName }) => {
+export const emailSignUpSuccess = ({ userAuth, displayName }) => {
     return {
-        type: SIGN_UP_SUCCESS,
-        payload: { user, displayName }
+        type: EMAIL_SIGN_UP_SUCCESS,
+        payload: { userAuth, displayName }
     }
 }
 
-export const signUpFailure = (error) => {
+export const emailSignUpFailure = (error) => {
     console.log(error)
     return {
-        type: SIGN_UP_FAILURE,
+        type: EMAIL_SIGN_UP_FAILURE,
         payload: error
     }
 }

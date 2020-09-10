@@ -1,5 +1,5 @@
 import { all, call, takeLatest, put } from 'redux-saga/effects';
-import {SIGN_OUT_SUCCESS} from '../user/user.types'
+import { SIGN_OUT_SUCCESS } from '../user/user.types'
 import { clearCart } from './cart.actions';
 
 export function* clearCartOnSignOut() {

@@ -22,32 +22,7 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
-
-const checkOrCreateUserDocInFirestore = async (userAuth, displayName) => {
-  if (!userAuth) return;
-  const userRef = firestore.doc(`users/${userAuth.uid}`);
-  const snapShot = await userRef.get();
-
-  if (snapShot.exists) return userRef;
-
-  else if (!snapShot.exists) {
-    console.log('===> not exist')
-    const createdAt = new Date();
-    try {
-      await userRef.set({
-        displayName: displayName,
-        email: userAuth.email,
-        createdAt,
-      });
-    } catch (error) {
-      console.log('error in creating user:', error.message);
-    }
-    return userRef;
-  }
-}
-
-const getUserInFirestoreForUserSaga = async (userAuth) => {
+const getUserFromFirestoreForUserSaga = async (userAuth) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapShot = await userRef.get();
@@ -95,20 +70,8 @@ const googleSignInOrSignUpForUserSaga = async (userAuth, displayName) => {
   }
 }
 
-const createCollectionAndDocsInFirestore = async (collectionKeyToCreate, objectsToAdd) => {
-  const collectionRef = firestore.collection(collectionKeyToCreate);
-  const batch = firestore.batch();
-
-  objectsToAdd.forEach(obj => {
-    const newDocRef = collectionRef.doc();
-    batch.set(newDocRef, obj);
-  });
-
-  return await batch.commit();
-}
-
-const convertCollectionsSnapshotToMap = collections => {
-  const transformedCollection = collections.docs.map(doc => {
+const convertCollectionsSnapshotToMap = collectionSnapshot => {
+  const transformedCollection = collectionSnapshot.docs.map(doc => {
     const { title, items } = doc.data();
 
     return {
@@ -140,12 +103,9 @@ export {
   auth,
   firestore,
   googleProvider,
-  signInWithGoogle,
-  checkOrCreateUserDocInFirestore,
-  getUserInFirestoreForUserSaga,
+  getUserFromFirestoreForUserSaga,
   createUserInFirestoreForUserSaga,
   googleSignInOrSignUpForUserSaga,
-  createCollectionAndDocsInFirestore,
   convertCollectionsSnapshotToMap,
   getCurrentUser
 }

@@ -3,14 +3,12 @@ import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-// import { auth } from '../../firebase/firebase.utils';
-
 import CartIcon from '../Cart-icon/Cart-icon.component';
 import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
 import { selectCurrentHiddenCart } from '../../redux/hide-cart/hide-cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+
 import { signOutStart } from '../../redux/user/user.actions';
-// import { clearCart } from '../../redux/cart/cart.actions'
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 

@@ -17,12 +17,12 @@ class SignIn extends React.Component {
     };
   }
 
-  handleSubmit = async event => {
+  handleEmailAndPasswordSignInSubmit = async event => {
     event.preventDefault();
     const { emailSignInStart } = this.props;
     const { email, password } = this.state;
 
-    emailSignInStart(email, password);
+    emailSignInStart({ email, password });
   };
 
   handleChange = event => {
@@ -37,7 +37,7 @@ class SignIn extends React.Component {
         <h2>I already have an account</h2>
         <span>Sign in with your email and password</span>
 
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleEmailAndPasswordSignInSubmit}>
           <FormInput
             name='email'
             type='email'
@@ -68,8 +68,7 @@ class SignIn extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   googleSignInOrSignUpStart: () => dispatch(googleSignInOrSignUpStart()),
-  emailSignInStart: (email, password) =>
-    dispatch(emailSignInStart({ email, password }))
+  emailSignInStart: (emailAndPassword) => dispatch(emailSignInStart(emailAndPassword))
 });
 
 export default connect(null, mapDispatchToProps)(SignIn);
