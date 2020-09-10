@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import FormInput from '../Form-input/Form-input.component';
 import CustomButton from '../Custom-button/Custom-button.component';
 
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
 import { setDisplayName } from '../../redux/display-name/display-name.actions';
+import { googleSignInOrSignUpStart, signUpStart } from '../../redux/user/user.actions';
 
 import './Sign-up.styles.scss';
 
@@ -29,14 +29,7 @@ class SignUp extends React.Component {
             return;
         }
 
-        try {
-            this.props.setDisplayName(displayName);
-            await auth.createUserWithEmailAndPassword(email, password);
-
-            this.setState({ displayName: '', email: '', password: '', confirmPassword: '' });
-        } catch (error) {
-            console.error(error);
-        }
+        this.props.signUpStart({ email, password, displayName })
     };
 
     handleChange = event => {
@@ -46,6 +39,7 @@ class SignUp extends React.Component {
 
     render() {
         const { displayName, email, password, confirmPassword } = this.state;
+        const { googleSignInOrSignUpStart } = this.props;
         return (
             <div className='sign-up'>
                 <h2 className='title'>I do not have a account</h2>
@@ -85,8 +79,8 @@ class SignUp extends React.Component {
                     />
                     <div className='buttons'>
                         <CustomButton type='submit'> Sign Up </CustomButton>
-                        <CustomButton type='button' onClick={signInWithGoogle} google={true}>
-                            Sign Up with Google
+                        <CustomButton type='button' onClick={googleSignInOrSignUpStart} google={true}>
+                            Sign In / Sign Up with Google
                         </CustomButton>
                     </div>
                 </form>
@@ -96,7 +90,9 @@ class SignUp extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
+    googleSignInOrSignUpStart: () => dispatch(googleSignInOrSignUpStart()),
     setDisplayName: input => dispatch(setDisplayName(input)),
+    signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials))
 });
 
 export default connect(

@@ -9,49 +9,51 @@ import SignInAndSignUpPage from './Pages/SignInSignUpPage/SignInAndSignUpPage.co
 import CheckoutPage from './Pages/CheckoutPage/CheckoutPage.component';
 import Header from './Components/Header/Header.component';
 
-import { setCurrentUser } from './redux/user/user.actions';
+// import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { setDisplayName } from './redux/display-name/display-name.actions';
 import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
 
-import { auth, checkOrCreateUserDocInFirestore } from './firebase/firebase.utils';
-
+import { checkUserSession } from './redux/user/user.actions';
 import './App.css';
 
 class App extends React.Component {
 
-  listener = null;
+  // componentDidMount() {
+  //   const { setCurrentUser, setDisplayName } = this.props;
+  //   this.listener = auth.onAuthStateChanged(async userAuth => {
+  //     if (userAuth) {
+  //       try {
+  //         const displayName = userAuth.displayName || this.props.displayName;
+  //         const userRef = await checkOrCreateUserDocInFirestore(userAuth, displayName);
+  //         userRef.onSnapshot(snapShot => {
+  //           setCurrentUser({
+  //             id: snapShot.id,
+  //             ...snapShot.data()
+  //           });
+  //           setDisplayName('');
+  //         });
+  //       }
+  //       catch (error) {
+  //         setCurrentUser(null);
+  //         setDisplayName('');
+  //         console.log('Error: ', error.message);
+  //       }
+  //     }
+  //     else {
+  //       setCurrentUser(null);
+  //       setDisplayName('');
+  //     }
+  //   })
+  // }
+
+  // componentWillUnmount() {
+  //   this.listener();
+  // }
 
   componentDidMount() {
-    const { setCurrentUser, setDisplayName } = this.props;
-    this.listener = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        try {
-          const displayName = userAuth.displayName || this.props.displayName;
-          const userRef = await checkOrCreateUserDocInFirestore(userAuth, displayName);
-          userRef.onSnapshot(snapShot => {
-            setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            });
-            setDisplayName('');
-          });
-        }
-        catch (error) {
-          setCurrentUser(null);
-          setDisplayName('');
-          console.log('Error: ', error.message);
-        }
-      }
-      else {
-        setCurrentUser(null);
-        setDisplayName('');
-      }
-    })
-  }
-
-  componentWillUnmount() {
-    this.listener();
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   render() {
@@ -76,7 +78,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user)),
+  checkUserSession: () => dispatch(checkUserSession()),
   setDisplayName: displayName => dispatch(setDisplayName(displayName)),
 });
 

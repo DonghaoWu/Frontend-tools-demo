@@ -18,13 +18,62 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-provider.setCustomParameters({ prompt: 'select_account' });
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-const signInWithGoogle = () => auth.signInWithPopup(provider);
+const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
 
 const checkOrCreateUserDocInFirestore = async (userAuth, displayName) => {
+  if (!userAuth) return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+
+  if (snapShot.exists) return userRef;
+
+  else if (!snapShot.exists) {
+    console.log('===> not exist')
+    const createdAt = new Date();
+    try {
+      await userRef.set({
+        displayName: displayName,
+        email: userAuth.email,
+        createdAt,
+      });
+    } catch (error) {
+      console.log('error in creating user:', error.message);
+    }
+    return userRef;
+  }
+}
+
+const getUserInFirestoreForUserSaga = async (userAuth) => {
+  if (!userAuth) return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+
+  if (snapShot.exists) return userRef;
+  else throw new Error('User does not exist.')
+}
+
+const createUserInFirestoreForUserSaga = async (userAuth, displayName) => {
+  if (!userAuth) return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const createdAt = new Date();
+
+  try {
+    await userRef.set({
+      displayName: displayName,
+      email: userAuth.email,
+      createdAt,
+    });
+  } catch (error) {
+    console.log('error in creating user:', error.message);
+  }
+  return userRef;
+}
+
+const googleSignInOrSignUpForUserSaga = async (userAuth, displayName) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapShot = await userRef.get();
@@ -40,7 +89,7 @@ const checkOrCreateUserDocInFirestore = async (userAuth, displayName) => {
         createdAt,
       });
     } catch (error) {
-      console.log('error in creating user', error.message);
+      console.log('error in creating user:', error.message);
     }
     return userRef;
   }
@@ -76,12 +125,27 @@ const convertCollectionsSnapshotToMap = collections => {
   }, {});
 };
 
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+      unsubscribe();
+      resolve(userAuth);
+    }, reject);
+  });
+};
+
+
 export {
   firebase,
   auth,
   firestore,
+  googleProvider,
   signInWithGoogle,
   checkOrCreateUserDocInFirestore,
+  getUserInFirestoreForUserSaga,
+  createUserInFirestoreForUserSaga,
+  googleSignInOrSignUpForUserSaga,
   createCollectionAndDocsInFirestore,
-  convertCollectionsSnapshotToMap
+  convertCollectionsSnapshotToMap,
+  getCurrentUser
 }
