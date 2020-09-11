@@ -34,11 +34,7 @@ const Header = ({ currentUser, history, hidden, signOutStart }) => {
         {
           currentUser ?
             (
-              // <div className='option' onClick={signOutStart}>SIGN OUT</div>//
-              <div className='option' onClick={()=>{
-                signOutStart();
-                // history.push('/signin');
-              }}>SIGN OUT</div>
+              <div className='option' onClick={() => { signOutStart(history) }}>SIGN OUT</div>
             )
             :
             (
@@ -59,7 +55,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => {
   return {
-    signOutStart: () => dispatch(signOutStart())
+    signOutStart: (history) => dispatch(signOutStart(history))
   }
 }
 
