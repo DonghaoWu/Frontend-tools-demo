@@ -30,3 +30,19 @@ const WithSpinner = (WrappedComponent) => {
 // <Route exact path="/signin">{currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}</Route>
 
 // <Route exact path="/signin" component={SignInAndSignUpPage} />
+
+export function* onEmailSignInStart() {
+    yield takeLatest(EMAIL_SIGN_IN_START, signInWithEmail);
+}
+
+export function* signInWithEmail(action) {
+    const { payload } = action;
+    const { email, passowrd } = payload;
+    try {
+        const res = yield auth.signInWithEmailAndPassword(email, password);
+        const userAuth = res.user;
+        yield getSnapshotFromUserAuth(getUserFromFirestoreForUserSaga, userAuth);
+    } catch (error) {
+        yield put(signInFailure(error));
+    }
+}

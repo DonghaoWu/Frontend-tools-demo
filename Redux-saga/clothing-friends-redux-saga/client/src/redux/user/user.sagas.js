@@ -51,7 +51,9 @@ export function* signInOrSignUpWithGoogle() {
     }
 }
 
-export function* signInWithEmail({ payload: { email, password } }) {
+export function* signInWithEmail(action) {
+    const { payload } = action;
+    const { email, password } = payload;
     try {
         const res = yield auth.signInWithEmailAndPassword(email, password);
         const userAuth = res.user;
@@ -71,17 +73,19 @@ export function* isUserAuthenticated() {
     }
 }
 
-export function* signOut({ payload }) {
+export function* signOut(action) {
+    const history = action.payload;
     try {
         yield auth.signOut();
         yield put(signOutSuccess());
-        payload.push('/signin');
+        history.push('/signin');
     } catch (error) {
         yield put(signOutFailure(error));
     }
 }
 
-export function* signUpWithEmail({ payload }) {
+export function* signUpWithEmail(action) {
+    const { payload } = action;
     const { email, password, displayName } = payload;
     try {
         const res = yield auth.createUserWithEmailAndPassword(email, password);
@@ -92,7 +96,8 @@ export function* signUpWithEmail({ payload }) {
     }
 }
 
-export function* signInAfterSignUp({ payload }) {
+export function* signInAfterSignUp(action) {
+    const { payload } = action;
     const { userAuth, displayName } = payload;
     yield getSnapshotFromUserAuth(createUserInFirestoreForUserSaga, userAuth, displayName);
 }

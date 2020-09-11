@@ -27,7 +27,6 @@ export const signInSuccess = user => ({
 });
 
 export const signInFailure = error => {
-    console.log(error)
     return {
         type: SIGN_IN_FAILURE,
         payload: error

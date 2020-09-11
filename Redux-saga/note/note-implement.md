@@ -31,7 +31,7 @@
 
 14. Sign-in.component.jsx 
 
-15. Sign-UP.component.jsx 
+15. Sign-up.component.jsx 
 
 16. Header.component.jsx
 
