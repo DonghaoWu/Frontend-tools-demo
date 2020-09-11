@@ -63,3 +63,5 @@
 26. user.reducer.js
 
 27. Sign-up.component.jsx
+
+- 9/11 未实现 saga 情况下 sign out redirect to signInAndSignUp page。
