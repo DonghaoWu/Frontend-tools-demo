@@ -27,6 +27,6 @@ const WithSpinner = (WrappedComponent) => {
     return Spinner;
 }
 
-<Route exact path="/signin">{currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}</Route>
+// <Route exact path="/signin">{currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />}</Route>
 
-<Route exact path="/signin" component={SignInAndSignUpPage} />
+// <Route exact path="/signin" component={SignInAndSignUpPage} />

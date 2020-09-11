@@ -35,26 +35,19 @@ const Header = ({ currentUser, history, hidden, clearCart }) => {
           ) :
             null
         }
-        <Link className='option' to='/'>
-          HOME
-      </Link>
-        <Link className='option' to='/shop'>
-          SHOP
-      </Link>
-        <Link className='option' to='/shop'>
-          CONTACT
-      </Link>
-        {currentUser ? (
-          <Link to='/signin'>
-            <div className='option' onClick={() => signOut()}>
-              SIGN OUT
-        </div>
-          </Link>
-        ) : (
-            <Link className='option' to='/signin'>
-              SIGN IN
-        </Link>
-          )}
+        <Link className='option' to='/'>HOME</Link>
+        <Link className='option' to='/shop'>SHOP</Link>
+        <Link className='option' to='/shop'>CONTACT</Link>
+        {
+          currentUser ?
+            (
+              <div className='option' onClick={signOut}>SIGN OUT</div>
+            )
+            :
+            (
+              <Link className='option' to='/signin'>SIGN IN</Link>
+            )
+        }
         <CartIcon />
       </div>
       {hidden ? null : <CartDropdown />}
