@@ -482,7 +482,7 @@
     + 5. getSnapshotFromUserAuth()
     + 6. googleSignInOrSignUpForUserSaga()
     + 7. signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
-    -    signInFailure(error)
+         signInFailure(error)
     + 8. user.reducer.js 
     ```
 
@@ -677,7 +677,7 @@
     + 6. user.reducer.js
     ```
 
-2. `这里实现了在 saga 中 redirect 功能。`
+2. :gem::gem::gem:__`这里实现了在 saga 中 redirect 功能。`__
 
 ### <span id="7.5">`Step5: Clear cart when sign out.`</span>
 
@@ -1101,46 +1101,30 @@
 
 - #### Click here: [BACK TO CONTENT](#7.0)
 
-1. Set up types.
+1. Redux-thunk logic.
 
-    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.types.js`__
+  <p align="center">
+  <img src="../assets/fe-p7-01.png" width=90%>
+  </p>
 
-    ```js
+  -----------------------------------------------------------------
 
-    ```
+2. Redux-saga logic.
 
-2. Set up actions.
+  <p align="center">
+  <img src="../assets/fe-p7-02.png" width=90%>
+  </p>
 
-    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
-
-    ```js
-
-    ```
-
-3. Set up sagas.
-
-    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
-
-    ```js
-
-    ```
+  -----------------------------------------------------------------
 
 #### `Comment:`
-1. 调动顺序: emailSignUpStart
-
-    ```diff
-    + 1. signOutSuccess() --> invoke SIGN_OUT_SUCCESS type
-    + 2. onSignOutSuccess() --> listen SIGN_OUT_SUCCESS type
-    + 3. clearCartOnSignOut()
-    + 4. clearCart()
-    + 5. cart.reducer.js
-    ```
+1. 
 
 -----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
 
-- 
+- null
 
 - #### Click here: [BACK TO CONTENT](#7.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
