@@ -43,6 +43,7 @@
 - [7.6 Refactor email sign up logic.](#7.6)
 - [7.7 Refactor load user logic.](#7.7)
 - [7.8 Redux-thunk auth logic VS Reudx-saga auth logic.](#7.8)
+
 ------------------------------------------------------------
 
 ### <span id="7.1">`Step1: Set up redux-saga.`</span>
@@ -772,6 +773,85 @@
     + 4. clearCart()
     + 5. cart.reducer.js
     ```
+
+### <span id="7.7">`Step7: Refactor load user logic.`</span>
+
+- #### Click here: [BACK TO CONTENT](#7.0)
+
+1. Set up types.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.types.js`__
+
+    ```js
+
+    ```
+
+2. Set up actions.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
+
+    ```js
+
+    ```
+
+3. Set up sagas.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
+
+    ```js
+
+    ```
+
+#### `Comment:`
+1. 调动顺序: emailSignUpStart
+
+    ```diff
+    + 1. signOutSuccess() --> invoke SIGN_OUT_SUCCESS type
+    + 2. onSignOutSuccess() --> listen SIGN_OUT_SUCCESS type
+    + 3. clearCartOnSignOut()
+    + 4. clearCart()
+    + 5. cart.reducer.js
+    ```
+
+### <span id="7.8">`Step8: Redux-thunk auth logic VS Reudx-saga auth logic.`</span>
+
+- #### Click here: [BACK TO CONTENT](#7.0)
+
+1. Set up types.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.types.js`__
+
+    ```js
+
+    ```
+
+2. Set up actions.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
+
+    ```js
+
+    ```
+
+3. Set up sagas.
+
+    __`Location:./clothing-friends-redux-saga/client/src/redux/user/user.actions.js`__
+
+    ```js
+
+    ```
+
+#### `Comment:`
+1. 调动顺序: emailSignUpStart
+
+    ```diff
+    + 1. signOutSuccess() --> invoke SIGN_OUT_SUCCESS type
+    + 2. onSignOutSuccess() --> listen SIGN_OUT_SUCCESS type
+    + 3. clearCartOnSignOut()
+    + 4. clearCart()
+    + 5. cart.reducer.js
+    ```
+
 -----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
