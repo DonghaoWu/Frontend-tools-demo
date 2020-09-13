@@ -1118,7 +1118,8 @@
   -----------------------------------------------------------------
 
 #### `Comment:`
-1. 
+1. redux-thunk 的思路是每当 firebase auth 改变时都会由 App 的 onAuthStageChanged 进行侦听，而且是伴随整个 App 的运行都处于侦听，同时 onAuthStageChanged 的 callback function 是集中处理 auth 数据的中心，经这个中心处理之后最后改变 reducer state。
+2. redux-saga 的思路是每一个 auth 函数直接跟 firebase 沟通，并直接处理返回的数据而不需要进行集中化处理，返回的数据直接改变 reducer state。而使用 onAuthStageChanged 的场景只在重载或者重新打开 App 时读取一次现存 firebase auth 数据，读取之后就马上关闭侦听，如果有 auth 数据就直接交给 sign in 流程处理，最后改变 reducer state。
 
 -----------------------------------------------------------------
 
