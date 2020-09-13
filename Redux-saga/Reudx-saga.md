@@ -35,13 +35,13 @@
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
 - [7.1 Set up redux-saga.](#7.1)
-- [7.2 Add shop saga and change code in ShopPage.component.js.](#7.2)
-- [7.3 Refactor sign in logic.](#7.3)
-- [7.4 Refactor sign out logic.](#7.4)
+- [7.2 Refactor fetch shop data code.](#7.2)
+- [7.3 Refactor sign in code.](#7.3)
+- [7.4 Refactor sign out code.](#7.4)
 - [7.5 Clear cart when sign out.](#7.5)
 
-- [7.6 Refactor email sign up logic.](#7.6)
-- [7.7 Refactor load user logic.](#7.7)
+- [7.6 Refactor email sign up code.](#7.6)
+- [7.7 Refactor load user code.](#7.7)
 - [7.8 Redux-thunk auth logic VS Reudx-saga auth logic.](#7.8)
 
 ------------------------------------------------------------
@@ -105,7 +105,7 @@
 #### `Comment:`
 1. 
 
-### <span id="7.2">`Step2: Add shop saga and change code in ShopPage.component.js.`</span>
+### <span id="7.2">`Step2: Refactor fetch shop data code.`</span>
 
 - #### Click here: [BACK TO CONTENT](#7.0)
 
