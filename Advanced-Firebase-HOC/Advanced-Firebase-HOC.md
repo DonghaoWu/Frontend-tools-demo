@@ -1,6 +1,6 @@
 # Front end development tools (Part 5)
 
-### `Key Word: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`
+### `Key Words: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 

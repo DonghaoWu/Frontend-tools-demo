@@ -1,6 +1,6 @@
 # Front end development tools (Part 3)
 
-### `Key Word: reselect, redux-persist, nested routing, ownProps, data normalization.`
+### `Key Words: reselect, redux-persist, nested routing, ownProps, data normalization.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 

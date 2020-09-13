@@ -1,6 +1,6 @@
 # Front end development tools (Part 4)
 
-### `Key Word: heroku, stripe front end, stripe back end, full stack deploy, remove dependencies in production mode.`
+### `Key Words: heroku, stripe front end, stripe back end, full stack deploy, remove dependencies in production mode.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 

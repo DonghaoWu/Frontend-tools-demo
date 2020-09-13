@@ -1,6 +1,6 @@
 # Front end development tools (Part 7)
 
-### `Key Word: redux-saga, redirect in saga, authentication logic refactor.`
+### `Key Words: redux-saga, redirect in saga, authentication logic refactor.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 

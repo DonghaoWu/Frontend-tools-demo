@@ -1,6 +1,6 @@
 # Front end development tools (Part 2)
 
-### `Key Word: Redux, Cart, reselect.`
+### `Key Words: Redux, Cart, reselect.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
