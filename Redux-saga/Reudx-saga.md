@@ -496,7 +496,7 @@
     + 5. getSnapshotFromUserAuth()
     + 6. getUserFromFirestoreForUserSaga()
     + 7. signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })
-    -    signInFailure(error)
+         signInFailure(error)
     + 8. user.reducer.js 
     ```
 
@@ -673,7 +673,7 @@
     + 3. signOut(action)
     + 4. auth.signOut()
     + 5. signOutSuccess() --> invoke SIGN_OUT_SUCCESS type
-    -    signOutFailure(error)
+         signOutFailure(error)
     + 6. user.reducer.js
     ```
 
