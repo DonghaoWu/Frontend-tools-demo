@@ -225,7 +225,7 @@
     + 2. onFetchCollectionsStart() --> listen to FETCH_COLLECTIONS_START type
     + 3. fetchCollections()
     + 4. fetchCollectionsSuccess(collectionsMap)
-    -    fetchCollectionsFailure(error.message)
+         fetchCollectionsFailure(error.message)
     + 5. shop.reducer.js 
     ```
 
@@ -409,8 +409,8 @@
             super(props);
 
             this.state = {
-            email: '',
-            password: ''
+                email: '',
+                password: ''
             };
         }
 
