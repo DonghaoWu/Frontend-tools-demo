@@ -737,7 +737,7 @@
     + 5. cart.reducer.js
     ```
 
-2. `这里展示的是一个比较复杂的不同 saga 之间 listener 的调用。`
+2. :gem::gem::gem:`这里展示的是一个比较复杂的不同 saga 之间 listener 的调用。`
 
 ### <span id="7.6">`Step6: Refactor email sign up logic.`</span>
 
@@ -961,7 +961,7 @@
         - 4.2.1 user.reducer.js
     ```
 
-2. `这里展示的是一个比较复杂的同 saga 之中不同 listener 之间的调用。`
+2. :gem::gem::gem:`这里展示的是一个比较复杂的同 saga 之中不同 listener 之间的调用。`
 
 ### <span id="7.7">`Step7: Refactor load user logic.`</span>
 
