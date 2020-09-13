@@ -66,7 +66,6 @@ export const emailSignUpSuccess = ({ userAuth, displayName }) => {
 }
 
 export const emailSignUpFailure = (error) => {
-    console.log(error)
     return {
         type: EMAIL_SIGN_UP_FAILURE,
         payload: error
