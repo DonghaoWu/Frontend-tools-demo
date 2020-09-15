@@ -30,3 +30,6 @@ kill -9 <PID>
 
 - [Part7 - Redux saga. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-saga/Reudx-saga.md) 
     - __`Key Words: Redux-saga set up, redirect in saga, firebase authentication logic refactor.`__
+
+- [Part8 - Redux hooks. :gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/React-Hooks/React-Hooks.md) 
+    - __`Key Words: React hooks, useState, useEffect.`__
