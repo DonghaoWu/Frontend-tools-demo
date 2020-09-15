@@ -10,7 +10,6 @@ import CheckoutPage from './Pages/CheckoutPage/CheckoutPage.component';
 import Header from './Components/Header/Header.component';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
-import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
 
 import { checkUserSession } from './redux/user/user.actions';
 
@@ -40,8 +39,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
-  displayName: selectInputDisplayName,
+  currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = dispatch => ({

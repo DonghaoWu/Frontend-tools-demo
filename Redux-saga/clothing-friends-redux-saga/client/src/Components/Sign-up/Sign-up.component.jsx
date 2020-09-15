@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import FormInput from '../Form-input/Form-input.component';
 import CustomButton from '../Custom-button/Custom-button.component';
 
-import { setDisplayName } from '../../redux/display-name/display-name.actions';
 import { googleSignInOrSignUpStart, emailSignUpStart } from '../../redux/user/user.actions';
 
 import './Sign-up.styles.scss';
@@ -91,7 +90,6 @@ class SignUp extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     googleSignInOrSignUpStart: () => dispatch(googleSignInOrSignUpStart()),
-    setDisplayName: input => dispatch(setDisplayName(input)),
     emailSignUpStart: (userCredentials) => dispatch(emailSignUpStart(userCredentials))
 });
 
