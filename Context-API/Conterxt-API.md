@@ -36,7 +36,7 @@
 
 - #### Click here: [BACK TO CONTENT](#9.0)
 
-1. (Collections context) Set up initial data.
+1. __`(Collections context)`__ Set up initial data.
 
     __`Location:./clothing-friends-context-api/client/src/contexts/collections/collections.context.js`__
 
@@ -49,7 +49,7 @@ const CollectionsContext = createContext(SHOP_DATA);
 export default CollectionsContext;
 ```
 
-2. (Collections context) Consume the data in component.
+2. __`(Collections context)`__ Consume the data in component.
 
     __`Location:./clothing-friends-context-api/client/src/Components/Collection-overview/Collection-overview.component.jsx`__
 
@@ -83,7 +83,7 @@ const CollectionsOverview = () => {
 export default CollectionsOverview;
 ```
 
-3. (Directory context) Set up initial data.
+3. __`(Directory context)`__ Set up initial data.
 
     __`Location:./clothing-friends-context-api/client/src/contexts/directory/directory.context.js`__
 
@@ -96,7 +96,7 @@ const DirectoryContext = createContext(DIRECTORY_DATA);
 export default DirectoryContext;
 ```
 
-4. (Directory context) Consume the data in component.
+4. __`(Directory context)`__ Consume the data in component.
 
     __`Location:./clothing-friends-context-api/client/src/Components/Directory/Directory.component.jsx`__
 
@@ -123,7 +123,7 @@ const Directory = () => {
 export default Directory;
 ```
 
-5. (Current user context) Set up initial data.
+5. __`(Current user context)`__ Set up initial data.
 
     __`Location:./clothing-friends-context-api/client/src/contexts/current-user/current-user.context.js`__
 
@@ -135,7 +135,7 @@ const CurrentUserContext = createContext(undefined);
 export default CurrentUserContext;
 ```
 
-6. (Current user context) `Update` the data in component and passdown.
+6. __`(Current user context)`__ `Update` the data in component and passdown.
 
     __`Location:./clothing-friends-context-api/client/src/App.js`__
 
@@ -224,7 +224,7 @@ class App extends React.Component {
 export default App;
 ```
 
-7. (Current user context) Consume the data in component.
+7. __`(Current user context)`__ Consume the data in component.
 
     __`Location:./clothing-friends-context-api/client/src/Components/Header/Header.context.js`__
 
@@ -333,7 +333,7 @@ export default withRouter(Header);
 
 - #### Click here: [BACK TO CONTENT](#9.0)
 
-1. :gem::gem::gem: (Cart context) Set up initial state data and Provider component.
+1. :gem::gem::gem: __`(Cart context)`__ Set up initial state data and Provider component.
 
     __`Location:./clothing-friends-context-api/client/src/providers/cart/cart.provider.jsx`__
 
@@ -401,7 +401,7 @@ const CartProvider = ({ children }) => {
 export default CartProvider;
 ```
 
-2. (Cart context) Add a provider in index.js
+2. __`(Cart context)`__ Add a provider in index.js
 
     __`Location:./clothing-friends-context-api/client/src/index.js`__
 
@@ -429,7 +429,7 @@ ReactDOM.render(
 serviceWorker.unregister();
 ```
 
-3. (Cart context) Consume the data and function in a functional component.
+3. __`(Cart context)`__ Consume the data and function in a functional component.
 
     __`Location:./clothing-friends-context-api/client/src/Components/Cart-icon/Cart-icon.jsx`__
 
@@ -455,7 +455,7 @@ const CartIcon = () => {
 export default CartIcon;
 ```
 
-4. Consume the data and function in a class component.
+4. __`(Cart context)`__ Consume the data and function in a class component.
 
     __`Location:./clothing-friends-context-api/client/src/App.js`__
 
