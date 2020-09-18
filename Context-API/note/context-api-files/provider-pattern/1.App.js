@@ -1,5 +1,9 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import './App.css';
 
 import HomePage from './Pages/HomePage/HomePage.component';
 import ShopPage from './Pages/ShopPage/ShopPage.component';
@@ -9,28 +13,25 @@ import Header from './Components/Header/Header.component';
 
 import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils';
 
-import CurrentUserContext from './contexts/current-user/current-user.context.js';
-import { CartContext } from './providers/cart/cart.provider';
+import { setDisplayName } from './redux/display-name/display-name.actions';
 
-import './App.css';
+import CurrentUserContext from './contexts/current-user/current-user.context.js';
 
 class App extends React.Component {
-    static contextType = CartContext;
 
     constructor() {
         super();
         this.state = {
-            currentUser: null,
+            currentUser: null
         }
     }
 
     componentDidMount() {
-        const { setName } = this.context;
-
+        const { setDisplayName } = this.props;
         this.listener = auth.onAuthStateChanged(async userAuth => {
             if (userAuth) {
                 try {
-                    const displayName = userAuth.displayName || this.context.displayName;
+                    const displayName = userAuth.displayName || this.props.displayName;
                     const userRef = await checkDocOrCreateDocInFirestore(userAuth, displayName);
                     userRef.onSnapshot(snapShot => {
                         this.setState(
@@ -41,18 +42,18 @@ class App extends React.Component {
                                 }
                             }
                         );
-                        setName('');
+                        setDisplayName('');
                     });
                 }
                 catch (error) {
-                    this.setState({ currentUser: null });
-                    setName('');
+                    setCurrentUser(null);
+                    setDisplayName('');
                     console.log('error creating user', error.message);
                 }
             }
             else {
                 this.setState({ currentUser: null });
-                setName('');
+                setDisplayName('');
             }
         })
     }
@@ -79,4 +80,15 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+    displayName: selectInputDisplayName
+});
+
+const mapDispatchToProps = dispatch => ({
+    setDisplayName: displayName => dispatch(setDisplayName(displayName)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);

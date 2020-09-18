@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
 
 import { auth } from '../../firebase/firebase.utils';
 
 import CartIcon from '../Cart-icon/Cart-icon.component';
 import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
+import { clearCart } from '../../redux/cart/cart.actions';
 
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
 import { CartContext } from '../../providers/cart/cart.provider';
@@ -13,16 +15,16 @@ import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './Header.styles.scss';
 
-const Header = ({ history }) => {
-
-    const currentUser = useContext(CurrentUserContext);
-    const { hidden, clearCart } = useContext(CartContext);
+const Header = ({ history, clearCart }) => {
 
     const signOut = async () => {
         await auth.signOut();
         clearCart();
         history.push("/signin");
     }
+
+    const currentUser = useContext(CurrentUserContext);
+    const { hidden } = useContext(CartContext);
 
     return (
         <div className='header'>
@@ -57,4 +59,11 @@ const Header = ({ history }) => {
     )
 };
 
-export default withRouter(Header);
+
+const mapDispatchToProps = dispatch => {
+    return {
+        clearCart: () => dispatch(clearCart())
+    }
+}
+
+export default withRouter(connect(null, mapDispatchToProps)(Header));

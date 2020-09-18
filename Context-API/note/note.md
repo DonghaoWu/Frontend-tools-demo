@@ -74,3 +74,21 @@ const CollectionPage = ({ match }) => {
 }
 export default CollectionPage;
 ```
+
+- consumer : static data / initial data
+- provider : dynamic data
+- 以下两个变量未处理：
+```js
+import { setDisplayName } from './redux/display-name/display-name.actions';
+import { selectInputDisplayName } from './redux/display-name/display-name.selectors';
+```
+
+- 第一步，如何传输 static data
+- 第二步，如何传输 dynamic state，不是简单通过 parent component 到 child component。
+- 第三步，
+- 最后一步，删除 redux 和 react-redux。
+- 弄清楚上传与下载的动作代码在哪里发生。
+
+- Provider context pattern
+
+- 

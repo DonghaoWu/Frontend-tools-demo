@@ -1,18 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import FormInput from '../Form-input/Form-input.component';
 import CustomButton from '../Custom-button/Custom-button.component';
 
 import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
-import { setDisplayName } from '../../redux/display-name/display-name.actions';
+
+import { CartContext } from '../../providers/cart/cart.provider';
 
 import './Sign-up.styles.scss';
 
 class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
-
+    static contextType = CartContext;
+    constructor() {
+        super();
         this.state = {
             displayName: '',
             email: '',
@@ -23,6 +23,7 @@ class SignUp extends React.Component {
 
     handleSubmit = async event => {
         event.preventDefault();
+        const { setName } = this.context;
         const { displayName, email, password, confirmPassword } = this.state;
         if (password !== confirmPassword) {
             alert("passwords don't match");
@@ -30,7 +31,7 @@ class SignUp extends React.Component {
         }
 
         try {
-            this.props.setDisplayName(displayName);
+            setName(displayName);
             await auth.createUserWithEmailAndPassword(email, password);
 
             this.setState({ displayName: '', email: '', password: '', confirmPassword: '' });
@@ -93,13 +94,6 @@ class SignUp extends React.Component {
             </div>
         );
     }
-}
+};
 
-const mapDispatchToProps = dispatch => ({
-    setDisplayName: input => dispatch(setDisplayName(input)),
-});
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(SignUp);
+export default SignUp;
