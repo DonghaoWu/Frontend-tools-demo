@@ -557,6 +557,8 @@ export default App;
 
 2. :gem::gem::gem: 另外的难点是在 provider component 中使用 `useEffect`。
 
+3. :gem::gem::gem: 重点是 Provider component 的设置。
+
 -----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
