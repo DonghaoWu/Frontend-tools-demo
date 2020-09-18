@@ -1,6 +1,6 @@
 # Front end development tools (Part 9)
 
-### `Key Words: React hooks, useState, useEffect.`
+### `Key Words: React hooks, useContext, Provider context pattern.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -21,8 +21,7 @@
 ------------------------------------------------------------
 
 #### `Context API:`
-```diff
-```
+- [React Context documentation](https://reactjs.org/docs/context.html#when-to-use-context)
 
 ### <span id="9.0">`Brief Contents & codes position`</span>
 
@@ -557,11 +556,13 @@ export default App;
 + const { setDisplayNameFromSignUp, displayName } = this.context;
 ```
 
+2. :gem::gem::gem: 另外的难点是在 provider component 中使用 `useEffect`。
+
 -----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
 
-- null
+- [React Context documentation](https://reactjs.org/docs/context.html#when-to-use-context)
 
 - #### Click here: [BACK TO CONTENT](#9.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
