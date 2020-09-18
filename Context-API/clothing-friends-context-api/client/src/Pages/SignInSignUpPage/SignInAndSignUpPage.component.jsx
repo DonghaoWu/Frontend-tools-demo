@@ -5,8 +5,7 @@ import SignUp from '../../Components/Sign-up/Sign-up.component';
 
 import './SignInAndSignUpPage.styles.scss';
 
-
-const SignInAndSignUpPage = ({ setDisplayName }) => {
+const SignInAndSignUpPage = () => {
   return (<div className='sign-in-and-sign-up'>
     <SignIn />
     <SignUp />

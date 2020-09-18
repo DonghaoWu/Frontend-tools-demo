@@ -1,1 +1,0 @@
-export const SET_DISPLAY_NAME = 'SET_DISPLAY_NAME';
