@@ -21,7 +21,7 @@
 ------------------------------------------------------------
 
 #### `Context API:`
-- [React Context documentation](https://reactjs.org/docs/context.html#when-to-use-context)
+- [React Context documentation.](https://reactjs.org/docs/context.html#when-to-use-context)
 
 ### <span id="9.0">`Brief Contents & codes position`</span>
 
@@ -38,7 +38,7 @@
 
 1. (Collections context) Set up initial data.
 
-__`Location:./clothing-friends-context-api/client/src/contexts/collections/collections.context.js`__
+    __`Location:./clothing-friends-context-api/client/src/contexts/collections/collections.context.js`__
 
 ```js
 import { createContext } from 'react';
@@ -51,7 +51,7 @@ export default CollectionsContext;
 
 2. (Collections context) Consume the data in component.
 
-__`Location:./clothing-friends-context-api/client/src/Components/Collection-overview/Collection-overview.component.jsx`__
+    __`Location:./clothing-friends-context-api/client/src/Components/Collection-overview/Collection-overview.component.jsx`__
 
 ```js
 import React, { useContext } from 'react';
@@ -85,7 +85,7 @@ export default CollectionsOverview;
 
 3. (Directory context) Set up initial data.
 
-__`Location:./clothing-friends-context-api/client/src/contexts/directory/directory.context.js`__
+    __`Location:./clothing-friends-context-api/client/src/contexts/directory/directory.context.js`__
 
 ```js
 import { createContext } from 'react';
@@ -98,7 +98,7 @@ export default DirectoryContext;
 
 4. (Directory context) Consume the data in component.
 
-__`Location:./clothing-friends-context-api/client/src/Components/Directory/Directory.component.jsx`__
+    __`Location:./clothing-friends-context-api/client/src/Components/Directory/Directory.component.jsx`__
 
 ```js
 import React, { useContext } from 'react';
@@ -125,7 +125,7 @@ export default Directory;
 
 5. (Current user context) Set up initial data.
 
-__`Location:./clothing-friends-context-api/client/src/contexts/current-user/current-user.context.js`__
+    __`Location:./clothing-friends-context-api/client/src/contexts/current-user/current-user.context.js`__
 
 ```js
 import { createContext } from 'react';
@@ -137,7 +137,7 @@ export default CurrentUserContext;
 
 6. (Current user context) `Update` the data in component and passdown.
 
-__`Location:./clothing-friends-context-api/client/src/App.js`__
+    __`Location:./clothing-friends-context-api/client/src/App.js`__
 
 ```js
 import React from 'react';
@@ -226,7 +226,7 @@ export default App;
 
 7. (Current user context) Consume the data in component.
 
-__`Location:./clothing-friends-context-api/client/src/Components/Header/Header.context.js`__
+    __`Location:./clothing-friends-context-api/client/src/Components/Header/Header.context.js`__
 
 ```js
 import React, { useContext } from 'react';
@@ -335,7 +335,7 @@ export default withRouter(Header);
 
 1. :gem::gem::gem: (Cart context) Set up initial state data and Provider component.
 
-__`Location:./clothing-friends-context-api/client/src/providers/cart/cart.provider.jsx`__
+    __`Location:./clothing-friends-context-api/client/src/providers/cart/cart.provider.jsx`__
 
 ```jsx
 import React, { createContext, useState, useEffect } from 'react';
@@ -403,7 +403,7 @@ export default CartProvider;
 
 2. (Cart context) Add a provider in index.js
 
-__`Location:./clothing-friends-context-api/client/src/index.js`__
+    __`Location:./clothing-friends-context-api/client/src/index.js`__
 
 ```js
 import React from 'react';
@@ -431,7 +431,7 @@ serviceWorker.unregister();
 
 3. (Cart context) Consume the data and function in a functional component.
 
-__`Location:./clothing-friends-context-api/client/src/Components/Cart-icon/Cart-icon.jsx`__
+    __`Location:./clothing-friends-context-api/client/src/Components/Cart-icon/Cart-icon.jsx`__
 
 ```js
 import React, { useContext } from 'react';
@@ -457,7 +457,7 @@ export default CartIcon;
 
 4. Consume the data and function in a class component.
 
-__`Location:./clothing-friends-context-api/client/src/App.js`__
+    __`Location:./clothing-friends-context-api/client/src/App.js`__
 
 ```js
 import React from 'react';
@@ -486,7 +486,6 @@ class App extends React.Component {
             currentUser: null,
         }
     }
-
 
     componentDidMount() {
         this.listener = auth.onAuthStateChanged(async userAuth => {
@@ -562,7 +561,7 @@ export default App;
 
 __`本章用到的全部资料：`__
 
-- [React Context documentation](https://reactjs.org/docs/context.html#when-to-use-context)
+- [React Context documentation.](https://reactjs.org/docs/context.html#when-to-use-context)
 
 - #### Click here: [BACK TO CONTENT](#9.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
