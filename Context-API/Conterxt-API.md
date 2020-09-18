@@ -21,7 +21,7 @@
 ------------------------------------------------------------
 
 #### `Context API:`
-- [React Context documentation.](https://reactjs.org/docs/context.html#when-to-use-context)
+- [React Context documentation.](https://reactjs.org/docs/context.html)
 
 ### <span id="9.0">`Brief Contents & codes position`</span>
 
@@ -561,7 +561,7 @@ export default App;
 
 __`本章用到的全部资料：`__
 
-- [React Context documentation.](https://reactjs.org/docs/context.html#when-to-use-context)
+- [React Context documentation.](https://reactjs.org/docs/context.html)
 
 - #### Click here: [BACK TO CONTENT](#9.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
