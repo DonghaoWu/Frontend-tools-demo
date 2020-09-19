@@ -1,6 +1,6 @@
 # Front end development tools (Part 6)
 
-### `Key Words: redux-thunk, container + HOC pattern, throw error, async fetching data initial state bug.`
+### `Key Words: redux-thunk, container + HOC pattern, throw error, async fetching data initial state bug, compose, firebase authorization usual logic.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 

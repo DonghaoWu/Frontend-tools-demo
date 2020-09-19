@@ -26,7 +26,7 @@ kill -9 <PID>
     - __`Key Words: Firebase security, security rules, Upload batch data to Firestore, Fetch data from Firestore, Spinner, Higher Order Component data flow, firestore batch & collection query.`__
 
 - [Part6 - Redux thunk and container pattern. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Async-Redux-Container/Async-Redux-Container.md) 
-    - __`Key Words: redux-thunk, container + HOC pattern, throw error, async fetching data initial state bug, firebase authorization usual logic.`__
+    - __`Key Words: redux-thunk, container + HOC pattern, throw error, async fetching data initial state bug, compose. firebase authorization usual logic.`__
 
 - [Part7 - Redux saga. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-saga/Reudx-saga.md) 
     - __`Key Words: Redux-saga set up, redirect in saga, firebase authentication logic refactor.`__
