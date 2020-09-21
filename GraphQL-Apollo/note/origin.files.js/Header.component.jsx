@@ -5,8 +5,9 @@ import { createStructuredSelector } from 'reselect';
 
 import { auth } from '../../firebase/firebase.utils';
 
-import {default as CartIcon} from '../Cart-icon/Cart-icon.container';
+import CartIcon from '../Cart-icon/Cart-icon.component';
 import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
+import { selectCurrentHiddenCart } from '../../redux/hide-cart/hide-cart.selectors';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearCart } from '../../redux/cart/cart.actions'
 
@@ -56,6 +57,7 @@ const Header = ({ currentUser, history, hidden, clearCart }) => {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  hidden: selectCurrentHiddenCart
 });
 
 const mapDispatchToProps = dispatch => {
