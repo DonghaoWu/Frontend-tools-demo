@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './spinner.styles.scss';
+import './Spinner.styles.scss';
 
 const Spinner = () => (
   <div className='spinner-overlay'>
