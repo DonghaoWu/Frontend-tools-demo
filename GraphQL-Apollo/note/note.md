@@ -6,5 +6,23 @@
 - ShopPage.component.jsx
 - index.js
 
-3. 
-    
+3. `collection.container.jsx`
+```js
+  <Query
+    query={GET_COLLECTION_BY_TITLE}
+    variables={‌{ title: match.params.collectionId }}
+  >
+    {({ loading, data }) => {
+      if (loading) return <Spinner />;
+      const { getCollectionsByTitle } = data; <===== // Like so
+      return <CollectionPage collection={getCollectionsByTitle} />;
+    }}
+  </Query>
+```
+
+4. 
+- CategoryPage.component.jsx
+- CategoryPage.container.jsx
+- ShopPage.component.jsx
+
+5. 
