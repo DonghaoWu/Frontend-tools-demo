@@ -15,6 +15,7 @@
 
 #### `本章背景：`
 1. 在本章中使用 React 自带的 GraphQL 的前端 Apollo 代替 redux 功能。
+2. 本小节主要讲述的是如何使用 apollo 通过 gql 语言获得 remote data。
 
 ------------------------------------------------------------
 
@@ -87,7 +88,7 @@ ReactDOM.render(
 1. 这个配置首先要注意3点：a. client 是一个 由 graphql 配置出来的变量; b. client 是一个传递到 App 的变量; c. httpLink 中的 uri 是一个已经配置好的后端 graphql API。
 
 
-### <span id="10.1">`Step2: Collections (Remote content) with no variables pattern.`</span>
+### <span id="10.2">`Step2: Collections (Remote content) with no variables pattern.`</span>
 
 - #### Click here: [BACK TO CONTENT](#10.0)
 
