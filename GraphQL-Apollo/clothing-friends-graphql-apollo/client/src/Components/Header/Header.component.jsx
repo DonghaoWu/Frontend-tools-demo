@@ -5,8 +5,8 @@ import { createStructuredSelector } from 'reselect';
 
 import { auth } from '../../firebase/firebase.utils';
 
-import {default as CartIcon} from '../Cart-icon/Cart-icon.container';
-import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
+import { default as CartIcon } from '../Cart-icon/Cart-icon.container';
+import { default as CartDropdown } from '../Cart-dropdown/Cart-dropdown.container';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { clearCart } from '../../redux/cart/cart.actions'
 

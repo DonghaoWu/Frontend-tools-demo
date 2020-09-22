@@ -29,7 +29,7 @@
 - CategoryPage.container.jsx
 - ShopPage.component.jsx
 
-5. Mutation
+5. Mutation (难点)
 
 - ./graphql/resolvers
 - index.js
@@ -43,3 +43,53 @@
 - Cart-icon.container.jsx
 
 - Header.component.jsx
+
+//-- working 4:45
+
+6. Adding items with apollo
+
+- index.js
+- ./graphql/cart.utils.js
+- resolvers.js
+- Cart-dropdown.component.jsx
+- Cart-dropdown.container.js
+- Header.component.jsx
+
+
+- Collection-item.component.jsx
+- Collection-item.container.jsx
+- Collection-preview.component.jsx
+
+7. npm install lodash
+```jsx
+import { flowRight } from 'lodash';
+// export default compose(
+//   //...code 
+// )(CollectionItemContainer);
+
+export default flowRight(
+  // ...code
+)(CollectionItemContainer);
+```
+
+8. Cart item count with Apollo
+
+- index.js
+- cart.utils.js
+
+```js
+export const getCartItemCount = cartItems =>{
+  return cartItems.reduce(
+    (accumalatedQuantity, cartItem) =>{
+      return accumalatedQuantity + cartItem.quantity,
+    },0)
+}
+```
+
+- resolvers.js
+- Cart-icon.container.jsx
+- Cart-icon.component.jsx
+
+9. compose
+
+- Cart-icon.container.jsx
