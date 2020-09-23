@@ -5,7 +5,7 @@ import { gql } from 'apollo-boost';
 import ColletionItem from './Collection-item.component';
 
 const ADD_ITEM_TO_CART = gql`
-    mutation AddITemToCart($item:Item!){
+    mutation AddItemToCart($item:Item!){
         addItemToCart(item:$item) @client
     }
 `;

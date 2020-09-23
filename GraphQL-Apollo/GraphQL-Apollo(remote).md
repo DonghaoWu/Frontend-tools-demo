@@ -10,7 +10,10 @@
 
 ### `Check Dependencies & Tools:`
 
-- null
+- apollp-boost 
+- react-apollo 
+- graphql
+
 ------------------------------------------------------------
 
 #### `本章背景：`
@@ -51,7 +54,6 @@
 +import { createHttpLink } from 'apollo-link-http';
 +import { InMemoryCache } from 'apollo-cache-inmemory';
 +import { ApolloClient } from 'apollo-boost';
-+import { resolvers, typeDefs } from './graphql/resolvers';
 
 +const httpLink = createHttpLink({
 +  uri: 'https://crwn-clothing.com'
@@ -62,8 +64,6 @@
 +const client = new ApolloClient({
 +  link: httpLink,
 +  cache,
-+  typeDefs,
-+  resolvers
 +});
 
 ReactDOM.render(
@@ -81,8 +81,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-
-3. 在 src 中创建一个新文件 `graphql`，子文件 `resolvers.js`
 
 #### `Comment:`
 1. 这个配置首先要注意3点：a. client 是一个 由 graphql 配置出来的变量; b. client 是一个传递到 App 的变量; c. httpLink 中的 uri 是一个已经配置好的后端 graphql API。
