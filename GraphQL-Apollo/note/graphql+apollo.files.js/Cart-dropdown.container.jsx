@@ -20,7 +20,7 @@ const CartDropdownContainer = () => {
     return (
         <Mutation mutation={TOGGLE_CART_HIDDEN}>
             {
-                toggleCartHidden => {
+                toggleCartHidden => (
                     <Query query={GET_CART_ITEMS}>
                         {
                             ({ data: { cartItems } }) => {
@@ -30,7 +30,7 @@ const CartDropdownContainer = () => {
                             }
                         }
                     </Query>
-                }
+                )
             }
         </Mutation>
     )

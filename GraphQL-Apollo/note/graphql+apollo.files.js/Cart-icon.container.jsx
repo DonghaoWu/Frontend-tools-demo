@@ -24,7 +24,7 @@ const CartIconContainer = () => {
                     return (
                         < Mutation mutation={TOGGLE_CART_HIDDEN}>
                             {
-                                toggleCartHidden => <CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount}/>
+                                toggleCartHidden => <CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount} />
                             }
                         </Mutation>
                     )

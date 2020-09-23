@@ -15,22 +15,22 @@ export const typeDefs = gql`
 `;
 
 const GET_CART_HIDDEN = gql`
-    {
-        cartHidden @client
-    }
-`;
-
-const GET_CART_ITEMS = gql`
-    {
-        cartItems @client
-    }
+  {
+    cartHidden @client
+  }
 `;
 
 const GET_ITEM_COUNT = gql`
-    {
-        itemCount @client
-    }
-`
+  {
+    itemCount @client
+  }
+`;
+
+const GET_CART_ITEMS = gql`
+  {
+    cartItems @client
+  }
+`;
 
 export const resolvers = {
     Mutation: {
@@ -48,7 +48,7 @@ export const resolvers = {
         },
 
         addItemToCart: (_root, { item }, { cache }) => {
-            const { carItems } = cache.readQuery({
+            const { cartItems } = cache.readQuery({
                 query: GET_CART_ITEMS
             });
 
@@ -57,12 +57,12 @@ export const resolvers = {
             cache.writeQuery({
                 query: GET_ITEM_COUNT,
                 data: { itemCount: getCartItemCount(newCartItems) }
-            })
-            
+            });
+
             cache.writeQuery({
                 query: GET_CART_ITEMS,
-                data: { carItems: newCartItems }
-            })
+                data: { cartItems: newCartItems }
+            });
 
             return newCartItems;
         }
