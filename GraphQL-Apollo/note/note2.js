@@ -1,3 +1,4 @@
+//step2
 // cart.utils.js
 export const clearItemFromCart = (cartItems, item) =>
   cartItems.filter(cartItem => cartItem.id !== item.id);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CheckoutItem from '../../Components/Checkout-item/Checkout-item.component';
+import { default as CheckoutItem } from '../../Components/Checkout-item/Checkout-item.container';
 import StripeCheckoutButton from '../../Components/Stripe-button/Stripe-button.component';
 
 import './CheckoutPage.styles.scss';

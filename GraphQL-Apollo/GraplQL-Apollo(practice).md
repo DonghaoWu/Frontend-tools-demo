@@ -76,7 +76,7 @@
     });
     ```
 
-2. Pass the data to CheckoutPage container component. :gem:`(completed)`
+2. Pass the data to CheckoutPage container component. 
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/CheckoutPage/CheckoutPage.container.jsx`__
 
@@ -224,117 +224,22 @@
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Create a new data stored in local client.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
-
-    ```diff
-    client.writeData({
-        data: {
-            cartHidden: true,
-    +       cartItems: [],
-        }
-    });
-    ```
-
-2. Pass the data to Cart-dropdown container component.:gem:`(completed)`
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
-
-    ```jsx
-    import React from 'react';
-    import { Query, Mutation } from 'react-apollo';
-    import { gql } from 'apollo-boost';
-
-    import CartDropdown from './Cart-dropdown.component';
-
-    const TOGGLE_CART_HIDDEN = gql`
-        mutation ToggleCartHidden{
-            toggleCartHidden @client
-        }
-    `;
-
-    const GET_CART_ITEMS = gql`
-        {
-            cartItems @client 
-        }
-    `;
-
-    const CartDropdownContainer = () => {
-        return (
-            <Mutation mutation={TOGGLE_CART_HIDDEN}>
-                {
-                    toggleCartHidden => {
-                        <Query query={GET_CART_ITEMS}>
-                            {
-                                ({ data: { cartItems } }) => {
-                                    return (
-                                        <CartDropdown cartItems={cartItems} toggleCartHidden={toggleCartHidden} />
-                                    )
-                                }
-                            }
-                        </Query>
-                    }
-                }
-            </Mutation>
-        )
-    };
-
-    export default CartDropdownContainer;
-    ```
-
-3. Remove all redux code in Cart-dropdown component.:gem:`(completed)`
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.component.jsx`__
-
-    ```jsx
-    import React from 'react';
-    import { withRouter } from 'react-router-dom';
-
-    import CustomButton from '../Custom-button/Custom-button.component';
-    import CartItem from '../Cart-item/Cart-item.component';
-
-    import './Cart-dropdown.styles.scss';
-
-    const CartDropdown = ({ cartItems, history, toggleCartHidden }) => (
-        <div className='cart-dropdown'>
-            <div className='cart-items'>
-                {cartItems.length ? (
-                    cartItems.map(cartItem => (
-                        <CartItem key={cartItem.id} item={cartItem} />
-                    ))
-                ) : (
-                        <span className='empty-message'>Your cart is empty</span>
-                    )}
-            </div>
-            <CustomButton
-                onClick={() => {
-                    history.push('/checkout');
-                    toggleCartHidden();
-                }}
-            >
-                GO TO CHECKOUT
-        </CustomButton>
-        </div>
-    );
-
-    export default withRouter(CartDropdown);
-    ```
-
-4. Create a new mutation type.
+1. Create two new mutation type.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
     ```diff
-    export const typeDefs = gql`
-        extend type Mutation{
-            ToggleCartHidden:Boolean!
-    +       AddItemToCart(item:Item!):[Item]!
-        }
-    `;
+    +import { removeItemFromCart, clearItemFromCart } from './cart.utils';
+
+    +export const typeDefs = gql`
+    +extend type Mutation {
+    +    RemoveItemFromCart(item: Item!): [Item]!
+    +    ClearItemFromCart(item: Item!): [Item]!
+    +}
+    +`;
     ```
 
-5. Create a new mutation function.
+2. Create two new mutation functions.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -347,117 +252,164 @@
 
     export const resolvers = {
         Mutation: {
-            toggleCartHidden: (_root, _args, { cache }) => {
-                const { cartHidden } = cache.readQuery({
-                    query: GET_CART_HIDDEN
+        +    removeItemFromCart: (_root, { item }, { cache }) => {
+                const { cartItems } = cache.readQuery({
+                    query: GET_CART_ITEMS
+                });
+
+                const newCartItems = removeItemFromCart(cartItems, item);
+
+                cache.writeQuery({
+                    query: GET_ITEM_COUNT,
+                    data: { itemCount: getCartItemCount(newCartItems) }
                 });
 
                 cache.writeQuery({
-                    query: GET_CART_HIDDEN,
-                    data: { cartHidden: !cartHidden }
+                    query: GET_CART_TOTAL,
+                    data: { cartTotal: getCartTotal(newCartItems) }
                 });
 
-                return !cartHidden;
+                cache.writeQuery({
+                    query: GET_CART_ITEMS,
+                    data: { cartItems: newCartItems }
+            });
+
+                return newCartItems;
             },
 
-    +        addItemToCart: (_root, { item }, { cache }) => {
-    +            const { carItems } = cache.readQuery({
-    +                query: GET_CART_ITEMS
-    +            });
+        +    clearItemFromCart: (_root, { item }, { cache }) => {
+                const { cartItems } = cache.readQuery({
+                    query: GET_CART_ITEMS
+                });
 
-    +            const newCartItems = addItemToCart(cartItems, item);
-                
-    +            cache.writeQuery({
-    +                query: GET_CART_ITEMS,
-    +                data: { carItems: newCartItems }
-    +            })
-    +            return newCartItems;
-    +        }
+                const newCartItems = clearItemFromCart(cartItems, item);
+
+                cache.writeQuery({
+                    query: GET_ITEM_COUNT,
+                    data: { itemCount: getCartItemCount(newCartItems) }
+                });
+
+                cache.writeQuery({
+                    query: GET_CART_TOTAL,
+                    data: { cartTotal: getCartTotal(newCartItems) }
+                });
+
+                cache.writeQuery({
+                    query: GET_CART_ITEMS,
+                    data: { cartItems: newCartItems }
+                });
+
+                return newCartItems;
+            }
         }
-    };
+    }
     ```
 
-6. Apply the mutation function in Collection-item container. :gem:`(completed)`
+3. Pass the data to Checkout-item container component.
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-item/Collection-item.container.jsx`__
+    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Checkout-item/Checkout-item.container.jsx`__
 
     ```jsx
     import React from 'react';
     import { Mutation } from 'react-apollo';
     import { gql } from 'apollo-boost';
 
-    import CollectionItem from './Collection-item.component';
+    import CheckoutItem from './Checkout-item.component';
 
     const ADD_ITEM_TO_CART = gql`
-        mutation AddItemToCart($item: Item!) {
+    mutation AddItemToCart($item: Item!) {
             addItemToCart(item: $item) @client
         }
     `;
 
-    const CollectionItemContainer = props => (
+    const REMOVE_ITEM_FROM_CART = gql`
+        mutation RemoveItemFromCart($item: Item!) {
+            removeItemFromCart(item: $item) @client
+        }
+    `;
+
+    const CLEAR_ITEM_FROM_CART = gql`
+        mutation ClearItemFromCart($item: Item!) {
+            clearItemFromCart(item: $item) @client
+        }
+    `;
+
+    const CheckoutItemContainer = props => (
         <Mutation mutation={ADD_ITEM_TO_CART}>
             {
-                addItemToCart => {
-                    return (<CollectionItem
-                        {...props}
-                        addItem={item => addItemToCart({ variables: { item } })}
-                    />
-                    )
-                }
+                addItemToCart => (
+                    <Mutation mutation={REMOVE_ITEM_FROM_CART}>
+                        {
+                            removeItemFromCart => (
+                                <Mutation mutation={CLEAR_ITEM_FROM_CART}>
+                                    {
+                                        clearItemFromCart => {
+                                            return (
+                                                <CheckoutItem
+                                                    {...props}
+                                                    addItem={item => addItemToCart({ variables: { item } })}
+                                                    removeItem={item => removeItemFromCart({ variables: { item } })}
+                                                    clearItem={item => clearItemFromCart({ variables: { item } })}
+                                                />
+                                            )
+                                        }
+                                    }
+                                </Mutation>
+                            )
+                        }
+                    </Mutation>
+                )
             }
-        </Mutation>
+        </Mutation >
     );
 
-    export default CollectionItemContainer;
+    export default CheckoutItemContainer;
     ```
 
-- Remove redux code in Collection-item component.:gem:`(completed)`
+4. Remove all redux code in Checkout-item component.
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-item/Collection-item.component.jsx`__
+    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Checkout-item/Checkout-item.component.jsx`__
 
     ```jsx
     import React from 'react';
 
-    import CustomButton from '../Custom-button/Custom-button.component';
+    import './Checkout-item.styles.scss';
 
-    import './Collection-item.styles.scss';
-
-    const CollectionItem = ({ item, addItem }) => {
-        const { name, price, imageUrl } = item;
+    const CheckoutItem = ({ cartItem, clearItem, addItem, removeItem }) => {
+        const { name, imageUrl, price, quantity } = cartItem;
         return (
-            <div className='collection-item'>
-                <div className='image' style={{ backgroundImage: `url(${imageUrl})` }} />
-                <div className='collection-footer'>
-                    <span className='name'>{name}</span>
-                    <span className='price'>{price}</span>
+            <div className='checkout-item'>
+                <div className='image-container'>
+                    <img src={imageUrl} alt='item' />
                 </div>
-                <CustomButton onClick={() => addItem(item)} inverted>
-                    Add to cart
-                </CustomButton>
+                <span className='name'>{name}</span>
+                <span className='quantity'>
+                    <div className='arrow' onClick={() => removeItem(cartItem)}>
+                        &#10094;
+            </div>
+                    <span className='value'>{quantity}</span>
+                    <div className='arrow' onClick={() => addItem(cartItem)}>
+                        &#10095;
+            </div>
+                </span>
+                <span className='price'>{price}</span>
+                <div className='remove-button' onClick={() => clearItem(cartItem)}>
+                    &#10005;
+        </div>
             </div>
         );
     };
 
-    export default CollectionItem;
+    export default CheckoutItem;
     ```
 
-7. Import Collection-item container in Collection-preview component.
+5. Import Checkout-item container in CheckoutPage component.
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-preview/Collection-preview.component.jsx`__
-
-    ```diff
-    - import CollectionItem from '../Collection-item/Collection-item.component'
-    + import { default as CollectionItem } from '../Collection-item/Collection-item.container'
-    ```
-
-8. Import Collection-item container in CategoryPage component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.component.jsx`__
+    __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CheckoutPage/CheckoutPage.component.jsx`__
 
     ```diff
-    - import CollectionItem from '../../Components/Collection-item/Collection-item.component';
-
-    + import { default as CollectionItem } from '../../Components/Collection-item/Collection-item.container';
+    - import CheckoutItem from '../../Components/Checkout-item/Checkout-item.component';
+    + import { default as CheckoutItem } from '../../Components/Checkout-item/Checkout-item.container';
     ```
 
 #### `Comment:`
@@ -481,7 +433,7 @@
     });
     ```
 
-2. Pass the data to Cart-icon container component. :gem:`(completed)`
+2. Pass the data to Cart-icon container component. 
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -525,7 +477,7 @@
     export default CartIconContainer;
     ```
 
-3. Remove all redux code in Cart-icon component.:gem:`(completed)`
+3. Remove all redux code in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.component.jsx`__
 
