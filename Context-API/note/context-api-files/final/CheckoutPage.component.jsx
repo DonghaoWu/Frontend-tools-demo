@@ -5,7 +5,7 @@ import StripeCheckoutButton from '../../Components/Stripe-button/Stripe-button.c
 
 import { CartContext } from '../../providers/cart/cart.provider.jsx';
 
-import './ChekcoutPage.styles.scss';
+import './CheckoutPage.styles.scss';
 
 const CheckoutPage = () => {
     const { cartItems, cartTotal } = useContext(CartContext);

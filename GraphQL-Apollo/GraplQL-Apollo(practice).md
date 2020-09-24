@@ -22,9 +22,10 @@
     1. index.js
     2. resolvers.js
     3. cart.utils.js
-    4. Header.container.jsx
-    5. Header.component.jsx
+    4. CheckoutPage.container.jsx
+    5. CheckoutPage.component.jsx
     6. App.js
+
     7. Cart-icon.container.jsx
     8. Cart-icon.component.jsx
     9. Cart-dropdown.container.jsx
@@ -49,101 +50,128 @@
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-- [12.1 Configurations.](#12.1)
-- [12.2 Local cart hidden value and toggleCartHidden function.(Mutation with no variable)](#12.2)
+- [12.1 Local cart total value and mutation function.](#12.1)
+- [12.2 Local remove item and clear item from cart mutation functions.](#12.2)
 - [12.3 Local cart items value and cart items function.(Mutation with variable)](#12.3)
 - [12.4 Local cart quantity value and mutation function.](#12.4)
 
 ------------------------------------------------------------
 
-### <span id="12.1">`Step1: Local cart hidden value and toggleCartHidden function.(Mutation with no variable).`</span>
+### <span id="12.1">`Step1: Local cart total value and mutation function.`</span>
 
-- #### Click here: [BACK TO CONTENT](#12.0)
+- #### Click here: [BACK TO CONTENT](#11.0)
 
 1. Create a new data stored in local client.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
-    ```js
+    ```diff
     client.writeData({
         data: {
-            cartHidden: true
+            cartHidden: true,
+            cartItems: [],
+            itemCount: 0,
+    +       cartTotal: 0,
         }
     });
     ```
 
-2. Pass the data into Header container component.
+2. Pass the data to CheckoutPage container component. :gem:`(completed)`
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.container.jsx`__
+    __`Location:./clothing-friends-graplql-apollo/client/src/Components/CheckoutPage/CheckoutPage.container.jsx`__
 
     ```jsx
     import React from 'react';
     import { Query } from 'react-apollo';
     import { gql } from 'apollo-boost';
 
-    import Header from './Header.component';
+    import CheckoutPage from './CheckoutPage.component';
 
-    const GET_CART_HIDDEN = gql`
+    const GET_CART_ITEMS_AND_TOTAL = gql`
         {
-            cartHidden @client
+            cartItems @client
+            cartTotal @client
         }
     `;
 
-    const HeaderContainer = () => {
-        return (
-            <Query query={GET_CART_HIDDEN}>
-                {
-                    ({ data }) => {
-                        const { cartHidden } = data;
-                        return <Header hidden={cartHidden} />
-                    }
-                }
-            </Query>
-        )
-    }
+    const CheckoutPageContainer = () => (
+        <Query query={GET_CART_ITEMS_AND_TOTAL}>
+            {({ data: { cartItems, cartTotal } }) => (
+            <CheckoutPage cartItems={cartItems} total={cartTotal} />
+            )}
+        </Query>
+    );
 
-    export default HeaderContainer;
+    export default CheckoutPageContainer;
     ```
 
-3. Remove some redux code in Header.component.
+3. Remove all redux code in CheckoutPage component.
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.component.jsx`__
+    __`Location:./clothing-friends-graplql-apollo/client/src/Components/CheckoutPage/CheckoutPage.component.jsx`__
+
+    ```jsx
+    import React from 'react';
+
+    import CheckoutItem from '../../Components/Checkout-item/Checkout-item.component';
+    import StripeCheckoutButton from '../../Components/Stripe-button/Stripe-button.component';
+
+    import './CheckoutPage.styles.scss';
+
+    const CheckoutPage = ({ cartItems, total }) => (
+        <div className='checkout-page'>
+            <div className='checkout-header'>
+            <div className='header-block'>
+                <span>Product</span>
+            </div>
+            <div className='header-block'>
+                <span>Description</span>
+            </div>
+            <div className='header-block'>
+                <span>Quantity</span>
+            </div>
+            <div className='header-block'>
+                <span>Price</span>
+            </div>
+            <div className='header-block'>
+                <span>Remove</span>
+            </div>
+            </div>
+                {cartItems.map(cartItem => (
+                    <CheckoutItem key={cartItem.id} cartItem={cartItem} />
+                ))}
+            <div className='total'>TOTAL: ${total}</div>
+            <div className='test-warning'>
+                *Please use the following test credit card for payments*
+                <br />
+                4242 4242 4242 4242 - Exp: 01/20 - CVV: 123
+            </div>
+            <StripeCheckoutButton price={total} />
+        </div>
+    );
+
+    export default CheckoutPage;
+    ```
+
+4. Import CheckoutPage container in App.js
 
     ```diff
-    - import { selectCurrentHiddenCart } from '../../redux/hide-cart/hide-cart.selectors';
-
-     const mapStateToProps = createStructuredSelector({
-         currentUser: selectCurrentUser,
-    -    hidden: selectCurrentHiddenCart
-     });
+    - import CheckoutPage from './Pages/CheckoutPage/CheckoutPage.component';
+    + import { default as CheckoutPage } from './Pages/CheckoutPage/CheckoutPage.container';
     ```
 
-4. Import Header container in App.js
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/App.js`__
-
-    ```diff
-    - import Header from './Components/Header/Header.component';
-    + import { default as Header } from './Components/Header/Header.container';
-    ```
-
-5. Create a new mutation type.
+5. Create an new mutation code in `addItemToCart`.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
-    ```js
-    export const typeDefs = gql`
-        extend type Mutation{
-            ToggleCartHidden:Boolean!
-        }
-    `;
-    ```
+    ```diff
+    + import { getCartTotal } from './cart.utils';
 
-6. Create a new mutation function.
+    + const GET_CART_TOTAL = gql`
+    +    {
+    +        cartTotal @client
+    +    }
+    +`;
 
-    __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
-
-    ```js
     export const resolvers = {
         Mutation: {
             toggleCartHidden: (_root, _args, { cache }) => {
@@ -157,122 +185,42 @@
                 });
 
                 return !cartHidden;
+            },
+
+            addItemToCart: (_root, { item }, { cache }) => {
+                const { cartItems } = cache.readQuery({
+                    query: GET_CART_ITEMS
+                });
+
+                const newCartItems = addItemToCart(cartItems, item);
+
+                cache.writeQuery({
+                    query: GET_ITEM_COUNT,
+                    data: { itemCount: getCartItemCount(newCartItems) }
+                });
+
+                cache.writeQuery({
+                    query: GET_CART_ITEMS,
+                    data: { cartItems: newCartItems }
+                });
+
+    +           cache.writeQuery({
+    +               query: GET_CART_TOTAL,
+    +               data: { cartTotal: getCartTotal(newCartItems) }
+    +           });
+
+                return newCartItems;
             }
         }
     };
     ```
 
-7. Apply the function in Cart-icon component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
-
-    ```jsx
-    import React from 'react';
-    import { Mutation } from 'react-apollo';
-    import { gql } from 'apollo-boost';
-
-    import CartIcon from './Cart-icon.component';
-
-    const TOGGLE_CART_HIDDEN = gql`
-        mutation ToggleCartHidden{
-            toggleCartHidden @client
-        }
-    `;
-
-    const CartIconContainer = () => {
-        return (
-            < Mutation mutation={TOGGLE_CART_HIDDEN}>
-                {
-                    toggleCartHidden => <CartIcon toggleCartHidden={toggleCartHidden}/>
-                }
-            </Mutation>
-        )
-    }
-
-    export default CartIconContainer;
-    ```
-
-- Remove some redux code in Cart-icon component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.component.jsx`__
-
-    ```diff
-    - import { toggleCartHidden } from '../../redux/hide-cart/hide-cart.actions';
-
-    - const mapDispatchToProps = dispatch => ({
-    -     toggleCartHidden: () => dispatch(toggleCartHidden())
-    - });
-    ```
-
-8. Apply the function in Cart-dropdown component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
-
-    ```jsx
-    import React from 'react';
-    import { Mutation } from 'react-apollo';
-    import { gql } from 'apollo-boost';
-
-    import CartDropdown from './Cart-dropdown.component';
-
-    const TOGGLE_CART_HIDDEN = gql`
-        mutation ToggleCartHidden{
-            toggleCartHidden @client
-        }
-    `
-
-    const CartDropdownContainer = () => {
-        return (
-            <Mutation mutation={TOGGLE_CART_HIDDEN}>
-                {
-                    toggleCartHidden => {
-                        return <CartDropdown toggleCartHidden={toggleCartHidden} />
-                    }
-                }
-            </Mutation>
-        )
-    }
-
-    export default CartDropdownContainer;
-    ```
-
-- Remove some redux code in Cart-dropdown component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.component.jsx`__
-
-    ```diff
-    - import { connect } from 'react-redux';
-    - import { createStructuredSelector } from 'reselect';
-    - import { toggleCartHidden } from '../../redux/hide-cart/hide-cart.actions';
-
-    - const CartDropdown = ({ cartItems, history, dispatch }) => (
-    + const CartDropdown = ({ cartItems, history, toggleCartHidden }) => (
-
-    <CustomButton
-        onClick={() => {
-            history.push('/checkout');
-    -       dispatch(toggleCartHidden());
-    +       toggleCartHidden();
-        }}
-    >
-    ```
-
-9. Import Cart-icon container and Cart-dropdown container in Header component.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.component.jsx`__
-
-    ```diff
-    - import CartIcon from '../Cart-icon/Cart-icon.component';
-    - import CartDropdown from '../Cart-dropdown/Cart-dropdown.component';
-
-    + import { default as CartIcon } from '../Cart-icon/Cart-icon.container';
-    + import { default as CartDropdown } from '../Cart-dropdown/Cart-dropdown.container';
-    ```
+5. Apply. 由于增加的代码属于 mutation function `addItemToCart` 的一部分，所以不需要传递到 component。
 
 #### `Comment:`
 1. 
 
-### <span id="12.2">`Step2: Local cart items value and cart items function.(Mutation with variable).`</span>
+### <span id="12.2">`Step2: Local remove item and clear item from cart mutation functions.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 

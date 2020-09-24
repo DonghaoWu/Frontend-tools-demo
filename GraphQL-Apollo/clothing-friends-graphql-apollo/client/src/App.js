@@ -8,7 +8,7 @@ import './App.css';
 import HomePage from './Pages/HomePage/HomePage.component';
 import ShopPage from './Pages/ShopPage/ShopPage.component';
 import SignInAndSignUpPage from './Pages/SignInSignUpPage/SignInAndSignUpPage.component';
-import CheckoutPage from './Pages/CheckoutPage/CheckoutPage.component';
+import { default as CheckoutPage } from './Pages/CheckoutPage/CheckoutPage.container';
 import { default as Header } from './Components/Header/Header.container';
 
 import { auth, checkDocOrCreateDocInFirestore } from './firebase/firebase.utils';
