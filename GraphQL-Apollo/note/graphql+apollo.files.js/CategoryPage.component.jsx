@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CollectionItem from '../../Components/Collection-item/Collection-item.component';
+import { default as CollectionItem } from '../../Components/Collection-item/Collection-item.container';
 
 import './CategoryPage.styles.scss';
 

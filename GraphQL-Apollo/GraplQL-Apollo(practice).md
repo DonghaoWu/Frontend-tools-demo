@@ -1,12 +1,12 @@
-# Front end development tools (Part 11)
+# Front end development tools (Part 12)
 
-### `Key Words: GraphQL frontend, Apollo, Spinner, local dynamic.`
+### `Key Words: GraphQL frontend, Apollo, local dynamic.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
 ## `Section: GraphQl frontend Apollo.` (Advanced)
 
-### `Summary`: In this documentation, we learn to use GraphQL in frontend to store and mutate local data.
+### `Summary`: In this documentation, we prctice to convert all rest component from redux to apollo graphql.
 
 ### `Check Dependencies & Tools:`
 
@@ -14,96 +14,7 @@
 ------------------------------------------------------------
 
 #### `本章背景：`
-1. 本小节主要讲述的是如何使用 apollo 代替 redux 的本地 state。
-2. :gem::gem::gem:`重点是引导本地定义数据（query）和本地定义函数（mutation）到组件。`
-
-3. :gem::gem::gem: 步骤：1. create 定义 2. gql 引用 3. get in component 应用
-------------------------------------------------------------
-
-#### `定义本地新 data 核心步骤：`:gem::gem::gem:
-
-- 定义新 data。
-
-```jsx
-// 新建
-client.writeData({
-    data: {
-        cartHidden: true
-    }
-});
-
-// 查询引用变量语句
-const GET_CART_HIDDEN = gql`
-    {
-        cartHidden @client
-    }
-`;
-
-// 应用在 React component
-<Query query={GET_CART_HIDDEN}>
-    {
-        ({ data }) => {
-            const { cartHidden } = data;
-            return <Header hidden={cartHidden} />
-        }
-    }
-</Query>
-```
-------------------------------------------------------------
-
-#### `定义本地新 mutation 核心步骤：`:gem::gem::gem:
-
-- 定义新 data。
-
-```js
-// 新建 mutation 类型
-export const typeDefs = gql`
-    extend type Mutation{
-        ToggleCartHidden:Boolean!
-    }
-`;
-
-// 查询引用变量语句
-const GET_CART_HIDDEN = gql`
-    {
-        cartHidden @client
-    }
-`;
-
-// 新建 mutation function
-export const resolvers = {
-    Mutation: {
-        toggleCartHidden: (_root, _args, { cache }) => {
-            const { cartHidden } = cache.readQuery({
-                query: GET_CART_HIDDEN
-            });
-            cache.writeQuery({
-                query: GET_CART_HIDDEN,
-                data: { cartHidden: !cartHidden }
-            });
-            return !cartHidden;
-        }
-    }
-};
-
-// 查询引用 mutation 语句
-const TOGGLE_CART_HIDDEN = gql`
-    mutation ToggleCartHidden{
-        toggleCartHidden @client
-    }
-`;
-
-// 应用在 React component
-const CartIconContainer = () => {
-    return (
-        < Mutation mutation={TOGGLE_CART_HIDDEN}>
-            {
-                toggleCartHidden => <CartIcon toggleCartHidden={toggleCartHidden}/>
-            }
-        </Mutation>
-    )
-};
-```
+1. 本小结主要是把上一章剩下的代码全部转换成 apollo graphql。
 ------------------------------------------------------------
 
 - 本章节涉及到的文件：
@@ -118,7 +29,7 @@ const CartIconContainer = () => {
     8. Cart-icon.component.jsx
     9. Cart-dropdown.container.jsx
     10. Cart-dropdown.component.jsx
-    11. Collection-item.container.jsx
+    12. Collection-item.container.jsx
     12. Collection-item.component.jsx
     13. Collection-preview.component.jsx
     14. CategoryPage.component.jsx 
@@ -127,48 +38,27 @@ const CartIconContainer = () => {
 
 - 关于 container 接受的参数：
 ```diff
-+ Header 接受 query(cartHidden) 一种参数。
-+ Cart-icon 接受 query(itemCount) 和 mutation(toggleCartHidden) 两种参数。
-+ Cart-dropdown 接受 query(cartItems) 和 mutation(toggleCartHidden) 两种参数。
-+ Collection-item 接受 mutation(addItemToCart) 一种参数。
++ 
 ```
 ------------------------------------------------------------
 
 #### `Apollo:`
 - [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
 
-### <span id="11.0">`Brief Contents & codes position`</span>
+### <span id="12.0">`Brief Contents & codes position`</span>
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-- [11.1 Configurations.](#11.1)
-- [11.2 Local cart hidden value and toggleCartHidden function.(Mutation with no variable)](#11.2)
-- [11.3 Local cart items value and cart items function.(Mutation with variable)](#11.3)
-- [11.4 Local cart quantity value and mutation function. (Mutation with variable)](#11.4)
+- [12.1 Configurations.](#12.1)
+- [12.2 Local cart hidden value and toggleCartHidden function.(Mutation with no variable)](#12.2)
+- [12.3 Local cart items value and cart items function.(Mutation with variable)](#12.3)
+- [12.4 Local cart quantity value and mutation function.](#12.4)
+
 ------------------------------------------------------------
 
-### <span id="11.1">`Step1: Configurations.`</span>
+### <span id="12.1">`Step1: Local cart hidden value and toggleCartHidden function.(Mutation with no variable).`</span>
 
-- #### Click here: [BACK TO CONTENT](#11.0)
-
-1. Create a new folder `graphql` and a new file `resolvers.js`.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
-
-    ```diff
-    +import { resolvers, typeDefs } from './graphql/resolvers';
-
-     const client = new ApolloClient({
-       link: httpLink,
-       cache,
-    +  typeDefs,
-    +  resolvers
-     });
-    ```
-
-### <span id="11.2">`Step2: Local cart hidden value and toggleCartHidden function.(Mutation with no variable).`</span>
-
-- #### Click here: [BACK TO CONTENT](#11.0)
+- #### Click here: [BACK TO CONTENT](#12.0)
 
 1. Create a new data stored in local client.
 
@@ -382,9 +272,9 @@ const CartIconContainer = () => {
 #### `Comment:`
 1. 
 
-### <span id="11.3">`Step3: Local cart items value and cart items function.(Mutation with variable).`</span>
+### <span id="12.2">`Step2: Local cart items value and cart items function.(Mutation with variable).`</span>
 
-- #### Click here: [BACK TO CONTENT](#11.0)
+- #### Click here: [BACK TO CONTENT](#12.0)
 
 1. Create a new data stored in local client.
 
@@ -625,9 +515,9 @@ const CartIconContainer = () => {
 #### `Comment:`
 1. 
 
-### <span id="11.4">`Step4: Local cart quantity value and mutation function.`</span>
+### <span id="12.3">`Step3: Local cart quantity value and mutation function.`</span>
 
-- #### Click here: [BACK TO CONTENT](#11.0)
+- #### Click here: [BACK TO CONTENT](#12.0)
 
 1. Create a new data stored in local client.
 
@@ -789,27 +679,11 @@ const CartIconContainer = () => {
 
 #### `Comment:`
 
-1. 这一段也可以这样写：
-```diff
--   cache.writeQuery({
--       query: GET_ITEM_COUNT,
--       data: { itemCount: getCartItemCount(newCartItems) }
--   });
-
-+   const { itemCount } = cache.readQuery({
-+       query: GET_ITEM_COUNT
-+   });
-
-+   cache.writeQuery({
-+       query: GET_ITEM_COUNT,
-+       data: { itemCount: itemCount + 1 }
-+   });
-```
------------------------------------------------------------------
+1. 
 
 __`本章用到的全部资料：`__
 
 - [https://www.apollographql.com/docs/.](https://www.apollographql.com/docs/)
 
-- #### Click here: [BACK TO CONTENT](#11.0)
+- #### Click here: [BACK TO CONTENT](#12.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
