@@ -1,11 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import FormInput from '../Form-input/Form-input.component';
 import CustomButton from '../Custom-button/Custom-button.component';
 
 import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
-import { setDisplayName } from '../../redux/display-name/display-name.actions';
 
 import './Sign-up.styles.scss';
 
@@ -95,11 +93,4 @@ class SignUp extends React.Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    setDisplayName: input => dispatch(setDisplayName(input)),
-});
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(SignUp);
+export default SignUp;

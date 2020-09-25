@@ -1,26 +1,43 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 
 import Header from './Header.component';
 
-const GET_CART_HIDDEN = gql`
-    {
-        cartHidden @client
-    }
+const GET_CLIENT_PROPERTIES = gql`
+  {
+    cartHidden @client
+    currentUser @client
+  }
 `;
+
+const CLEAR_CART = gql`
+    mutation ClearCart {
+            clearCart @client
+    }
+`
 
 const HeaderContainer = () => {
     return (
-        <Query query={GET_CART_HIDDEN}>
+        <Query query={GET_CLIENT_PROPERTIES}>
             {
-                ({ data }) => {
-                    const { cartHidden } = data;
-                    return <Header hidden={cartHidden} />
+                ({ data: { cartHidden, currentUser } }) => {
+                    return (
+                        <Mutation mutation={CLEAR_CART}>
+                            {
+                                clearCart => (
+                                    <Header
+                                        hidden={cartHidden}
+                                        currentUser={currentUser}
+                                        clearCart={clearCart} />
+                                )
+                            }
+                        </Mutation>
+                    )
                 }
             }
         </Query>
     )
-}
+};
 
 export default HeaderContainer;

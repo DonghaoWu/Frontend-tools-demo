@@ -1,21 +1,16 @@
 import React from 'react';
 import { Link, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import { auth } from '../../firebase/firebase.utils';
 
 import { default as CartIcon } from '../Cart-icon/Cart-icon.container';
 import { default as CartDropdown } from '../Cart-dropdown/Cart-dropdown.container';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { clearCart } from '../../redux/cart/cart.actions'
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './Header.styles.scss';
 
 const Header = ({ currentUser, history, hidden, clearCart }) => {
-
   const signOut = async () => {
     await auth.signOut();
     clearCart();
@@ -54,14 +49,4 @@ const Header = ({ currentUser, history, hidden, clearCart }) => {
   )
 };
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
-});
-
-const mapDispatchToProps = dispatch => {
-  return {
-    clearCart: () => dispatch(clearCart())
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));
+export default withRouter(Header);

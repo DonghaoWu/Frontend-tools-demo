@@ -1,19 +1,45 @@
 import { gql } from 'apollo-boost';
 
-import { addItemToCart, getCartItemCount, getCartTotal, removeItemFromCart, clearItemFromCart } from './cart.utils';
+import {
+    addItemToCart,
+    removeItemFromCart,
+    clearItemFromCart,
+    getCartTotal,
+    getCartItemCount
+} from './cart.utils';
 
 export const typeDefs = gql`
+  extend type Item {
+    quantity: Int
+  }
+  extend type DateTime {
+    nanoseconds: Int!
+    seconds: Int!
+  }
+  extend type User {
+    id: ID!
+    displayName: String!
+    email: String!
+    createdAt: DateTime!
+  }
+  extend type DisplayName {
+    displayName: String!
+  }
+  extend type Mutation {
+    ToggleCartHidden: Boolean!
+    AddItemToCart(item: Item!): [Item]!
+    RemoveItemFromCart(item: Item!): [Item]!
+    ClearItemFromCart(item: Item!): [Item]!
+    ClearCart:[Item]!
+    SetCurrentUser(user: User!): User!
+    SetDisplayName(displayName: DisplayName!): DisplayName!
+  }
+`;
 
-    extend type Item{
-        quantity:Int
-    }
-
-    extend type Mutation{
-        ToggleCartHidden:Boolean!
-        AddItemToCart(item:Item!):[Item]!
-        RemoveItemFromCart(item: Item!): [Item]!
-        ClearItemFromCart(item: Item!): [Item]!
-    }
+const GET_DISPLAY_NAME = gql`
+  {
+    displayName @client
+  }
 `;
 
 const GET_CART_HIDDEN = gql`
@@ -28,15 +54,21 @@ const GET_ITEM_COUNT = gql`
   }
 `;
 
+const GET_CART_TOTAL = gql`
+  {
+    cartTotal @client
+  }
+`;
+
 const GET_CART_ITEMS = gql`
   {
     cartItems @client
   }
 `;
 
-const GET_CART_TOTAL = gql`
+const GET_CURRENT_USER = gql`
   {
-    cartTotal @client
+    currentUser @client
   }
 `;
 
@@ -79,7 +111,7 @@ export const resolvers = {
 
             return newCartItems;
         },
-        
+
         removeItemFromCart: (_root, { item }, { cache }) => {
             const { cartItems } = cache.readQuery({
                 query: GET_CART_ITEMS
@@ -125,7 +157,41 @@ export const resolvers = {
             cache.writeQuery({
                 query: GET_CART_ITEMS,
                 data: { cartItems: newCartItems }
-            })
+            });
+
+            return newCartItems;
+        },
+        clearCart: (_root, _args, { cache }) => {
+            cache.writeQuery({
+                query: GET_ITEM_COUNT,
+                data: { itemCount: 0 }
+            });
+
+            cache.writeQuery({
+                query: GET_CART_TOTAL,
+                data: { cartTotal: 0 }
+            });
+
+            cache.writeQuery({
+                query: GET_CART_ITEMS,
+                data: { cartItems: [] }
+            });
+
+            return [];
+        },
+        setCurrentUser: (_root, { user }, { cache }) => {
+            cache.writeQuery({
+                query: GET_CURRENT_USER,
+                data: { currentUser: user }
+            });
+            return user;
+        },
+        setDisplayName: (_root, { displayName }, { cache }) => {
+            cache.writeQuery({
+                query: GET_DISPLAY_NAME,
+                data: { displayName: displayName }
+            });
+            return displayName;
         }
     }
 };
