@@ -63,38 +63,38 @@
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
-```diff
-+import { ApolloProvider } from 'react-apollo';
-+import { createHttpLink } from 'apollo-link-http';
-+import { InMemoryCache } from 'apollo-cache-inmemory';
-+import { ApolloClient } from 'apollo-boost';
+    ```diff
+    +import { ApolloProvider } from 'react-apollo';
+    +import { createHttpLink } from 'apollo-link-http';
+    +import { InMemoryCache } from 'apollo-cache-inmemory';
+    +import { ApolloClient } from 'apollo-boost';
 
-+const httpLink = createHttpLink({
-+  uri: 'https://crwn-clothing.com'
-+});
+    +const httpLink = createHttpLink({
+    +  uri: 'https://crwn-clothing.com'
+    +});
 
-+const cache = new InMemoryCache();
+    +const cache = new InMemoryCache();
 
-+const client = new ApolloClient({
-+  link: httpLink,
-+  cache,
-+});
+    +const client = new ApolloClient({
+    +  link: httpLink,
+    +  cache,
+    +});
 
-ReactDOM.render(
-  <React.StrictMode>
-+    <ApolloProvider client={client}>
-      <Provider store={store}>
-        <BrowserRouter>
-          <PersistGate persistor={persistor}>
-            <App />
-          </PersistGate>
-        </BrowserRouter>
-      </Provider>
-+    </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-```
+    ReactDOM.render(
+        <React.StrictMode>
+        +    <ApolloProvider client={client}>
+                <Provider store={store}>
+                    <BrowserRouter>
+                    <PersistGate persistor={persistor}>
+                        <App />
+                    </PersistGate>
+                    </BrowserRouter>
+                </Provider>
+        +    </ApolloProvider>
+        </React.StrictMode>,
+        document.getElementById('root')
+    );
+    ```
 
 #### `Comment:`
 1. 这个配置首先要注意3点：a. client 是一个 由 graphql 配置出来的传递到 App 的本地变量; __`b. httpLink 中的 uri 是一个已经配置好的后端 graphql API。`__
