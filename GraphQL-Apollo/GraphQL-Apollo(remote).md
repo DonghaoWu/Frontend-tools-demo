@@ -97,8 +97,7 @@ ReactDOM.render(
 ```
 
 #### `Comment:`
-1. 这个配置首先要注意3点：a. client 是一个 由 graphql 配置出来的变量; b. client 是一个传递到 App 的变量; c. httpLink 中的 uri 是一个已经配置好的后端 graphql API。
-
+1. 这个配置首先要注意3点：a. client 是一个 由 graphql 配置出来的传递到 App 的本地变量; __`b. httpLink 中的 uri 是一个已经配置好的后端 graphql API。`__
 
 ### <span id="10.2">`Step2: Collections (Remote content) with no variables pattern.`</span>
 
@@ -230,22 +229,22 @@ ReactDOM.render(
 #### `Comment:`
 1. 这里的重点是 container，Query 执行其中的 query 就可以得到 data，然后向下传递到 CollectionsOverview。
 
-```jsx
-const CollectionsOverviewContainer = () => {
-    return (
-        <Query query={GET_COLLECTIONS}>
-            {
-                ({ loading, error, data }) => {
-                    if (loading) return <Spinner />;
-                    return <CollectionsOverview collections={data.collections} />
+    ```jsx
+    const CollectionsOverviewContainer = () => {
+        return (
+            <Query query={GET_COLLECTIONS}>
+                {
+                    ({ loading, error, data }) => {
+                        if (loading) return <Spinner />;
+                        return <CollectionsOverview collections={data.collections} />
+                    }
                 }
-            }
-        </Query>
-    )
-}
-```
+            </Query>
+        )
+    }
+    ```
 
-2. graphql 回传的数据中包含一个 loading 的数据，可以以此简化 `Spinner` 的判断逻辑。
+2. :gem::gem:graphql 回传的数据中包含一个 loading 的数据，可以以此简化 `Spinner` 的判断逻辑。
 
 ### <span id="10.3">`Step3: Collections (Remote content) with variables pattern.`</span>
 
@@ -323,7 +322,7 @@ const CollectionsOverviewContainer = () => {
     export default CategoryPage;
     ```
 
-3. Import Collection-overview container in ShopPage.componet
+3. Import CategoryPage container in ShopPage.componet
 
     ```diff
     - import CategoryPage from '../CategoryPage/CategoryPage.component';
@@ -341,7 +340,7 @@ const CollectionsOverviewContainer = () => {
 
 __`本章用到的全部资料：`__
 
-- [https://www.apollographql.com/docs/.](https://www.apollographql.com/docs/)
+- [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
 
 - #### Click here: [BACK TO CONTENT](#10.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
