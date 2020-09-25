@@ -100,9 +100,9 @@ ReactDOM.render(
     import './Spinner.styles.scss';
 
     const Spinner = () => (
-    <div className='spinner-overlay'>
-        <div className='spinner-container' />
-    </div>
+        <div className='spinner-overlay'>
+            <div className='spinner-container' />
+        </div>
     );
 
     export default Spinner;
@@ -142,7 +142,7 @@ ReactDOM.render(
     }
     ```
 
-2. Remove redux in Collections-overview.component.jsx
+2. Remove redux code in Collections-overview.component.jsx
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collections-overview/Collections-overview.component.jsx`__
 
@@ -208,10 +208,10 @@ ReactDOM.render(
 
 4. Import Collection-overview container in ShopPage.componet
 
-```diff
-- import CollectionsOverview from '../../Components/Collections-overview/Collections-overview.component';
-+ import { default as CollectionsOverview } from '../../Components/Collections-overview/Collections-overview.container';
-```
+    ```diff
+    - import CollectionsOverview from '../../Components/Collections-overview/Collections-overview.component';
+    + import { default as CollectionsOverview } from '../../Components/Collections-overview/Collections-overview.container';
+    ```
 
 #### `Comment:`
 1. 这里的重点是 container，Query 执行其中的 query 就可以得到 data，然后向下传递到 CollectionsOverview。
@@ -311,17 +311,17 @@ const CollectionsOverviewContainer = () => {
 
 3. Import Collection-overview container in ShopPage.componet
 
-```diff
-- import CategoryPage from '../CategoryPage/CategoryPage.component';
-+ import { default as CategoryPage } from '../CategoryPage/CategoryPage.container';
-```
+    ```diff
+    - import CategoryPage from '../CategoryPage/CategoryPage.component';
+    + import { default as CategoryPage } from '../CategoryPage/CategoryPage.container';
+    ```
 
 #### `Comment:`
-1. :gem::gem::gem:这里示范的是怎样向 graphql 的 query 中传递变量，还有对应的 gql 语言设定。
+1. :gem::gem::gem:这里示范向 graphql 的 query 中传递变量，还有对应的 gql 语言设定。
 
-```jsx
-<Query query={GET_COLLECTIONS_BY_TITLE} variables={{ title: match.params.collectionId }}>
-```
+    ```jsx
+    <Query query={GET_COLLECTIONS_BY_TITLE} variables={{ title: match.params.collectionId }}>
+    ```
 
 -----------------------------------------------------------------
 
