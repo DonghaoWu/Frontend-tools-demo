@@ -82,7 +82,7 @@
 
     ReactDOM.render(
         <React.StrictMode>
-        +    <ApolloProvider client={client}>
+    +        <ApolloProvider client={client}>
                 <Provider store={store}>
                     <BrowserRouter>
                     <PersistGate persistor={persistor}>
@@ -90,7 +90,7 @@
                     </PersistGate>
                     </BrowserRouter>
                 </Provider>
-        +    </ApolloProvider>
+    +        </ApolloProvider>
         </React.StrictMode>,
         document.getElementById('root')
     );
