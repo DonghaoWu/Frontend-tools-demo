@@ -168,18 +168,19 @@
     import Spinner from '../Spinner/Spinner.component';
 
     const GET_COLLECTIONS = gql`
-    {
-        collections{
-            id
-            title
-            items{
+        {
+            collections{
                 id
-                name
-                price
-                imageUrl
+                title
+                items{
+                    id
+                    name
+                    price
+                    imageUrl
+                }
             }
         }
-    }`
+    `;
 
     const CollectionsOverviewContainer = () => {
         return (
@@ -197,7 +198,7 @@
     export default CollectionsOverviewContainer;
     ```
 
-3. Remove redux code in Collections-overview.component.jsx
+3. Remove all redux code in Collections-overview.component.jsx
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collections-overview/Collections-overview.component.jsx`__
 
@@ -244,7 +245,7 @@
     }
     ```
 
-2. :gem::gem:graphql 回传的数据中包含一个 loading 的数据，可以以此简化 `Spinner` 的判断逻辑。
+2. :gem::gem:graphql - 回传的数据中包含一个 loading 的数据，可以以此简化 `Spinner` 的判断逻辑。
 
 ### <span id="10.3">`Step3: Collections (Remote content) with variables pattern.`</span>
 
@@ -275,7 +276,7 @@
                 }
             }
         }
-    `
+    `;
 
     const CategoryPageContainer = ({ match }) => {
         return (
@@ -294,7 +295,7 @@
     export default CategoryPageContainer;
     ```
 
-2. Remove redux in CategoryPage.component.jsx
+2. Remove all redux code in CategoryPage.component.jsx
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.component.jsx`__
 
