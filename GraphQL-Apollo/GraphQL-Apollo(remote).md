@@ -22,8 +22,22 @@
 
 ------------------------------------------------------------
 
+#### `本章节涉及到的文件：`
+
+    1. index.js
+    2. App.js
+    3. Spinner.component.jsx
+    4. Spinner.styles.scss
+    5. Collections-overview.container.jsx
+    6. Collections-overview.component.jsx
+    7. CategoryPage.container.jsx
+    8. CategoryPage.component.jsx
+    9. ShopPage.component.jsx
+
+------------------------------------------------------------
+
 #### `Apollo:`
-- [https://www.apollographql.com/docs/.](https://www.apollographql.com/docs/)
+- [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
 
 ### <span id="10.0">`Brief Contents & codes position`</span>
 
@@ -142,29 +156,7 @@ ReactDOM.render(
     }
     ```
 
-2. Remove redux code in Collections-overview.component.jsx
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collections-overview/Collections-overview.component.jsx`__
-
-    ```jsx
-    import React from 'react';
-
-    import CollectionPreview from '../Collection-preview/Collection-preview.component';
-
-    import './Collections-overview.styles.scss';
-
-    const CollectionsOverview = ({ collections }) => (
-        <div className='collections-overview'>
-            {collections.map(({ id, ...otherCollectionProps }) => (
-                <CollectionPreview key={id} {...otherCollectionProps} />
-            ))}
-        </div>
-    );
-
-    export default CollectionsOverview;
-    ```
-
-3. Add a High order component to wrap Collection-overview component.
+2. Add a High order component to wrap Collection-overview component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collections-overview/Collections-overview.container.jsx`__
 
@@ -206,7 +198,29 @@ ReactDOM.render(
     export default CollectionsOverviewContainer;
     ```
 
-4. Import Collection-overview container in ShopPage.componet
+3. Remove redux code in Collections-overview.component.jsx
+
+    __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collections-overview/Collections-overview.component.jsx`__
+
+    ```jsx
+    import React from 'react';
+
+    import CollectionPreview from '../Collection-preview/Collection-preview.component';
+
+    import './Collections-overview.styles.scss';
+
+    const CollectionsOverview = ({ collections }) => (
+        <div className='collections-overview'>
+            {collections.map(({ id, ...otherCollectionProps }) => (
+                <CollectionPreview key={id} {...otherCollectionProps} />
+            ))}
+        </div>
+    );
+
+    export default CollectionsOverview;
+    ```
+
+4. Import Collection-overview container in ShopPage.component
 
     ```diff
     - import CollectionsOverview from '../../Components/Collections-overview/Collections-overview.component';
@@ -237,35 +251,7 @@ const CollectionsOverviewContainer = () => {
 
 - #### Click here: [BACK TO CONTENT](#10.0)
 
-1. Remove redux in CategoryPage.component.jsx
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.component.jsx`__
-
-    ```jsx
-    import React from 'react';
-
-    import CollectionItem from '../../Components/Collection-item/Collection-item.component';
-
-    import './CategoryPage.styles.scss';
-
-    const CategoryPage = ({ collection }) => {
-        const { title, items } = collection;
-        return (
-            <div className='collection-page'>
-                <h2 className='title'>{title}</h2>
-                <div className='items'>
-                    {items.map(item => (
-                        <CollectionItem key={item.id} item={item} />
-                    ))}
-                </div>
-            </div>
-        );
-    };
-
-    export default CategoryPage;
-    ```
-
-2. Add a High order component to wrap CategoryPage component.
+1. Add a High order component to wrap CategoryPage component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.container.jsx`__
 
@@ -307,6 +293,34 @@ const CollectionsOverviewContainer = () => {
     }
 
     export default CategoryPageContainer;
+    ```
+
+2. Remove redux in CategoryPage.component.jsx
+
+    __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.component.jsx`__
+
+    ```jsx
+    import React from 'react';
+
+    import CollectionItem from '../../Components/Collection-item/Collection-item.component';
+
+    import './CategoryPage.styles.scss';
+
+    const CategoryPage = ({ collection }) => {
+        const { title, items } = collection;
+        return (
+            <div className='collection-page'>
+                <h2 className='title'>{title}</h2>
+                <div className='items'>
+                    {items.map(item => (
+                        <CollectionItem key={item.id} item={item} />
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    export default CategoryPage;
     ```
 
 3. Import Collection-overview container in ShopPage.componet
