@@ -614,8 +614,7 @@ const CartIconContainer = () => {
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 
-- :gem:`cartItems ===> Cart-dropdown.container`
-- :gem:`addItemToCart ===> Collection-item.container`
+- :gem:`itemCount ===> Cart-icon.container`
 
 1. Create a new data stored in local client. __`itemCount`__
 
@@ -631,7 +630,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass the data to Cart-icon container component. :gem:`(completed)`
+2. Pass the data to Cart-icon container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -675,7 +674,7 @@ const CartIconContainer = () => {
     export default CartIconContainer;
     ```
 
-3. Remove all redux code in Cart-icon component.:gem:`(completed)`
+3. Remove all redux code in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.component.jsx`__
 
@@ -696,38 +695,26 @@ const CartIconContainer = () => {
     export default CartIcon;
     ```
 
-4. Create an extra data type in Item schema.
+4. Create an extra local data type in Item schema. __`'quantity'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
-    ```diff
+    ```jsx
     import { gql } from 'apollo-boost';
 
-    import { addItemToCart, getCartItemCount } from './cart.utils';
+    import { getCartItemCount } from './cart.utils';
 
     export const typeDefs = gql`
-
-    +    extend type Item{
-    +        quantity:Int
-    +    }
-
-        extend type Mutation{
-            ToggleCartHidden:Boolean!
-            AddItemToCart(item:Item!):[Item]!
+        extend type Item{
+            quantity:Int
         }
     `;
 
-    const GET_CART_HIDDEN = gql`
+    const GET_ITEM_COUNT = gql`
         {
-            cartHidden @client
+            itemCount @client
         }
     `;
-
-    +const GET_ITEM_COUNT = gql`
-    +    {
-    +        itemCount @client
-    +    }
-    +`;
 
     const GET_CART_ITEMS = gql`
     {
@@ -737,19 +724,6 @@ const CartIconContainer = () => {
 
     export const resolvers = {
         Mutation: {
-            toggleCartHidden: (_root, _args, { cache }) => {
-                const { cartHidden } = cache.readQuery({
-                    query: GET_CART_HIDDEN
-                });
-
-                cache.writeQuery({
-                    query: GET_CART_HIDDEN,
-                    data: { cartHidden: !cartHidden }
-                });
-
-                return !cartHidden;
-            },
-
             addItemToCart: (_root, { item }, { cache }) => {
                 const { cartItems } = cache.readQuery({
                     query: GET_CART_ITEMS
@@ -757,10 +731,10 @@ const CartIconContainer = () => {
 
                 const newCartItems = addItemToCart(cartItems, item);
 
-    +            cache.writeQuery({
-    +                query: GET_ITEM_COUNT,
-    +                data: { itemCount: getCartItemCount(newCartItems) }
-    +            });
+                cache.writeQuery({
+                    query: GET_ITEM_COUNT,
+                    data: { itemCount: getCartItemCount(newCartItems) }
+                });
 
                 cache.writeQuery({
                     query: GET_CART_ITEMS,
@@ -776,8 +750,9 @@ const CartIconContainer = () => {
 5. Apply. 由于增加的代码属于 mutation function `addItemToCart` 的一部分，所以不需要传递到 component。
 
 #### `Comment:`
+1. 这里创造的本地数据 `quantity` 用来结合远程数据 items 使用但不会占用远程数据位置，做一个本地辅助作用。
 
-1. 这一段也可以这样写：
+2. 这一段也可以这样写：
 ```diff
 -   cache.writeQuery({
 -       query: GET_ITEM_COUNT,
