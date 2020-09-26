@@ -22,9 +22,6 @@ export const typeDefs = gql`
     email: String!
     createdAt: DateTime!
   }
-  extend type DisplayName {
-    displayName: String!
-  }
   extend type Mutation {
     ToggleCartHidden: Boolean!
     AddItemToCart(item: Item!): [Item]!

@@ -31,7 +31,7 @@
     9. CheckoutPage.component.jsx
 
     10. Directory.data.js
-    2. Directory.component.jsx
+    11. Directory.component.jsx
 
     12. App.js
     13. App.container.jsx
@@ -51,9 +51,14 @@
 ------------------------------------------------------------
 
 - 关于 container 接受的参数：
-```diff
-+ 
-```
+    1. :gem:`cartTotal ===> CheckoutPage.container`
+    2. :gem:`removeItemFromCart ===> Checkout-item.container`
+    3. :gem:`clearItemFromCart ===> Checkout-item.container`
+    4. :gem:`currentUser ===> App.container, Header.container`
+    5. :gem:`setCurrentUser ===> App.container`
+    6. :gem:`clearCart ===> Header.container`
+    7. :gem:`displayName ===> App.container`
+    8. :gem:`setDisplayName ===> App.container, Header.container`
 ------------------------------------------------------------
 
 #### `Apollo:`
@@ -63,20 +68,22 @@
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-- [12.1 Local cart total value and mutation function.](#12.1)
-- [12.2 Local remove item and clear item from cart mutation functions.](#12.2)
-- [12.3 Directory data](#12.3)
-- [12.4 Local currentUser value and mutation function.](#12.4)
+- [12.1 Local cartTotal value.](#12.1)
+- [12.2 Local removeItemFromCart and clearItemFromCart mutation functions.](#12.2)
+- [12.3 Directory data without redux.](#12.3)
+- [12.4 Local currentUser value and setCurrentUser mutation function.](#12.4)
 - [12.5 Local sign up display name value and mutation function.](#12.5)
 - [12.6 Local cache set up data flow.](#12.5)
 
 ------------------------------------------------------------
 
-### <span id="12.1">`Step1: Local cart total value and mutation function.`</span>
+### <span id="12.1">`Step1: Local cartTotal value.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Create a new data stored in local client.
+- :gem:`cartTotal ===> CheckoutPage.container`
+
+1. Create a new data stored in local client. __`'cartTotal'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -91,7 +98,7 @@
     });
     ```
 
-2. Pass the data to CheckoutPage container component. 
+2. Pass __`'cartTotal'`__ to CheckoutPage container component. 
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/CheckoutPage/CheckoutPage.container.jsx`__
 
@@ -112,7 +119,7 @@
     const CheckoutPageContainer = () => (
         <Query query={GET_CART_ITEMS_AND_TOTAL}>
             {({ data: { cartItems, cartTotal } }) => (
-            <CheckoutPage cartItems={cartItems} total={cartTotal} />
+                <CheckoutPage cartItems={cartItems} total={cartTotal} />
             )}
         </Query>
     );
@@ -178,30 +185,17 @@
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
-    ```diff
-    + import { getCartTotal } from './cart.utils';
+    ```js
+    import { getCartTotal } from './cart.utils';
 
-    + const GET_CART_TOTAL = gql`
-    +    {
-    +        cartTotal @client
-    +    }
-    +`;
+    const GET_CART_TOTAL = gql`
+         {
+             cartTotal @client
+         }
+    `;
 
     export const resolvers = {
         Mutation: {
-            toggleCartHidden: (_root, _args, { cache }) => {
-                const { cartHidden } = cache.readQuery({
-                    query: GET_CART_HIDDEN
-                });
-
-                cache.writeQuery({
-                    query: GET_CART_HIDDEN,
-                    data: { cartHidden: !cartHidden }
-                });
-
-                return !cartHidden;
-            },
-
             addItemToCart: (_root, { item }, { cache }) => {
                 const { cartItems } = cache.readQuery({
                     query: GET_CART_ITEMS
@@ -219,10 +213,10 @@
                     data: { cartItems: newCartItems }
                 });
 
-    +           cache.writeQuery({
-    +               query: GET_CART_TOTAL,
-    +               data: { cartTotal: getCartTotal(newCartItems) }
-    +           });
+                cache.writeQuery({
+                    query: GET_CART_TOTAL,
+                    data: { cartTotal: getCartTotal(newCartItems) }
+                });
 
                 return newCartItems;
             }
@@ -235,39 +229,36 @@
 #### `Comment:`
 1. 
 
-### <span id="12.2">`Step2: Local remove item and clear item from cart mutation functions.`</span>
+### <span id="12.2">`Step2: Local removeItemFromCart and clearItemFromCart mutation functions.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Create two new mutation type.
+- :gem:`removeItemFromCart ===> Checkout-item.container`
+- :gem:`clearItemFromCart ===> Checkout-item.container`
+
+1. Create two new mutation types __`(RemoveItemFromCart, ClearItemFromCart)`__,two mutation functions __`(removeItemFromCart, clearItemFromCart)`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
-    ```diff
-    +import { removeItemFromCart, clearItemFromCart } from './cart.utils';
+    ```jsx
+    import { removeItemFromCart, clearItemFromCart } from './cart.utils';
 
-    +export const typeDefs = gql`
-    +extend type Mutation {
-    +    RemoveItemFromCart(item: Item!): [Item]!
-    +    ClearItemFromCart(item: Item!): [Item]!
-    +}
-    +`;
-    ```
+    export const typeDefs = gql`
+        extend type Mutation {
+            RemoveItemFromCart(item: Item!): [Item]!
+            ClearItemFromCart(item: Item!): [Item]!
+        }
+    `;
 
-2. Create two new mutation functions.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
-
-    ```diff
-    + const GET_CART_ITEMS = gql`
-    +    {
-    +        cartItems @client
-    +    }
-    +`;
+    const GET_CART_ITEMS = gql`
+    {
+        cartItems @client
+    }
+    `;
 
     export const resolvers = {
         Mutation: {
-        +    removeItemFromCart: (_root, { item }, { cache }) => {
+            removeItemFromCart: (_root, { item }, { cache }) => {
                 const { cartItems } = cache.readQuery({
                     query: GET_CART_ITEMS
                 });
@@ -287,12 +278,12 @@
                 cache.writeQuery({
                     query: GET_CART_ITEMS,
                     data: { cartItems: newCartItems }
-            });
+                });
 
                 return newCartItems;
             },
 
-        +    clearItemFromCart: (_root, { item }, { cache }) => {
+            clearItemFromCart: (_root, { item }, { cache }) => {
                 const { cartItems } = cache.readQuery({
                     query: GET_CART_ITEMS
                 });
@@ -317,10 +308,10 @@
                 return newCartItems;
             }
         }
-    }
+    };
     ```
 
-3. Pass the data to Checkout-item container component.
+3. Pass __`(removeItemFromCart, clearItemFromCart)`__ to Checkout-item container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Checkout-item/Checkout-item.container.jsx`__
 
@@ -332,9 +323,9 @@
     import CheckoutItem from './Checkout-item.component';
 
     const ADD_ITEM_TO_CART = gql`
-    mutation AddItemToCart($item: Item!) {
-            addItemToCart(item: $item) @client
-        }
+        mutation AddItemToCart($item: Item!) {
+                addItemToCart(item: $item) @client
+            }
     `;
 
     const REMOVE_ITEM_FROM_CART = gql`
@@ -399,18 +390,12 @@
                 </div>
                 <span className='name'>{name}</span>
                 <span className='quantity'>
-                    <div className='arrow' onClick={() => removeItem(cartItem)}>
-                        &#10094;
-            </div>
+                    <div className='arrow' onClick={() => removeItem(cartItem)}>&#10094;</div>
                     <span className='value'>{quantity}</span>
-                    <div className='arrow' onClick={() => addItem(cartItem)}>
-                        &#10095;
-            </div>
+                    <div className='arrow' onClick={() => addItem(cartItem)}>&#10095;</div>
                 </span>
                 <span className='price'>{price}</span>
-                <div className='remove-button' onClick={() => clearItem(cartItem)}>
-                    &#10005;
-        </div>
+                <div className='remove-button' onClick={() => clearItem(cartItem)}>&#10005;</div>
             </div>
         );
     };
@@ -430,11 +415,11 @@
 #### `Comment:`
 1. 
 
-### <span id="12.3">`Step3: Directory data.`</span>
+### <span id="12.3">`Step3: Directory data without redux.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Set the directory data locally.
+1. Set the directory data on local.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Directory/Directory.data.js`__
 
@@ -492,9 +477,9 @@
     const Directory = () => {
         return (
             <div className='directory-menu'>
-            {DIRECTORY_DATA.map(({ id, ...otherSectionProps }) => (
-                <DirectoryItem key={id} {...otherSectionProps} />
-            ))}
+                {DIRECTORY_DATA.map(({ id, ...otherSectionProps }) => (
+                    <DirectoryItem key={id} {...otherSectionProps} />
+                ))}
             </div>
         );
     };
@@ -504,11 +489,15 @@
 #### `Comment:`
 1. 
 
-### <span id="12.4">`Step4: Local currentUser value and mutation function.`</span>
+### <span id="12.4">`Step4: Local currentUser value and setCurrentUser mutation function.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Create a new data stored in local client.
+- :gem:`currentUser ===> App.container, Header.container`
+- :gem:`setCurrentUser ===> App.container`
+- :gem:`clearCart ===> Header.container`
+
+1. Create a new data stored in local client. __`'currentUser'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -526,7 +515,7 @@
     });
     ```
 
-2. Set up a current user mutation type and mutation function.
+2. Set up a current user type __`(User)`__ and mutation function type __`(SetCurrentUser)`__.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -566,7 +555,7 @@
     };
     ```
 
-3. Pass the data to App container component.
+3. Pass __`'currentUser'`__ and mutation function __`'setCurrentUser'`__ to App container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/App.container.jsx`__
 
@@ -637,16 +626,15 @@
 
         componentDidMount() {
             const { setCurrentUser } = this.props;
-
             this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
                 if (userAuth) {
                     const userRef = await checkDocOrCreateDocInFirestore(userAuth);
 
                     userRef.onSnapshot(snapShot => {
-                    setCurrentUser({
-                        id: snapShot.id,
-                        ...snapShot.data()
-                    });
+                        setCurrentUser({
+                            id: snapShot.id,
+                            ...snapShot.data()
+                        });
                     });
                 } else {
                     setCurrentUser(null);
@@ -662,21 +650,21 @@
             return (
                 <div>
                     <Header />
-                    <Switch>
-                    <Route exact path='/' component={HomePage} />
-                    <Route path='/shop' component={ShopPage} />
-                    <Route exact path='/checkout' component={CheckoutPage} />
-                    <Route
-                        exact
-                        path='/signin'
-                        render={() =>
-                        this.props.currentUser ? (
-                            <Redirect to='/' />
-                        ) : (
-                            <SignInAndSignUpPage />
-                            )
-                        }
-                    />
+                        <Switch>
+                        <Route exact path='/' component={HomePage} />
+                        <Route path='/shop' component={ShopPage} />
+                        <Route exact path='/checkout' component={CheckoutPage} />
+                        <Route
+                            exact
+                            path='/signin'
+                            render={() =>
+                            this.props.currentUser ? (
+                                <Redirect to='/' />
+                            ) : (
+                                <SignInAndSignUpPage />
+                                )
+                            }
+                        />
                     </Switch>
                 </div>
             );
@@ -684,17 +672,17 @@
     }
 
     const mapStateToProps = createStructuredSelector({
-    displayName: selectInputDisplayName
+        displayName: selectInputDisplayName
     });
 
     const mapDispatchToProps = dispatch => ({
-    setDisplayName: displayName => dispatch(setDisplayName(displayName)),
+        setDisplayName: displayName => dispatch(setDisplayName(displayName)),
     });
 
     export default connect( mapStateToProps, mapDispatchToProps)(App);
     ```
 
-5. Create a clear cart mutation function.
+5. Create a clear cart mutation function. __`'clearCart'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -728,7 +716,7 @@
     };
     ```
 
-6. Pass the data and mutation function to Header container component.
+6. Pass __`'currentUser'`__ and __`'clearCart'`__ to Header container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.container.jsx`__
 
@@ -750,7 +738,7 @@
         mutation ClearCart {
                 clearCart @client
         }
-    `
+    `;
 
     const HeaderContainer = () => {
         return (
@@ -778,7 +766,7 @@
     export default HeaderContainer;
     ```
 
-7. Remove all redux code in Header component.:gem:`(completed)`
+7. Remove all redux code in Header component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.component.jsx`__
 
@@ -795,10 +783,10 @@
 
     import './Header.styles.scss';
 
-    const Header = ({ currentUser, history, hidden, clearCart }) => {
+    const Header = ({ history, hidden, currentUser, clearCart }) => {
         const signOut = async () => {
             await auth.signOut();
-            clearCart();
+            await clearCart();
             history.push("/signin");
         }
 
@@ -838,13 +826,20 @@
     ```
 
 #### `Comment:`
-1. 
+1. 上面代码中，以下两个表达对结果有影响。
+    ```diff
+    - clearCart();
+    + await clearCart();
+    ```
 
-### <span id="12.5">`Step5: Local sign up display name value and mutation function.`</span>
+### <span id="12.5">`Step5: Local sign up displayName value and setDisplayName mutation function.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. Create a new data stored in local client.
+- :gem:`displayName ===> App.container`
+- :gem:`setDisplayName ===> App.container, Header.container`
+
+1. Create a new data stored in local client. __`'displayName'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -863,15 +858,12 @@
     });
     ```
 
-2. Set up a display name mutation type and mutation function.
+2. Set up a mutation function type __`(SetDisplayName)`__, a mutation function __`(setDisplayName)`__.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
     ```js
     export const typeDefs = gql`
-        extend type DisplayName {
-            displayName: String!
-        }
         extend type Mutation {
             SetDisplayName(displayName: DisplayName!): DisplayName!
         }
@@ -896,7 +888,7 @@
     };
     ```
 
-3. Pass the data and mutation function to App container component.
+3. Pass __`'displayName'`__ and __`'setDisplayName'`__ to App container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/App.container.jsx`__
 
@@ -1033,7 +1025,7 @@
     export default App;
     ```
 
-5. Pass the mutation function to Sign-up container component.
+5. Pass __`'setDisplayName'`__ to Sign-up container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Sign-up/Sign-up.container.jsx`__
 
@@ -1176,8 +1168,8 @@
     __`Location:./clothing-friends-graplql-apollo/client/src/Pages/SignInSignUpPage/SignInAndSignUpPage.component.jsx`__
 
     ```diff
-    -import SignUp from '../../Components/Sign-up/Sign-up.component';
-    +import { default as SignUp } from '../../Components/Sign-up/Sign-up.container'; 
+    - import SignUp from '../../Components/Sign-up/Sign-up.component';
+    + import { default as SignUp } from '../../Components/Sign-up/Sign-up.container'; 
     ```
 
 ### <span id="12.6">`Step6: Local cache set up data flow.`</span>

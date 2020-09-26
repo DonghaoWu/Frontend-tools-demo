@@ -13,7 +13,7 @@ import './Header.styles.scss';
 const Header = ({ currentUser, history, hidden, clearCart }) => {
   const signOut = async () => {
     await auth.signOut();
-    clearCart();
+    await clearCart();
     history.push("/signin");
   }
 
