@@ -72,7 +72,7 @@
 - [12.2 Local removeItemFromCart and clearItemFromCart mutation functions.](#12.2)
 - [12.3 Directory data without redux.](#12.3)
 - [12.4 Local currentUser value and setCurrentUser mutation function.](#12.4)
-- [12.5 Local sign up display name value and mutation function.](#12.5)
+- [12.5 Local sign up displayName value and setDisplayName mutation function.](#12.5)
 - [12.6 Local cache set up data flow.](#12.5)
 
 ------------------------------------------------------------
@@ -1177,7 +1177,6 @@
 - #### Click here: [BACK TO CONTENT](#12.0)
 
 1. 
-
 
 __`本章用到的全部资料：`__
 
