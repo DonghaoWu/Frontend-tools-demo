@@ -616,7 +616,7 @@ const CartIconContainer = () => {
 
 - :gem:`itemCount ===> Cart-icon.container`
 
-1. Create a new data stored in local client. __`itemCount`__
+1. Create a new data stored in local client. __`'itemCount'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -630,7 +630,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass the data to Cart-icon container component.
+2. Pass __`'itemCount'`__ to Cart-icon container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -717,9 +717,9 @@ const CartIconContainer = () => {
     `;
 
     const GET_CART_ITEMS = gql`
-    {
-        cartItems @client
-    }
+        {
+            cartItems @client
+        }
     `;
 
     export const resolvers = {
@@ -772,7 +772,7 @@ const CartIconContainer = () => {
 
 __`本章用到的全部资料：`__
 
-- [https://www.apollographql.com/docs/.](https://www.apollographql.com/docs/)
+- [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
