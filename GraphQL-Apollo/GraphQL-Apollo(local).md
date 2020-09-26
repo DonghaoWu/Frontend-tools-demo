@@ -172,10 +172,10 @@ const CartIconContainer = () => {
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 
-- `cartHidden ===> Header.container`
-- `toggleCartHidden ===> Cart-dropdown.container, Cart-ison.container`
+- :gem:`cartHidden ===> Header.container`
+- :gem:`toggleCartHidden ===> Cart-dropdown.container, Cart-ison.container`
 
-1. Create a new data stored in local client.__`cartHidden`__
+1. Create a new data stored in local client.__`(cartHidden)`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -187,7 +187,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass __`cartHidden`__ into Header container component.
+2. Pass __`(cartHidden)`__ into Header container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.container.jsx`__
 
@@ -220,7 +220,7 @@ const CartIconContainer = () => {
     export default HeaderContainer;
     ```
 
-3. Remove some redux code in Header.component.
+3. Remove some redux code in Header.component
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.component.jsx`__
 
@@ -242,7 +242,7 @@ const CartIconContainer = () => {
     + import { default as Header } from './Components/Header/Header.container';
     ```
 
-5. Create a new mutation type. __`ToggleCartHidden`__
+5. Create a new mutation type. __`(ToggleCartHidden)`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -254,7 +254,7 @@ const CartIconContainer = () => {
     `;
     ```
 
-6. Create a new mutation function. __`toggleCartHidden`__
+6. Create a new mutation function. __`(toggleCartHidden)`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -277,7 +277,7 @@ const CartIconContainer = () => {
     };
     ```
 
-7. Apply __`toggleCartHidden`__ in Cart-icon component.
+7. Apply __`(toggleCartHidden)`__ in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -319,7 +319,7 @@ const CartIconContainer = () => {
     - });
     ```
 
-8. Apply __`toggleCartHidden`__ in Cart-dropdown component.
+8. Apply __`(toggleCartHidden)`__ in Cart-dropdown component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
 
