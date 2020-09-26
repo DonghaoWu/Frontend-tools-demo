@@ -39,7 +39,7 @@ const GET_CART_HIDDEN = gql`
     }
 `;
 
-// 应用在 React component
+// 应用在 React container component
 <Query query={GET_CART_HIDDEN}>
     {
         ({ data }) => {
@@ -86,7 +86,7 @@ export const resolvers = {
     }
 };
 
-// 查询引用 mutation 语句
+// container 查询引用 mutation 语句
 const TOGGLE_CART_HIDDEN = gql`
     mutation ToggleCartHidden{
         toggleCartHidden @client
@@ -114,10 +114,12 @@ const CartIconContainer = () => {
     4. Header.container.jsx
     5. Header.component.jsx
     6. App.js
+
     7. Cart-icon.container.jsx
     8. Cart-icon.component.jsx
     9. Cart-dropdown.container.jsx
     10. Cart-dropdown.component.jsx
+
     11. Collection-item.container.jsx
     12. Collection-item.component.jsx
     13. Collection-preview.component.jsx
@@ -166,11 +168,14 @@ const CartIconContainer = () => {
      });
     ```
 
-### <span id="11.2">`Step2: Local cart hidden value and toggleCartHidden function.(Mutation with no variable).`</span>
+### <span id="11.2">`Step2: Local cartHidden value and toggleCartHidden function.(Mutation with no variable).`</span>
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 
-1. Create a new data stored in local client.
+- `cartHidden ===> Header.container`
+- `toggleCartHidden ===> Cart-dropdown.container, Cart-ison.container`
+
+1. Create a new data stored in local client.__`cartHidden`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -182,7 +187,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass the data into Header container component.
+2. Pass __`cartHidden`__ into Header container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.container.jsx`__
 
@@ -237,7 +242,7 @@ const CartIconContainer = () => {
     + import { default as Header } from './Components/Header/Header.container';
     ```
 
-5. Create a new mutation type.
+5. Create a new mutation type. __`ToggleCartHidden`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -249,7 +254,7 @@ const CartIconContainer = () => {
     `;
     ```
 
-6. Create a new mutation function.
+6. Create a new mutation function. __`toggleCartHidden`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -272,7 +277,7 @@ const CartIconContainer = () => {
     };
     ```
 
-7. Apply the function in Cart-icon component.
+7. Apply __`toggleCartHidden`__ in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -314,7 +319,7 @@ const CartIconContainer = () => {
     - });
     ```
 
-8. Apply the function in Cart-dropdown component.
+8. Apply __`toggleCartHidden`__ in Cart-dropdown component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
 
@@ -351,8 +356,6 @@ const CartIconContainer = () => {
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.component.jsx`__
 
     ```diff
-    - import { connect } from 'react-redux';
-    - import { createStructuredSelector } from 'reselect';
     - import { toggleCartHidden } from '../../redux/hide-cart/hide-cart.actions';
 
     - const CartDropdown = ({ cartItems, history, dispatch }) => (
