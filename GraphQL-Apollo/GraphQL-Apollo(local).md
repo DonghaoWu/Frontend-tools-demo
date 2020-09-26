@@ -175,7 +175,7 @@ const CartIconContainer = () => {
 - :gem:`cartHidden ===> Header.container`
 - :gem:`toggleCartHidden ===> Cart-dropdown.container, Cart-ison.container`
 
-1. Create a new data stored in local client.__`(cartHidden)`__
+1. Create a new data stored in local client.__`'cartHidden'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -187,7 +187,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass __`(cartHidden)`__ into Header container component.
+2. Pass __`'cartHidden'`__ into Header container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.container.jsx`__
 
@@ -242,7 +242,7 @@ const CartIconContainer = () => {
     + import { default as Header } from './Components/Header/Header.container';
     ```
 
-5. Create a new mutation type. __`(ToggleCartHidden)`__
+5. Create a new mutation type. __`'ToggleCartHidden'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -254,7 +254,7 @@ const CartIconContainer = () => {
     `;
     ```
 
-6. Create a new mutation function. __`(toggleCartHidden)`__
+6. Create a new mutation function. __`'toggleCartHidden'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -277,7 +277,7 @@ const CartIconContainer = () => {
     };
     ```
 
-7. Apply __`(toggleCartHidden)`__ in Cart-icon component.
+7. Apply __`'toggleCartHidden'`__ in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -319,7 +319,7 @@ const CartIconContainer = () => {
     - });
     ```
 
-8. Apply __`(toggleCartHidden)`__ in Cart-dropdown component.
+8. Apply __`'toggleCartHidden'`__ in Cart-dropdown component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
 
@@ -385,11 +385,14 @@ const CartIconContainer = () => {
 #### `Comment:`
 1. 
 
-### <span id="11.3">`Step3: Local cart items value and cart items function.(Mutation with variable).`</span>
+### <span id="11.3">`Step3: Local cartItems value and addItemToCart mutation function.(Mutation with variable).`</span>
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 
-1. Create a new data stored in local client.
+- :gem:`cartItems ===> Cart-dropdown.container`
+- :gem:`addItemToCart ===> Collection-item.container, Cart-ison.container`
+
+1. Create a new data stored in local client. __`'cartItems'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
@@ -402,7 +405,7 @@ const CartIconContainer = () => {
     });
     ```
 
-2. Pass the data to Cart-dropdown container component.:gem:`(completed)`
+2. Pass __`'cartItems'`__ to Cart-dropdown container component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
 
@@ -448,7 +451,7 @@ const CartIconContainer = () => {
     export default CartDropdownContainer;
     ```
 
-3. Remove all redux code in Cart-dropdown component.:gem:`(completed)`
+3. Remove all redux code in Cart-dropdown component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.component.jsx`__
 
@@ -486,63 +489,43 @@ const CartIconContainer = () => {
     export default withRouter(CartDropdown);
     ```
 
-4. Create a new mutation type.
+4. Create a new mutation type, __`'AddItemToCart'`__ , a new mutation function. __`'addItemToCart'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
-    ```diff
+    ```jsx
     export const typeDefs = gql`
         extend type Mutation{
-            ToggleCartHidden:Boolean!
-    +       AddItemToCart(item:Item!):[Item]!
+            AddItemToCart(item:Item!):[Item]!
         }
     `;
-    ```
 
-5. Create a new mutation function.
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
-
-    ```diff
-    + const GET_CART_ITEMS = gql`
-    +    {
-    +        cartItems @client
-    +    }
-    +`;
+    const GET_CART_ITEMS = gql`
+       {
+           cartItems @client
+       }
+    `;
 
     export const resolvers = {
         Mutation: {
-            toggleCartHidden: (_root, _args, { cache }) => {
-                const { cartHidden } = cache.readQuery({
-                    query: GET_CART_HIDDEN
+            addItemToCart: (_root, { item }, { cache }) => {
+                const { carItems } = cache.readQuery({
+                    query: GET_CART_ITEMS
                 });
 
-                cache.writeQuery({
-                    query: GET_CART_HIDDEN,
-                    data: { cartHidden: !cartHidden }
-                });
-
-                return !cartHidden;
-            },
-
-    +        addItemToCart: (_root, { item }, { cache }) => {
-    +            const { carItems } = cache.readQuery({
-    +                query: GET_CART_ITEMS
-    +            });
-
-    +            const newCartItems = addItemToCart(cartItems, item);
+                const newCartItems = addItemToCart(cartItems, item);
                 
-    +            cache.writeQuery({
-    +                query: GET_CART_ITEMS,
-    +                data: { carItems: newCartItems }
-    +            })
-    +            return newCartItems;
-    +        }
+                cache.writeQuery({
+                    query: GET_CART_ITEMS,
+                    data: { carItems: newCartItems }
+                })
+                return newCartItems;
+            }
         }
     };
     ```
 
-6. Apply the mutation function in Collection-item container. :gem:`(completed)`
+5. Apply __`'addItemToCart'`__ in Collection-item container. 
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-item/Collection-item.container.jsx`__
 
@@ -576,7 +559,7 @@ const CartIconContainer = () => {
     export default CollectionItemContainer;
     ```
 
-- Remove redux code in Collection-item component.:gem:`(completed)`
+- Remove redux code in Collection-item component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-item/Collection-item.component.jsx`__
 
@@ -621,7 +604,6 @@ const CartIconContainer = () => {
 
     ```diff
     - import CollectionItem from '../../Components/Collection-item/Collection-item.component';
-
     + import { default as CollectionItem } from '../../Components/Collection-item/Collection-item.container';
     ```
 
