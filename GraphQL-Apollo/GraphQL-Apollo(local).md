@@ -144,9 +144,9 @@ const CartIconContainer = () => {
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
 - [11.1 Configurations.](#11.1)
-- [11.2 Local cart hidden value and toggleCartHidden function.(Mutation with no variable)](#11.2)
-- [11.3 Local cart items value and cart items function.(Mutation with variable)](#11.3)
-- [11.4 Local cart quantity value and mutation function. (Mutation with variable)](#11.4)
+- [11.2 Local cartHidden value and toggleCartHidden function.(Mutation with no variable).](#11.2)
+- [11.3 Local cartItems value and addItemToCart mutation function.(Mutation with variable).](#11.3)
+- [11.4 Local itemCount value.](#11.4)
 ------------------------------------------------------------
 
 ### <span id="11.1">`Step1: Configurations.`</span>
@@ -610,11 +610,14 @@ const CartIconContainer = () => {
 #### `Comment:`
 1. 
 
-### <span id="11.4">`Step4: Local cart quantity value and mutation function.`</span>
+### <span id="11.4">`Step4: Local itemCount value and mutation function.`</span>
 
 - #### Click here: [BACK TO CONTENT](#11.0)
 
-1. Create a new data stored in local client.
+- :gem:`cartItems ===> Cart-dropdown.container`
+- :gem:`addItemToCart ===> Collection-item.container`
+
+1. Create a new data stored in local client. __`itemCount`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/index.js`__
 
