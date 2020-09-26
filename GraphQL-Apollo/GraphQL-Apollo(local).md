@@ -1,6 +1,6 @@
 # Front end development tools (Part 11)
 
-### `Key Words: GraphQL frontend, Apollo, Spinner, local dynamic.`
+### `Key Words: GraphQL frontend, Apollo, local dynamic.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -242,7 +242,7 @@ const CartIconContainer = () => {
     + import { default as Header } from './Components/Header/Header.container';
     ```
 
-5. Create a new mutation type. __`'ToggleCartHidden'`__
+5. Create a new mutation type. __`'ToggleCartHidden'`__, a new mutation function. __`'toggleCartHidden'`__
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -252,13 +252,7 @@ const CartIconContainer = () => {
             ToggleCartHidden:Boolean!
         }
     `;
-    ```
 
-6. Create a new mutation function. __`'toggleCartHidden'`__
-
-    __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
-
-    ```js
     export const resolvers = {
         Mutation: {
             toggleCartHidden: (_root, _args, { cache }) => {
@@ -277,7 +271,7 @@ const CartIconContainer = () => {
     };
     ```
 
-7. Apply __`'toggleCartHidden'`__ in Cart-icon component.
+6. Apply __`'toggleCartHidden'`__ in Cart-icon component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-icon/Cart-icon.container.jsx`__
 
@@ -319,7 +313,7 @@ const CartIconContainer = () => {
     - });
     ```
 
-8. Apply __`'toggleCartHidden'`__ in Cart-dropdown component.
+7. Apply __`'toggleCartHidden'`__ in Cart-dropdown component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Cart-dropdown/Cart-dropdown.container.jsx`__
 
@@ -370,7 +364,7 @@ const CartIconContainer = () => {
     >
     ```
 
-9. Import Cart-icon container and Cart-dropdown container in Header component.
+8. Import Cart-icon container and Cart-dropdown container in Header component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Header/Header.component.jsx`__
 
@@ -589,7 +583,7 @@ const CartIconContainer = () => {
     export default CollectionItem;
     ```
 
-7. Import Collection-item container in Collection-preview component.
+6. Import Collection-item container in Collection-preview component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Components/Collection-preview/Collection-preview.component.jsx`__
 
@@ -598,7 +592,7 @@ const CartIconContainer = () => {
     + import { default as CollectionItem } from '../Collection-item/Collection-item.container'
     ```
 
-8. Import Collection-item container in CategoryPage component.
+7. Import Collection-item container in CategoryPage component.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/Pages/CategoryPage/CategoryPage.component.jsx`__
 
@@ -695,7 +689,7 @@ const CartIconContainer = () => {
     export default CartIcon;
     ```
 
-4. Create an extra local data type in Item schema. __`'quantity'`__
+4. Create an extra local data type in Item schema. __`'quantity'`__, some new code in function __`addItemToCart`__.
 
     __`Location:./clothing-friends-graplql-apollo/client/src/graphql/resolvers.js`__
 
@@ -747,10 +741,10 @@ const CartIconContainer = () => {
     };
     ```
 
-5. Apply. 由于增加的代码属于 mutation function `addItemToCart` 的一部分，所以不需要传递到 component。
+5. Apply. 由于增加的代码属于 mutation function `addItemToCart` 的一部分，属于一并改变动作。
 
 #### `Comment:`
-1. 这里创造的本地数据 `quantity` 用来结合远程数据 items 使用但不会占用远程数据位置，做一个本地辅助作用。
+1. :gem::gem::gem:这里创造的本地数据 `quantity` 用来结合远程数据 items 使用但不会占用远程数据位置，做一个本地辅助作用。
 
 2. 这一段也可以这样写：
 ```diff
