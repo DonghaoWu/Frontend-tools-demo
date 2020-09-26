@@ -128,12 +128,11 @@ const CartIconContainer = () => {
 ------------------------------------------------------------
 
 - 关于 container 接受的参数：
-```diff
-+ Header 接受 query(cartHidden) 一种参数。
-+ Cart-icon 接受 query(itemCount) 和 mutation(toggleCartHidden) 两种参数。
-+ Cart-dropdown 接受 query(cartItems) 和 mutation(toggleCartHidden) 两种参数。
-+ Collection-item 接受 mutation(addItemToCart) 一种参数。
-```
+    1. :gem:`cartHidden ===> Header.container`
+    2. :gem:`toggleCartHidden ===> Cart-dropdown.container, Cart-icon.container`
+    3. :gem:`cartItems ===> Cart-dropdown.container`
+    4. :gem:`addItemToCart ===> Collection-item.container`
+    5. :gem:`itemCount ===> Cart-icon.container`
 ------------------------------------------------------------
 
 #### `Apollo:`
