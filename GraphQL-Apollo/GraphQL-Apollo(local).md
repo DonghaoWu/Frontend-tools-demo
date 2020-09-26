@@ -173,7 +173,7 @@ const CartIconContainer = () => {
 - #### Click here: [BACK TO CONTENT](#11.0)
 
 - :gem:`cartHidden ===> Header.container`
-- :gem:`toggleCartHidden ===> Cart-dropdown.container, Cart-ison.container`
+- :gem:`toggleCartHidden ===> Cart-dropdown.container, Cart-icon.container`
 
 1. Create a new data stored in local client.__`'cartHidden'`__
 
@@ -390,7 +390,7 @@ const CartIconContainer = () => {
 - #### Click here: [BACK TO CONTENT](#11.0)
 
 - :gem:`cartItems ===> Cart-dropdown.container`
-- :gem:`addItemToCart ===> Collection-item.container, Cart-ison.container`
+- :gem:`addItemToCart ===> Collection-item.container`
 
 1. Create a new data stored in local client. __`'cartItems'`__
 
