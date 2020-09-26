@@ -1180,7 +1180,7 @@
 
 __`本章用到的全部资料：`__
 
-- [https://www.apollographql.com/docs/.](https://www.apollographql.com/docs/)
+- [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
