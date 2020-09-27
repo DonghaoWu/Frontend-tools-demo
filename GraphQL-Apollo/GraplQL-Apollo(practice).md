@@ -251,9 +251,9 @@
     `;
 
     const GET_CART_ITEMS = gql`
-    {
-        cartItems @client
-    }
+        {
+            cartItems @client
+        }
     `;
 
     export const resolvers = {
@@ -1177,7 +1177,7 @@
 - #### Click here: [BACK TO CONTENT](#12.0)
 
   <p align="center">
-  <img src="../assets/fe-p12-01.png" width=90%>
+  <img src="../assets/fe-p12-01.png" width=95%>
   </p>
 
 -----------------------------------------------------------------
