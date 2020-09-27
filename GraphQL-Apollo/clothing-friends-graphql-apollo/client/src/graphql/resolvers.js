@@ -29,7 +29,7 @@ export const typeDefs = gql`
     ClearItemFromCart(item: Item!): [Item]!
     ClearCart:[Item]!
     SetCurrentUser(user: User!): User!
-    SetDisplayName(displayName: DisplayName!): DisplayName!
+    SetDisplayName(displayName: String!): String!
   }
 `;
 

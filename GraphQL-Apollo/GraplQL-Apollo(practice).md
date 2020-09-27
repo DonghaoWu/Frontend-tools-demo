@@ -865,7 +865,7 @@
     ```js
     export const typeDefs = gql`
         extend type Mutation {
-            SetDisplayName(displayName: DisplayName!): DisplayName!
+            SetDisplayName(displayName: String!): String!
         }
     `;
 
@@ -1172,11 +1172,15 @@
     + import { default as SignUp } from '../../Components/Sign-up/Sign-up.container'; 
     ```
 
-### <span id="12.6">`Step6: Local cache set up data flow.`</span>
+### <span id="12.6">`Step6: local displayName data flow.`</span>
 
 - #### Click here: [BACK TO CONTENT](#12.0)
 
-1. 
+  <p align="center">
+  <img src="../assets/fe-p12-01.png" width=90%>
+  </p>
+
+-----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
 
