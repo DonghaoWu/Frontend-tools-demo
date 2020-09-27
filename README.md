@@ -45,3 +45,15 @@ kill -9 <PID>
 - [Part9 - Context API. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Context-API/Conterxt-API.md)
     - __`Code base: Part4`__ 
     - __`Key Words: React hooks, useContext, Provider context pattern.`__
+
+- [Part10 - Graphql+Apollo (remote). :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/GraphQL-Apollo/GraphQL-Apollo(remote).md)
+    - __`Code base: Part4`__ 
+    - __`Key Words: GraphQL frontend, Apollo, Spinner.`__
+
+- [Part11 - Graphql+Apollo (local cache). :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/GraphQL-Apollo/GraphQL-Apollo(local).md)
+    - __`Code base: Part4`__ 
+    - __`Key Words: GraphQL frontend, Apollo, local cache.`__
+
+- [Part12 - Graphql+Apollo (local cache). :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/GraphQL-Apollo/GraplQL-Apollo(practice).md)
+    - __`Code base: Part4`__ 
+    - __`Key Words: GraphQL frontend, Apollo, local cache.`__
