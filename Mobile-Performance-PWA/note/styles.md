@@ -1,3 +1,13 @@
 - App.scss
-- Checkout.styles.scss
-- 
+- CheckoutPage.styles.scss
+- CollectionPage.styles.scss
+- HomePage.styles.scss
+- SignInSignUpPage.styles.scss
+
+- Checkout-item.styles.scss
+- Collection-item.styles.scss
+- Collection-preview.styles.scss
+- Header.styles.scss
+- Directory-item.styles.scss
+- Sign-in.styles.scss
+- Sign-up.styles.scss
