@@ -57,3 +57,7 @@ kill -9 <PID>
 - [Part12 - Graphql+Apollo (local cache). :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/GraphQL-Apollo/GraplQL-Apollo(practice).md)
     - __`Code base: Part4`__ 
     - __`Key Words: GraphQL frontend, Apollo, local cache.`__
+
+- [Part13 - Mobile support, React performance, PWA. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Mobile-Performance-PWA/Mobile-Performance-PWA.md)
+    - __`Code base: Part7`__ 
+    - __`Key Words: Mobile support, media query, performance, PWA, lazy loading, Suspense, error boundry, React.memo, useCallback, useMemo.`__
