@@ -257,3 +257,13 @@ app.listen(port, error => {
 });
 
 // git push heroku master --force
+
+```bash
+$ git init
+$ heroku login
+$ heroku create <your app name>
+$ heroku git:remote -a <your app name>
+$ git add .
+$ git commit -m'something'
+$ git push heroku master --force
+```
