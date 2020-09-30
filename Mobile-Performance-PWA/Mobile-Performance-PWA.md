@@ -1,6 +1,6 @@
 # Front end development tools (Part 13)
 
-### `Key Words: Mobile support, media query, performance, PWA, lazy loading, Suspense, error boundry, React.memo, useCallback, useMemo.`
+### `Key Words: Mobile support, media query, performance, PWA, lazy loading, Suspense, error boundry, React.memo, useCallback, useMemo, compression.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -29,6 +29,9 @@
     2. Spinner.styles.jsx
     3. With-spinner.jsx
     4. App.js
+    5. manifest.json
+    6. server.js
+    7. index.js
 
 ------------------------------------------------------------
 
@@ -154,7 +157,7 @@
 
 2. Import Spinner component in With-spinner component.
 
-    __`Location:./clothing-friends-mobile-performance-pwa/client/src/Components/With-spinner/Collections-overview.container.jsx`__
+    __`Location:./clothing-friends-mobile-performance-pwa/client/src/Components/With-spinner/With-spinner.container.jsx`__
 
     ```jsx
     import React from 'react';
@@ -181,7 +184,7 @@
 
 - #### Click here: [BACK TO CONTENT](#13.0)
 
-1. Add `lazy` and `suspense` from react:
+1. Add `lazy` and `Suspense` from react:
 
     __`Location:./clothing-friends-mobile-performance-pwa/client/src/App.js`__
 
@@ -241,7 +244,7 @@
     export default connect(mapStateToProps,mapDispatchToProps)(App);
     ```
 
-2. Add a Error boundary component.
+2. Add an Error boundary component.
 
     __`Location:./clothing-friends-mobile-performance-pwa/client/src/Components/Error-boundary/Error-boundary.component.jsx`__
 
@@ -277,7 +280,7 @@
     export default ErrorBoundary;
     ```
 
-3. Add error boundary compnent to App.js
+3. Add the error boundary component to App.js
 
     ```diff
     import React, { lazy, Suspense } from 'react';
@@ -364,17 +367,17 @@
     __`Location:./clothing-friends-mobile-performance-pwa/client/src/index.js`__
 
     ```diff
-    +import * as serviceWorker from './serviceWorker';
+    + import * as serviceWorker from './serviceWorker';
 
-    +serviceWorker.register();
+    + serviceWorker.register();
     ```
 
     __`Location:./clothing-friends-mobile-performance-pwa/client/src/server.js`__
 
     ```diff
-    +app.get('/service-worker.js', (req, res) => {
-    +    res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
-    +})
+    + app.get('/service-worker.js', (req, res) => {
+    +     res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
+    + })
     ```
 
 2. manifest.json
@@ -391,19 +394,19 @@
         "name": "Clothing-friends by Donghao",
         "icons": [
             {
-            "src": "favicon.ico",
-            "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/x-icon"
+                "src": "favicon.ico",
+                "sizes": "64x64 32x32 24x24 16x16",
+                "type": "image/x-icon"
             },
             {
-            "src": "crwn-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
+                "src": "crwn-512x512.png",
+                "sizes": "512x512",
+                "type": "image/png"
             },
             {
-            "src": "crwn-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
+                "src": "crwn-192x192.png",
+                "sizes": "192x192",
+                "type": "image/png"
             }
         ],
         "start_url": ".",
@@ -413,7 +416,7 @@
     }
     ```
 
-3. ssl
+3. Adding SSL.
 
     - install dependency in main directory.
     ```bash
@@ -442,9 +445,9 @@
     app.use(cors());
 
     if (process.env.NODE_ENV === 'production') {
-    +    app.use(compression());
-    +    app.use(enforce.HTTPS({ trustProtoHeader: true }));
-    +    app.use(express.static(path.join(__dirname, 'client/build')));
+    +   app.use(compression());
+    +   app.use(enforce.HTTPS({ trustProtoHeader: true }));
+    +   app.use(express.static(path.join(__dirname, 'client/build')));
 
         app.get('*', function (req, res) {
             res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
@@ -456,9 +459,9 @@
         console.log('Server running on port ' + port);
     });
 
-    +app.get('/service-worker.js', (req, res) => {
-    +    res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
-    +});
+    + app.get('/service-worker.js', (req, res) => {
+    +     res.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
+    + });
 
     app.post('/payment', (req, res) => {
         const body = {
@@ -480,25 +483,45 @@
 #### `Comment:`
 1. 
 
-### <span id="13.5">`Step5: Deploy on heroku.`</span>
+### <span id="13.5">`Step5: Deploy on Heroku.`</span>
 
-- #### Click here: [BACK TO CONTENT](#13.0)
+- #### Click here: [BACK TO CONTENT](#4.0)
 
-```bash
-$ git init
-$ heroku login
-$ heroku create <your app name>
-$ heroku git:remote -a <your app name>
-$ git add .
-$ git commit -m'something'
-$ git push heroku master --force
-```
+1. Deploy on Heroku - `<In app root directory>`:
+
+    ```bash
+    $ git init
+    $ heroku login
+    $ heroku create <your app name>
+    $ heroku git:remote -a <your app name>
+    $ git add .
+    $ git commit -m'something'
+    $ git push heroku master --force
+    ```
+
+2. Add stripe secret key in Heroku.
+
+  <p align="center">
+  <img src="../assets/fe-p4-04.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+3. Add firebase Authorized domain.
+
+  <p align="center">
+  <img src="../assets/fe-p4-05.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
+4. Unhide firebase publish api key.
 
 -----------------------------------------------------------------
 
 __`本章用到的全部资料：`__
 
-- [https://www.apollographql.com/docs/](https://www.apollographql.com/docs/)
+- null
 
 - #### Click here: [BACK TO CONTENT](#13.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
