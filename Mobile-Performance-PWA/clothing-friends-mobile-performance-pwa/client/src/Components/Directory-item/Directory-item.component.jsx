@@ -4,8 +4,6 @@ import { withRouter } from 'react-router-dom';
 
 const DirectoryItem = (props) => {
     const { title, imageUrl, size, history, linkUrl, match } = props;
-    // console.log(props);
-    console.log(title, size)
     return (
         <div className={`${size} directory-item`}>
             <div className='background-image' style={{ backgroundImage: `url(${imageUrl})` }} />

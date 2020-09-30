@@ -8,7 +8,9 @@ import Spinner from './Components/Spinner/Spinner.component';
 import ErrorBoundary from './Components/Error-boundary/Error-boundary.component.jsx';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
+import { selectCurrentHiddenCart } from './redux/hide-cart/hide-cart.selectors';
 
+import { toggleCartHidden } from './redux/hide-cart/hide-cart.actions';
 import { checkUserSession } from './redux/user/user.actions';
 
 import './App.scss';
@@ -23,6 +25,16 @@ class App extends React.Component {
   componentDidMount() {
     const { checkUserSession } = this.props;
     checkUserSession();
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside = (event) => {
+    const { cartHidden, toggleCartHidden } = this.props;
+    if (!cartHidden) toggleCartHidden();
   }
 
   render() {
@@ -46,11 +58,13 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  cartHidden: selectCurrentHiddenCart
 });
 
 const mapDispatchToProps = dispatch => ({
-  checkUserSession: () => dispatch(checkUserSession())
+  checkUserSession: () => dispatch(checkUserSession()),
+  toggleCartHidden: () => dispatch(toggleCartHidden())
 });
 
 export default connect(
