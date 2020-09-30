@@ -19,6 +19,7 @@ const HomePage = lazy(() => import('./Pages/HomePage/HomePage.component'));
 const ShopPage = lazy(() => import('./Pages/ShopPage/ShopPage.component'));
 const SignInAndSignUpPage = lazy(() => import('./Pages/SignInSignUpPage/SignInAndSignUpPage.component'));
 const CheckoutPage = lazy(() => import('./Pages/CheckoutPage/CheckoutPage.component'));
+const OrderPage = lazy(() => import('./Pages/OrderPage/OrderPage.component'));
 
 class App extends React.Component {
 
@@ -49,6 +50,7 @@ class App extends React.Component {
               <Route exact path='/' component={HomePage} />
               <Route path='/shop' component={ShopPage} />
               <Route exact path='/checkout' component={CheckoutPage} />
+              <Route exact path='/orders' component={OrderPage} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

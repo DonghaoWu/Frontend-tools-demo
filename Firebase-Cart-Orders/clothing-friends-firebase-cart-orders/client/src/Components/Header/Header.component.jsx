@@ -24,13 +24,15 @@ const Header = ({ currentUser, history, hidden, signOutStart }) => {
       <div className='options'>
         {
           currentUser ? (
-            <span className='option'>{`Welcome, ${currentUser.displayName}`}</span>
+            <div>
+              <span className='option'>{`Welcome, ${currentUser.displayName}`}</span>
+              <Link className='option' to='/orders'>ORDERS</Link>
+            </div>
           ) :
             null
         }
         <Link className='option' to='/'>HOME</Link>
         <Link className='option' to='/shop'>SHOP</Link>
-        <Link className='option' to='/shop'>CONTACT</Link>
         {
           currentUser ?
             (
