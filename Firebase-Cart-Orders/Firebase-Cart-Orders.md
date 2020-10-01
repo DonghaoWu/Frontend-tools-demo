@@ -20,15 +20,11 @@
 
 4. 其中 cart feature 新添加的功能都是在 saga 的循环里面完成的，不需要在 component 中触发。
 
-
 ------------------------------------------------------------
 
 #### `Redux-saga API`
 ```diff
-+ import createSagaMiddleware from 'redux-saga';
-+ createSagaMiddleware()
-+ sagaMiddleware.run(rootSaga);
-+ import { takeLatest, put, all, call } from 'redux-saga/effects';
+
 ```
 
 ### <span id="14.0">`Brief Contents & codes position`</span>
@@ -37,13 +33,6 @@
 
 - [14.1 Firebase Cart.](#14.1)
 - [14.2 Firebase Orders.](#14.2)
-- [14.3 Refactor sign in code.](#14.3)
-- [14.4 Refactor sign out code.](#14.4)
-- [14.5 Clear cart when sign out.](#14.5)
-
-- [14.6 Refactor email sign up code.](#14.6)
-- [14.14 Refactor load user code.](#14.14)
-- [14.8 Redux-thunk auth logic VS Reudx-saga auth logic.](#14.8)
 
 ------------------------------------------------------------
 
