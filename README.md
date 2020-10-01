@@ -61,3 +61,7 @@ kill -9 <PID>
 - [Part 13 - Mobile support, React performance, PWA. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Mobile-Performance-PWA/Mobile-Performance-PWA.md)
     - __`Code base: Part7`__ 
     - __`Key Words: Mobile support, media query, performance, PWA, lazy loading, Suspense, error boundry, React.memo, useCallback, useMemo.`__
+
+- [Part 14 - Firebase Cart Orders, Firestore security. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Mobile-Performance-PWA/Mobile-Performance-PWA.md)
+    - __`Code base: Part13`__ 
+    - __`Key Words: `__
