@@ -16,7 +16,7 @@
 #### `本章背景：`
 1. 配置 redux-saga。
 2. 熟悉 redux-saga 的设置流程。
-3. [Part 14: Redux-saga](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-saga/Reudx-saga.md)
+3. [Part 7: Redux-saga](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-saga/Reudx-saga.md)
 
 ------------------------------------------------------------
 
