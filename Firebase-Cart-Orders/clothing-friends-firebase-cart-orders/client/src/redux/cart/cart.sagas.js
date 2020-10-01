@@ -3,7 +3,7 @@ import { all, call, takeLatest, put, select } from 'redux-saga/effects';
 import { getUserCartRef } from '../../firebase/firebase.utils';
 
 import { SIGN_OUT_SUCCESS, SIGN_IN_SUCCESS } from '../user/user.types';
-import { ADD_ITEM, REMOVE_ITEM, CLEAR_ITEM_FROM_CART } from './cart.types'
+import { ADD_ITEM, REMOVE_ITEM, CLEAR_ITEM_FROM_CART } from './cart.types';
 
 import { clearCart, setCartFromFirebase } from './cart.actions';
 
@@ -24,7 +24,7 @@ export function* checkCartFromFirebase({ payload: user }) {
     yield put(setCartFromFirebase(cartSnapshot.data().cartItems));
 };
 
-export function* onUserSignIn() {
+export function* onUserSignInSuccess() {
     yield takeLatest(SIGN_IN_SUCCESS, checkCartFromFirebase);
 };
 
@@ -53,5 +53,5 @@ export function* onCartChange() {
 };
 
 export function* cartSagas() {
-    yield all([call(onSignOutSuccess), call(onCartChange), call(onUserSignIn)]);
+    yield all([call(onSignOutSuccess), call(onCartChange), call(onUserSignInSuccess)]);
 }

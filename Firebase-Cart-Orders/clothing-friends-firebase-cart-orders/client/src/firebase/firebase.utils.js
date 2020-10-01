@@ -97,7 +97,7 @@ const getCurrentUser = () => {
   });
 };
 
-export const getUserCartRef = async userId => {
+const getUserCartRef = async userId => {
   const cartsRef = firestore.collection('carts').where('userId', '==', userId);
   const snapShot = await cartsRef.get();
 
@@ -119,5 +119,6 @@ export {
   createUserInFirestoreForUserSaga,
   googleSignInOrSignUpForUserSaga,
   convertCollectionsSnapshotToMap,
-  getCurrentUser
+  getCurrentUser,
+  getUserCartRef
 }
