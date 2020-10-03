@@ -1,8 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
 
-const StripeCheckoutButton = ({ price }) => {
+import { orderPlacedStart } from '../../redux/orders/orders.actions';
+
+const StripeCheckoutButton = ({ price, orderItems, orderPlacedStart, history }) => {
     const priceForStripe = price * 100;
     const publishableKey = 'pk_test_51HLupsCbpGGT0rI7hrSbq3oI4boGToq9OnsqjO6mwc3SKlApYWFZU2KkOlMwl1gSJmhxT20PUsfWXrM2XIuHEuJ50085O63Qvj';
 
@@ -16,7 +20,11 @@ const StripeCheckoutButton = ({ price }) => {
             }
         })
             .then(response => {
-                alert('succesful payment');
+                console.log('here is StripeCheckoutButton', response);
+                orderPlacedStart(orderItems, history);
+            })
+            .then(response => {
+                // alert('succesful payment');
             })
             .catch(error => {
                 console.log('Payment Error: ', error);
@@ -42,4 +50,8 @@ const StripeCheckoutButton = ({ price }) => {
     );
 };
 
-export default StripeCheckoutButton;
+const mapDispatchToProps = dispatch => ({
+    orderPlacedStart: (orderItems, history) => dispatch(orderPlacedStart(orderItems,history))
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(StripeCheckoutButton));

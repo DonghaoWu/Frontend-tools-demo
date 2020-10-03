@@ -1,4 +1,11 @@
-import { ADD_ITEM, REMOVE_ITEM, CLEAR_ITEM_FROM_CART, CLEAR_CART, SET_CART_FROM_FIREBASE } from './cart.types';
+import {
+    ADD_ITEM, 
+    REMOVE_ITEM,
+    CLEAR_ITEM_FROM_CART,
+    CLEAR_CART,
+    ORDER_SUCCESS_CLEAR_CART,
+    SET_CART_FROM_FIREBASE
+} from './cart.types';
 import { addItemToCart, removeItemFromCart } from './cart.utils';
 
 const INITIAL_STATE = {
@@ -26,6 +33,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 )
             };
         case CLEAR_CART:
+        case ORDER_SUCCESS_CLEAR_CART:
             return {
                 ...state,
                 cartItems: []

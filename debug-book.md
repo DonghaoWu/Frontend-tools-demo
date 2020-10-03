@@ -13,4 +13,14 @@
     - clearCart();
     + await clearCart();
     ```
-8. 
+8. 10/2 大错误，type 复制黏贴的坏处，以下这个隐蔽的错误导致每个不同的动作都引向同一个 reducer。
+```js
+export const SET_ORDERS_FROM_FIREBASE = 'SET_CART_FROM_FIREBASE';
+```
+
+- 这件事说明检查 type 很重要，不然会出现一些奇怪的行为。
+
+9. 关于时间的处理，在本 app 中如果 order success 就会先更新 firebase，接着使用本地数据更新 state，这里有一个问题就是 上传的 createdAt 在 firebase 里面是以 timestamp 形式保存，而本地则使用 new Date()， 是两个不同的格式，所带的 method 也不一样，所以有：
+```js
+let time = createdAt.toDate ? createdAt.toDate().toString() : createdAt.toString();
+```

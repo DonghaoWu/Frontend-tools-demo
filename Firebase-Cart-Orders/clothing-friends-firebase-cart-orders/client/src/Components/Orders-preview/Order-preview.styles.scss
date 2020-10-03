@@ -1,0 +1,30 @@
+.order-preview {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 100px;
+
+  @media screen and (max-width: 800px) {
+    align-items: center;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 25px;
+
+    cursor: pointer;
+    &:hover {
+      color: grey;
+    }
+  }
+
+  .preview {
+    display: flex;
+    justify-content: flex-start;
+
+    @media screen and (max-width: 800px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 15px;
+    }
+  }
+}

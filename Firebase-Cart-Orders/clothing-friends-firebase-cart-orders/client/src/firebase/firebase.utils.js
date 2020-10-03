@@ -110,6 +110,19 @@ const getUserCartRef = async userId => {
   }
 };
 
+const getUserOrdersRef = async userId => {
+  const ordersRef = firestore.collection('orders').where('userId', '==', userId);
+  const snapShot = await ordersRef.get();
+
+  if (snapShot.empty) {
+    const orderDocRef = firestore.collection('orders').doc();
+    await orderDocRef.set({ userId, orders: [] });
+    return orderDocRef;
+  } else {
+    return snapShot.docs[0].ref;
+  }
+};
+
 export {
   firebase,
   auth,
@@ -120,5 +133,6 @@ export {
   googleSignInOrSignUpForUserSaga,
   convertCollectionsSnapshotToMap,
   getCurrentUser,
-  getUserCartRef
+  getUserCartRef,
+  getUserOrdersRef
 }

@@ -8,6 +8,7 @@ import displayNameReducer from './display-name/display-name.reducer';
 import directoryReducer from './directory/directory.reducer';
 import shopReducer from './shop/shop.reducer';
 import hideCartReducer from './hide-cart/hide-cart.reducer';
+import ordersReducer from './orders/orders.reducer'
 
 const persistConfig = {
     key: 'root',
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     displayName: displayNameReducer,
     directory: directoryReducer,
     shop: shopReducer,
-    hideCart: hideCartReducer
+    hideCart: hideCartReducer,
+    orders: ordersReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
