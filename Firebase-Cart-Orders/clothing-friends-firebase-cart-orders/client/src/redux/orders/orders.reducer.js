@@ -13,7 +13,6 @@ const ordersReducer = (state = INITIAL_STATE, action) => {
                 ordersList: action.payload
             };
         case ORDER_PLACED_SUCCESS:
-            console.log('=====>',action.payload)
             return {
                 ...state,
                 ordersList: action.payload,

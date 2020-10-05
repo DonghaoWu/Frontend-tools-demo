@@ -11,18 +11,13 @@ import { orderSuccessClearCart } from '../cart/cart.actions';
 import { selectCurrentUser } from '../user/user.selectors';
 import { selectCurrentOrders } from './orders.selectors';
 
-// import { addNewOrder } from './orders.utils';
-
 export function* checkOrdersFromFirebase({ payload: user }) {
-    // console.log('checkOrdersFromFirebase working ===========>');
     const ordersRef = yield getUserOrdersRef(user.id);
     const ordersSnapshot = yield ordersRef.get();
-    // console.log('in function check order', ordersSnapshot.data())
     yield put(setOrdersFromFirebase(ordersSnapshot.data().orders));
 };
 
 export function* onSignInSuccess() {
-    // yield console.log('sign in success working ===========>');
     yield takeLatest(SIGN_IN_SUCCESS, checkOrdersFromFirebase);
 };
 
@@ -33,7 +28,6 @@ export function* onOrderPlacedStart() {
 export function* updateOrdersInFirebase(action) {
     const orderItems = action.payload;
     const history = action.history
-    // console.log('updateOrdersInFirebase ========>', action);
     const currentUser = yield select(selectCurrentUser);
     if (currentUser) {
         try {

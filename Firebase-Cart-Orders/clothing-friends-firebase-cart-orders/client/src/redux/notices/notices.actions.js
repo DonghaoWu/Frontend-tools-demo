@@ -14,9 +14,9 @@ export const addNotice = (msg, noticeType, id) => {
     }
 }
 
-export const removeNotice = (id) => (
-    {
+export const removeNotice = (id) => {
+    return {
         type: REMOVE_NOTICE,
         payload: id
     }
-);
+};

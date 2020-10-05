@@ -20,14 +20,12 @@ const StripeCheckoutButton = ({ price, orderItems, orderPlacedStart, history }) 
             }
         })
             .then(response => {
-                console.log('here is StripeCheckoutButton', response);
                 orderPlacedStart(orderItems, history);
             })
             .then(response => {
                 // alert('succesful payment');
             })
             .catch(error => {
-                console.log('Payment Error: ', error);
                 alert(
                     'There was an issue with your payment! Please make sure you use the provided credit card.'
                 );

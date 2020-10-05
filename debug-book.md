@@ -106,4 +106,9 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CartDropd
 
 11. 上面的例子使用`自身 node 作为参数。`
 
-12. 
+12. 10/5 takeEvery 的应用实例，使用在并行侦听连续出现的错误。
+```js
+export function* onSignInFailure() {
+    yield takeEvery(SIGN_IN_FAILURE, signInFailureNotice);
+}
+```

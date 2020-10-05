@@ -18,9 +18,10 @@ export const orderPlacedSuccess = orders => {
     }
 };
 
-export const orderPlacedFailure = () => {
+export const orderPlacedFailure = (error) => {
     return {
         type: ORDER_PLACED_FAILURE,
+        payload: error
     }
 };
 

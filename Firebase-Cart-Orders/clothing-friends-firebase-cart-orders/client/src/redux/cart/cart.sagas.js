@@ -19,11 +19,8 @@ export function* onSignOutSuccess() {
 };
 
 export function* checkCartFromFirebase({ payload: user }) {
-    // console.log('checkCartFromFirebase working ===========>');
-
     const cartRef = yield getUserCartRef(user.id);
     const cartSnapshot = yield cartRef.get();
-    // console.log('in function check cart', cartSnapshot.data())
     yield put(setCartFromFirebase(cartSnapshot.data().cartItems));
 };
 
