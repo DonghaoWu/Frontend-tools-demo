@@ -1,5 +1,5 @@
 .order-item {
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -27,13 +27,14 @@
   }
 
   .order-detail {
-    width: 95%;
+    width: 95px;
+    height:10%;
     display: flex;
     justify-content: space-around;
-    font-size: 12px;
+    font-size: 15px;
 
     .name {
-      width: 90%;
+      width: 80%;
       padding-bottom: 10px;
     }
 
