@@ -11,6 +11,7 @@ import './Orders-overview.styles.scss';
 const OrdersOverview = ({ orders }) => {
     return (
         <div className='orders-overview'>
+            <h1 className='orders-title'>Orders Overview</h1>
             {
                 orders.map(({ createdAt, orderItems }) => {
                     let time = createdAt.toDate ? createdAt.toDate().toString() : createdAt.toString();

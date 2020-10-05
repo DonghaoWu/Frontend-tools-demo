@@ -6,7 +6,7 @@ import './OrdersPage.styles.scss';
 
 const OrdersPage = () => {
   return (
-    <div >
+    <div className='orders-container'>
       <OrdersOverview />
     </div>
   )

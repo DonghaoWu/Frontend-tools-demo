@@ -8,7 +8,7 @@ const OrderItem = ({ item }) => {
     return (
         <div className='order-item'>
             <div className='image' style={{ backgroundImage: `url(${imageUrl})` }} />
-            <div className='collection-footer'>
+            <div className='order-detail'>
                 <span className='name'>{name}</span>
                 <span className='price'>{quantity}</span>
             </div>

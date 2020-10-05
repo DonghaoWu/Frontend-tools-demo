@@ -1,7 +1,10 @@
 .order-preview {
   display: flex;
   flex-direction: column;
-  margin-bottom: 100px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid;
+
 
   @media screen and (max-width: 800px) {
     align-items: center;
@@ -20,6 +23,7 @@
   .preview {
     display: flex;
     justify-content: flex-start;
+
 
     @media screen and (max-width: 800px) {
       display: grid;

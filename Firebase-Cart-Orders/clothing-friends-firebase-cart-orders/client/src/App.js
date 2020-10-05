@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import Header from './Components/Header/Header.component';
 import Spinner from './Components/Spinner/Spinner.component';
 import ErrorBoundary from './Components/Error-boundary/Error-boundary.component.jsx';
+import Notification from './Components/Notification/Notification.component';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { selectCurrentHiddenCart } from './redux/hide-cart/hide-cart.selectors';
@@ -26,23 +27,16 @@ class App extends React.Component {
   componentDidMount() {
     const { checkUserSession } = this.props;
     checkUserSession();
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
-  handleClickOutside = (event) => {
-    const { cartHidden, toggleCartHidden } = this.props;
-    // if (!cartHidden) toggleCartHidden();
   }
 
   render() {
     const { currentUser } = this.props;
     return (
-      <div>
+      <div ref={node => this.node = node}>
         <Header currentUser={currentUser} />
+        <div className='notices-container' >
+          <Notification />
+        </div>
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>

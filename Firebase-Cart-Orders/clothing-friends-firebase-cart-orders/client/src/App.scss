@@ -15,3 +15,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.notices-container{
+  height:40px;
+  display: flex;
+  justify-content: flex-end;
+  margin:0 10px 0 0;
+  font-size: 20px;
+  text-align: center;
+}
