@@ -17,7 +17,6 @@
 1. 配置 redux-saga。
 2. 熟悉 redux-saga 的设置流程。
 3. [Part 7: Redux-saga & configuration.](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Redux-saga/Reudx-saga.md)
-
 4. 其中 cart feature 新添加的功能都是在 saga 的循环里面完成的，不需要在 component 中触发。
 
 ------------------------------------------------------------
