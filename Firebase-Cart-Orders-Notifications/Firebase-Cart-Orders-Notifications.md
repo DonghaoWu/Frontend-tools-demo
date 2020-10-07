@@ -1,10 +1,10 @@
 # Front end development tools (Part 14)
 
-### `Key Words: Redux-saga, store user cart data and orders data in Firestore, Firestore data rules.`
+### `Key Words: Redux-saga, store user cart data and orders data in Firestore, Firestore data rules, notifications.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
-## `Section: Firebase Cart Orders.` (Advanced)
+## `Section: Firebase, Cart Orders Notifications sagas.` (Advanced)
 
 ### `Summary`: In this documentation, we learn to store user cart data and orders data in Firestore, also learn related Firestore data rules.
 
@@ -281,6 +281,23 @@
     ```
 
 4. Set up reducer.
+
+    __`Location:./client/src/redux/cart/cart.reducer.js`__
+
+    ```diff
+    + import { ORDER_SUCCESS_CLEAR_CART } from './cart.types';
+
+    const cartReducer = (state = INITIAL_STATE, action) => {
+        switch (action.type) {
+            case CLEAR_CART:
+    +       case ORDER_SUCCESS_CLEAR_CART:
+                return {
+                    ...state,
+                    cartItems: []
+                };
+        }
+    };
+    ```
 
     __`Location:./client/src/redux/orders/orders.reducer.js`__
 
