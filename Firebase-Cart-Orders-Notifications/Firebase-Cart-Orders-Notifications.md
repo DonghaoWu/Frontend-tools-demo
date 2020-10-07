@@ -466,6 +466,275 @@
 
 3. :gem::gem::gem:目前为止 redux-saga 最难的地方是跟踪 action，同时熟悉 saga callback function 是:gem:隐式:gem:获得参数的。
 
+
+### <span id="14.2">`Step2: Firebase Notifications.`</span>
+
+- #### Click here: [BACK TO CONTENT](#14.0)
+
+1. Related component files and scss files.
+
+    - ./client/src/App.js
+
+    - ./client/src/Components/Notifications/Notifications.component.jsx
+    - ./client/src/Components/Notifications/Notifications.styles.scss
+
+    __`Location:./client/src/Components/Notifications/Notifications.component.jsx`__
+
+    ```jsx
+    import React from 'react'
+    import { connect } from 'react-redux';
+    import './Notification.styles.scss';
+    import { createStructuredSelector } from 'reselect';
+    import { selectCurrentNotices } from '../../redux/notices/notices.selectors';
+
+
+    const Notification = (props) => props.notices !== null && props.notices.length > 0 && props.notices.map(notice => (
+        <div key={notice.id} className={`notice notice-${notice.noticeType}`}>
+            {notice.msg}
+        </div>
+    ));
+
+    const mapStateToProps = createStructuredSelector({
+        notices: selectCurrentNotices,
+    });
+
+    export default connect(mapStateToProps)(Notification);
+    ```
+
+2. Set up types.
+
+    __`Location:./client/src/redux/notices/notices.types.js`__
+
+    ```js
+    export const SIGN_IN_SUCCESS_MSG = 'SIGN_IN_SUCCESS_MSG';
+    export const SIGN_IN_FAILURE_MSG = 'SIGN_IN_FAILURE_MSG';
+    export const SIGN_UP_SUCCESS_MSG = 'SIGN_UP_SUCCESS_MSG';
+    export const SIGN_UP_FAILURE_MSG = 'SIGN_UP_FAILURE_MSG';
+    export const SIGN_OUT_SUCCESS_MSG = 'SIGN_OUT_SUCCESS_MSG';
+    export const SIGN_OUT_FAILURE_MSG = 'SIGN_OUT_FAILURE_MSG';
+
+    export const ORDER_PLACED_SUCCESS_MSG = 'ORDER_PLACED_SUCCESS_MSG';
+    export const ORDER_PLACED_FAILURE_MSG = 'ORDER_PLACED_FAILURE_MSG';
+
+    export const ADD_NOTICE = 'ADD_NOTICE';
+    export const REMOVE_NOTICE = 'REMOVE_NOTICE';
+    ```
+
+3. Set up actions.
+
+    __`Location:./client/src/redux/notices/notices.actions.js`__
+
+    ```js
+    import {
+        ADD_NOTICE,
+        REMOVE_NOTICE
+    } from './notices.types';
+
+    export const addNotice = (msg, noticeType, id) => {
+        return {
+            type: ADD_NOTICE,
+            payload: {
+                msg: msg,
+                noticeType: noticeType,
+                id: id
+            }
+        }
+    }
+
+    export const removeNotice = (id) => {
+        return {
+            type: REMOVE_NOTICE,
+            payload: id
+        }
+    };
+    ```
+
+4. Set up reducer.
+
+    __`Location:./client/src/redux/notices/notices.reducer.js`__
+
+    ```jsx
+    import { ADD_NOTICE, REMOVE_NOTICE } from './notices.types';
+    const initialState = [];
+
+    export default function (state = initialState, action) {
+        const { payload, type } = action;
+        switch (type) {
+            case ADD_NOTICE:
+                return [...state, payload];
+            case REMOVE_NOTICE:
+                return state.filter(notice => notice.id !== payload);
+            default:
+                return state;
+        }
+    }
+    ```
+
+    __`Location:./client/src/redux/root-reducer.js`__
+
+    ```diff
+    +   import noticesReducer from './notices/notices.reducer';
+
+        const rootReducer = combineReducers({
+            user: userReducer,
+            cart: cartReducer,
+            displayName: displayNameReducer,
+            directory: directoryReducer,
+            shop: shopReducer,
+            hideCart: hideCartReducer,
+            orders: ordersReducer,
+    +       notices: noticesReducer
+        });
+    ```
+
+    __`Location:./client/src/redux/notices/notices.selectors.js`__
+
+    ```js
+    import { createSelector } from 'reselect';
+
+    const selectNotices = state => state.notices;
+
+    export const selectCurrentNotices = createSelector(
+        [selectNotices],
+        notices => notices
+    );
+    ```
+
+5. Set up sagas.
+
+    __`Location:./client/src/redux/notices/notices.sagas.js`__
+
+    ```js
+    import { takeLatest, put, all, call, delay, takeEvery } from 'redux-saga/effects';
+
+    import {
+        SIGN_IN_SUCCESS,
+        SIGN_IN_FAILURE,
+        SIGN_OUT_SUCCESS,
+        SIGN_OUT_FAILURE,
+        EMAIL_SIGN_UP_SUCCESS,
+        EMAIL_SIGN_UP_FAILURE,
+    } from '../user/user.types';
+
+    import { ORDER_PLACED_SUCCESS, ORDER_PLACED_FAILURE } from '../orders/orders.types';
+
+    import { v4 as uuid } from 'uuid'
+
+    import { addNotice, removeNotice } from './notices.actions';
+
+    import { setErrorMessage } from './notices.utils';
+
+    export function* signInSuccessNotice() {
+        const id = uuid();
+        yield put(addNotice('Sign in success', 'success', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onSignInSuccess() {
+        yield takeLatest(SIGN_IN_SUCCESS, signInSuccessNotice);
+    }
+
+    export function* signInFailureNotice(action) {
+        const id = uuid();
+        yield put(addNotice(`Sign in failure:  ${setErrorMessage(action.payload.code)}`, 'danger', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onSignInFailure() {
+        yield takeEvery(SIGN_IN_FAILURE, signInFailureNotice);
+    }
+
+    export function* signOutSuccessNotice() {
+        const id = uuid();
+        yield put(addNotice('Sign out success', 'success', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onSignOutSuccess() {
+        yield takeLatest(SIGN_OUT_SUCCESS, signOutSuccessNotice);
+    }
+
+    export function* signOutFailureNotice(action) {
+        const id = uuid();
+        yield put(addNotice(`Sign out failure: ${setErrorMessage(action.payload.code)}`, id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onSignOutFailure() {
+        yield takeLatest(SIGN_OUT_FAILURE, signOutFailureNotice);
+    }
+
+    export function* emailSignUpSuccessNotice() {
+        const id = uuid();
+        yield put(addNotice('Email sign up success', 'success', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onEmailSignUpSuccess() {
+        yield takeLatest(EMAIL_SIGN_UP_SUCCESS, emailSignUpSuccessNotice);
+    }
+
+    export function* emailSignUpFailureNotice(action) {
+        const id = uuid();
+        yield put(addNotice(`Email sign up failure: ${setErrorMessage(action.payload.code)}`, 'danger', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onEmailSignUpFailure() {
+        yield takeEvery(EMAIL_SIGN_UP_FAILURE, emailSignUpFailureNotice);
+    }
+
+    export function* orderPlacedSuccessNotice() {
+        const id = uuid();
+        yield put(addNotice('Order placed success', 'success', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onOrderPlacedSuccess() {
+        yield takeLatest(ORDER_PLACED_SUCCESS, orderPlacedSuccessNotice);
+    }
+
+    export function* orderPlacedFailureNotice(action) {
+        const id = uuid();
+        yield put(addNotice(`Order placed failure: ${setErrorMessage(action.payload.code)}`, 'danger', id));
+        yield delay(2500);
+        yield put(removeNotice(id));
+    }
+
+    export function* onOrderPlacedFailure() {
+        yield takeLatest(ORDER_PLACED_FAILURE, orderPlacedFailureNotice);
+    }
+
+    export function* noticesSagas() {
+        yield all([
+            call(onSignInSuccess),
+            call(onSignInFailure),
+            call(onSignOutSuccess),
+            call(onSignOutFailure),
+            call(onOrderPlacedSuccess),
+            call(onOrderPlacedFailure),
+            call(onEmailSignUpSuccess),
+            call(onEmailSignUpFailure)
+        ]);
+    }
+    ```
+
+#### `Comment:`
+1. Redux-saga 运行流程：
+
+  <p align="center">
+  <img src="../assets/fe-p14-04.png" width=90%>
+  </p>
+
+  -----------------------------------------------------------------
+
 __`本章用到的全部资料：`__
 
 - null
