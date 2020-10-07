@@ -43,7 +43,7 @@
 
 1. Set up types.
 
-    __`Location:./clothing-friends-firebase-cart-orders/client/src/redux/cart/cart.types.js`__
+    __`Location:./client/src/redux/cart/cart.types.js`__
 
     ```js
     export const SET_CART_FROM_FIREBASE = 'SET_CART_FROM_FIREBASE';
@@ -51,7 +51,7 @@
 
 2. Set up actions.
 
-    __`Location:./clothing-friends-firebase-cart-orders/client/src/redux/cart/cart.actions.js`__
+    __`Location:./client/src/redux/cart/cart.actions.js`__
 
     ```js
     export const setCartFromFirebase = cartItems => ({
@@ -60,7 +60,7 @@
     });
     ```
 
-    __`Location:./clothing-friends-firebase-cart-orders/client/src/redux/user/user.actions.js`__
+    __`Location:./client/src/redux/user/user.actions.js`__
 
     ```js
     export const signInSuccess = user => ({
@@ -71,7 +71,7 @@
 
 3. Set up a new firebase function to __`fetch/create`__ cart data in Firestore.
 
-    __`Location:./clothing-friends-firebase-cart-orders/client/src/firebase/firebase.utils.js`__
+    __`Location:./client/src/firebase/firebase.utils.js`__
 
     ```js
     export const getUserCartRef = async userId => {
@@ -90,7 +90,7 @@
 
 4. Set up sagas.
 
-    __`Location:./clothing-friends-firebase-cart-orders/client/src/redux/cart/cart.sagas.js`__
+    __`Location:./client/src/redux/cart/cart.sagas.js`__
 
     ```js
     import { getUserCartRef } from '../../firebase/firebase.utils';
@@ -474,6 +474,7 @@
 1. Related component files and scss files.
 
     - ./client/src/App.js
+    - ./client/src/App.styles.scss
 
     - ./client/src/Components/Notifications/Notifications.component.jsx
     - ./client/src/Components/Notifications/Notifications.styles.scss
