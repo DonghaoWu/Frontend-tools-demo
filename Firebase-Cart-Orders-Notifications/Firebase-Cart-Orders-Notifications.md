@@ -232,9 +232,9 @@
 
     __`Location:./client/src/redux/cart/cart.types.js`__
 
-```diff
-+ export const ORDER_SUCCESS_CLEAR_CART = 'ORDER_SUCCESS_CLEAR_CART';
-```
+    ```diff
+    + export const ORDER_SUCCESS_CLEAR_CART = 'ORDER_SUCCESS_CLEAR_CART';
+    ```
 
 3. Set up actions.
 
