@@ -457,7 +457,7 @@
 
   -----------------------------------------------------------------
 
-3. :gem::gem::gem:目前为止 redux-saga 最难的地方是跟踪 action，同时熟悉 saga callback function 是:key:隐式:key:获得参数的。
+3. :gem::gem::gem:目前为止 redux-saga 最难的地方是跟踪 action，同时熟悉 saga callback function 是:gem:隐式:gem:获得参数的。
 __`本章用到的全部资料：`__
 
 - null
