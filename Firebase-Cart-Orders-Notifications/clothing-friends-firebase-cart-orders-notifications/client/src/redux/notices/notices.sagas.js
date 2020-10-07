@@ -11,17 +11,26 @@ import {
 
 import { ORDER_PLACED_SUCCESS, ORDER_PLACED_FAILURE } from '../orders/orders.types';
 
-import { v4 as uuid } from 'uuid'
-
+import { setErrorMessage } from './notices.utils';
+import { v4 as uuid } from 'uuid';
 import { addNotice, removeNotice } from './notices.actions';
 
-import { setErrorMessage } from './notices.utils';
-
-export function* signInSuccessNotice() {
+export function* handleNotifications({ action, msg, status }) {
     const id = uuid();
-    yield put(addNotice('Sign in success', 'success', id));
+    if (action) {
+        yield put(addNotice(`${msg}: ${setErrorMessage(action.payload.code)}`, status, id));
+    }
+    else yield put(addNotice(`${msg}`, status, id));
     yield delay(2500);
     yield put(removeNotice(id));
+}
+
+export function* signInSuccessNotice() {
+    yield handleNotifications({
+        action: null,
+        msg: 'Sign in success',
+        status: 'success'
+    })
 }
 
 export function* onSignInSuccess() {
@@ -29,10 +38,11 @@ export function* onSignInSuccess() {
 }
 
 export function* signInFailureNotice(action) {
-    const id = uuid();
-    yield put(addNotice(`Sign in failure:  ${setErrorMessage(action.payload.code)}`, 'danger', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action,
+        msg: 'Sign in failure',
+        status: 'danger'
+    })
 }
 
 export function* onSignInFailure() {
@@ -40,10 +50,11 @@ export function* onSignInFailure() {
 }
 
 export function* signOutSuccessNotice() {
-    const id = uuid();
-    yield put(addNotice('Sign out success', 'success', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action: null,
+        msg: 'Sign out success',
+        status: 'success'
+    })
 }
 
 export function* onSignOutSuccess() {
@@ -51,10 +62,11 @@ export function* onSignOutSuccess() {
 }
 
 export function* signOutFailureNotice(action) {
-    const id = uuid();
-    yield put(addNotice(`Sign out failure: ${setErrorMessage(action.payload.code)}`, id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action,
+        msg: 'Sign out failure',
+        status: 'danger'
+    })
 }
 
 export function* onSignOutFailure() {
@@ -62,10 +74,11 @@ export function* onSignOutFailure() {
 }
 
 export function* emailSignUpSuccessNotice() {
-    const id = uuid();
-    yield put(addNotice('Email sign up success', 'success', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action: null,
+        msg: 'Email sign up success',
+        status: 'success'
+    })
 }
 
 export function* onEmailSignUpSuccess() {
@@ -73,10 +86,11 @@ export function* onEmailSignUpSuccess() {
 }
 
 export function* emailSignUpFailureNotice(action) {
-    const id = uuid();
-    yield put(addNotice(`Email sign up failure: ${setErrorMessage(action.payload.code)}`, 'danger', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action,
+        msg: 'Email sign up failure',
+        status: 'danger'
+    })
 }
 
 export function* onEmailSignUpFailure() {
@@ -84,10 +98,11 @@ export function* onEmailSignUpFailure() {
 }
 
 export function* orderPlacedSuccessNotice() {
-    const id = uuid();
-    yield put(addNotice('Order placed success', 'success', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action: null,
+        msg: 'Order placed success',
+        status: 'success'
+    })
 }
 
 export function* onOrderPlacedSuccess() {
@@ -95,10 +110,11 @@ export function* onOrderPlacedSuccess() {
 }
 
 export function* orderPlacedFailureNotice(action) {
-    const id = uuid();
-    yield put(addNotice(`Order placed failure: ${setErrorMessage(action.payload.code)}`, 'danger', id));
-    yield delay(2500);
-    yield put(removeNotice(id));
+    yield handleNotifications({
+        action,
+        msg: 'Order placed failure',
+        status: 'danger'
+    })
 }
 
 export function* onOrderPlacedFailure() {
