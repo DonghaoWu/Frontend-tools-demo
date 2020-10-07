@@ -230,6 +230,12 @@
     export const ORDER_PLACED_FAILURE = 'ORDER_PLACED_FAILURE';
     ```
 
+    __`Location:./client/src/redux/cart/cart.types.js`__
+
+    ```fiff
+    + export const ORDER_SUCCESS_CLEAR_CART = 'ORDER_SUCCESS_CLEAR_CART';
+    ```
+
 3. Set up actions.
 
     __`Location:./client/src/redux/orders/orders.actions.js`__
@@ -275,29 +281,13 @@
     ```js
 
     import { ORDER_SUCCESS_CLEAR_CART } from './cart.types';
+
     export const orderSuccessClearCart = () => ({
         type: ORDER_SUCCESS_CLEAR_CART
     });
     ```
 
 4. Set up reducer.
-
-    __`Location:./client/src/redux/cart/cart.reducer.js`__
-
-    ```diff
-    + import { ORDER_SUCCESS_CLEAR_CART } from './cart.types';
-
-    const cartReducer = (state = INITIAL_STATE, action) => {
-        switch (action.type) {
-            case CLEAR_CART:
-    +       case ORDER_SUCCESS_CLEAR_CART:
-                return {
-                    ...state,
-                    cartItems: []
-                };
-        }
-    };
-    ```
 
     __`Location:./client/src/redux/orders/orders.reducer.js`__
 
@@ -362,6 +352,23 @@
         [selectOrders],
         orders => orders.ordersList
     );
+    ```
+
+    __`Location:./client/src/redux/cart/cart.reducer.js`__
+
+    ```diff
+    + import { ORDER_SUCCESS_CLEAR_CART } from './cart.types';
+
+    const cartReducer = (state = INITIAL_STATE, action) => {
+        switch (action.type) {
+            case CLEAR_CART:
+    +       case ORDER_SUCCESS_CLEAR_CART:
+                return {
+                    ...state,
+                    cartItems: []
+                };
+        }
+    };
     ```
 
 5. Set up sagas.
