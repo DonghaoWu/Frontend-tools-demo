@@ -11,14 +11,13 @@ import {
 
 import { ORDER_PLACED_SUCCESS, ORDER_PLACED_FAILURE } from '../orders/orders.types';
 
-import { setErrorMessage } from './notices.utils';
 import { v4 as uuid } from 'uuid';
 import { addNotice, removeNotice } from './notices.actions';
 
 export function* handleNotifications({ action, msg, status }) {
     const id = uuid();
     if (action) {
-        yield put(addNotice(`${msg}: ${setErrorMessage(action.payload.code)}`, status, id));
+        yield put(addNotice(`${msg}: ${action.payload.message}`, status, id));
     }
     else yield put(addNotice(`${msg}`, status, id));
     yield delay(2500);

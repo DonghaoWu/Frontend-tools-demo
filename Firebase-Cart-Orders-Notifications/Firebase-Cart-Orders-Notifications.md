@@ -1,6 +1,6 @@
 # Front end development tools (Part 14)
 
-### `Key Words: Redux-saga, store user cart data and orders data in Firestore, Firestore data rules, notifications.`
+### `Key Words: Redux-saga, store user cart data and orders data in Firestore, Firestore data security rules, notifications feature.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -33,9 +33,9 @@
 - [14.1 Firebase Cart.](#14.1)
 - [14.2 Firebase Orders.](#14.2)
 - [14.3 Firebase Notifications.](#14.3)
+- [14.4 Firebase security.](#14.4)
 
 ------------------------------------------------------------
-
 
 ### <span id="14.1">`Step1: Firebase Cart.`</span>
 
@@ -75,7 +75,7 @@
 
     ```js
     export const getUserCartRef = async userId => {
-        const cartsRef = firestore.collection('carts').where('userId', '==', userId);
+        const ordersRef = firestore.collection('carts').where('userId', '==', userId);
         const snapShot = await cartsRef.get();
 
         if (snapShot.empty) {
@@ -751,6 +751,40 @@
   </p>
 
   -----------------------------------------------------------------
+
+### <span id="14.4">`Step4: Firebase security.`</span>
+
+- #### Click here: [BACK TO CONTENT](#14.0)
+
+1. Set up Firestore security.
+
+```java
+service cloud.firestore {
+  match /databases/{database}/documents {
+		match /users/{uid}{
+    	allow read, create, update: if request.auth != null && request.auth.uid == uid
+    }
+    match /collections/{collection}{
+    	allow read;
+        allow write: if request.auth != null && request.auth.uid == 'hello kitty'
+    }
+    match /carts/{cart}{
+        allow read, create
+        allow update: if request.auth != null && request.auth.uid == request.resource.data.userId
+    }
+    match /orders/{order}{
+        allow read, create
+        allow update: if request.auth != null && request.auth.uid == request.resource.data.userId    
+    }
+  }
+}
+```
+
+#### `Comment:`
+1. 上例中，{uid} 可以用任何名字代替，但这条 url 在测试的时候输入形式是 `/users/asldkfhasdkfhasdfa234324`。
+2. 其他例子的 url 在测试的时候输入形式是 `/carts/{cart}` 和 `/orders/{order}`.
+3. 这里的 allow type 分为： read, write, delete, update, create.
+4. :gem::gem::gem:为什么对读取 cart 和 order 进行 uid 识别的读取限制：因为在第一条中已经进行了识别，而根据 app 的设计代码读取 cart 和 order 的动作都是在用户识别之后才能发动的，所以后续的读取就不用重复识别了。
 
 __`本章用到的全部资料：`__
 
