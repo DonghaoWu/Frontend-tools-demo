@@ -1,6 +1,6 @@
 # Front end development tools (Part 14)
 
-### `Key Words: Redux-saga, store user cart data and orders data in Firestore, Firestore security rules, notifications feature.`
+### `Key Words: Store user cart data and orders data in Firestore, notifications feature, Firestore security rules, Redux-saga.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
