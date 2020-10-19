@@ -208,10 +208,10 @@
     +   import "bootstrap/dist/css/bootstrap.min.css"
 
         ReactDOM.render(
-        <React.StrictMode>
-            <App />
-        </React.StrictMode>,
-        document.getElementById("root")
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>,
+            document.getElementById("root")
         )
     ```
 
@@ -219,7 +219,6 @@
 #### `Comment:`
 1. dev mode / prod mode 的设置：（后补）。
 2. 注意这里没有使用到 dotenv，React 自带 env 设置，只需要每个变量前面加入 `REACT_APP`。
-3. 
 
 ### <span id="15.2">`Step2: Set up contextAPI.`</span>
 
