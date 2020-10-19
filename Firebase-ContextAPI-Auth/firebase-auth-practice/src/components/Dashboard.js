@@ -15,7 +15,7 @@ export default function Dashboard() {
         setError('');
         try {
             await signOut();
-            history.push('/login');
+            history.push('/signin');
         } catch (error) {
             setError('Failed to sign out.')
         }

@@ -18,7 +18,7 @@ export default function Signup() {
 
     async function handelSubmit(e) {
         e.preventDefault();
-        if (passwordRef !== passwordConfirmRef) {
+        if (passwordRef.current.value !== passwordConfirmRef.current.value) {
             return setError('Passwords do not match.');
         }
         try {
@@ -51,11 +51,9 @@ export default function Signup() {
                             <Form.Label>Password Confirmation</Form.Label>
                             <Form.Control type="password" ref={passwordConfirmRef} required />
                         </Form.Group>
-                        <Button disable={loading} className="w-100" type="submit">Sign Up</Button>
+                        <Button disable={`${loading}`} className="w-100" type="submit">Sign Up</Button>
                     </Form>
-                    <div className='w-100 text-center mt-3'>
-                        <Link to='/forgot-password'>Forgot Password?</Link>
-                    </div>
+
                 </Card.Body>
             </Card>
             <div className='w-100 text-center mt-2'>Already have an account? <Link to='/signin'>Sign in.</Link></div>
