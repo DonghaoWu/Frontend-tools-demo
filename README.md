@@ -66,6 +66,6 @@ kill -9 <PID>
     - __`Code base: Part13`__ 
     - __`Key Words: Store user cart data and orders data in Firestore, notifications feature, Firestore security rules, Redux-saga.`__
 
-- [Part 15 - Firebase auth, ContextAPI, bootstrap. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Firebase-Cart-Orders-Notifications/Firebase-Cart-Orders-Notifications.md)
+- [Part 15 - Firebase auth, Context API, bootstrap. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Firebase-ContextAPI-Auth/Firebase-ContextAPI-AUTH.md)
     - __`Code base: NEW`__ 
     - __`Key Words: .`__

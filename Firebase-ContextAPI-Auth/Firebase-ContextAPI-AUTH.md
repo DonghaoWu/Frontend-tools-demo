@@ -67,6 +67,17 @@
 + Container
 ```
 
+- Firebase
+```diff
++ onAuthStateChanged
++ createUserWithEmailAndPassword
++ signInWithEmailAndPassword
++ signOut
++ sendPasswordResetEmail
++ updateEmail
++ updatePassword
+```
+
 ------------------------------------------------------------
 
 ### <span id="15.0">`Brief Contents & codes position`</span>
