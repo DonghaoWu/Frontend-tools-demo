@@ -163,6 +163,8 @@
 
 4. Create a new local environment file call `.env.local`
 
+    __`Location:./.env.local`__
+
     ```bash
     REACT_APP_FIREBASE_API_KEY=AIzaSyBxEpzKfLwtwIQOscDBlUbftS1OercOQfE
     REACT_APP_FIREBASE_AUTH_DOMAIN=auth-demo-presentation.firebaseapp.com
