@@ -1,6 +1,6 @@
 # Front end development tools (Part 15)
 
-### `Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku.`
+### `Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods, promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -846,7 +846,7 @@ Promise.all(promises)
     <Route path='/route-1/sub-1' component={componentB} />
     ```
 
-4. PrivateRoute 的设置是本章最有价值的点，这里使用的是 HOC 的方法，之后可以在很多例子中使用。
+4. :gem::gem::gem::gem:PrivateRoute 的设置是本章最有价值的点，这里使用的是 HOC 的方法，之后可以在很多例子中使用。
 
 ### <span id="15.5">`Step5: Deploy on heroku.`</span>
 
