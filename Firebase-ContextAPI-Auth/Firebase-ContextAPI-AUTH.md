@@ -910,13 +910,13 @@ Promise.all(promises)
 6. Allow deploy domain in Firebase.
 
     <p align="center">
-        <img src="../assets/fe-p15-09.png" width=90%>
+        <img src="../assets/fe-p15-10.png" width=90%>
     </p>
 
 7. Add env variables in heroku setting.
 
     <p align="center">
-        <img src="../assets/fe-p15-10.png" width=90%>
+        <img src="../assets/fe-p15-09.png" width=90%>
     </p>
 
 __`本章用到的全部资料：`__
