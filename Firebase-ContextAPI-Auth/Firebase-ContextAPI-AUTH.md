@@ -1,6 +1,6 @@
 # Front end development tools (Part 15)
 
-### `Key Words: .`
+### `Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -161,7 +161,7 @@
 
     ------------------------------------------------------------
 
-4. Create a new local environment file call `.env.local`
+4. Create a new local environment file call `.env.local`(only for this doc.)
 
     __`Location:./.env.local`__
 
@@ -217,7 +217,7 @@
 
 
 #### `Comment:`
-1. dev mode / prod mode 的设置：（后补）。
+1. :gem:dev mode / prod mode 的设置：一般来说会创建两个 project，dev project 是会允许 local，而 prod project 是不允许 local，这样做防止其他人下载 repo 之后在本地向 project 发送数据。
 2. 注意这里没有使用到 dotenv，React 自带 env 设置，只需要每个变量前面加入 `REACT_APP`。
 
 ### <span id="15.2">`Step2: Set up contextAPI.`</span>
@@ -272,7 +272,7 @@
                 setLoading(false);
             });
             return unsubscribe;
-        }, [])
+        }, []);
 
         const value = {
             currentUser,
@@ -291,6 +291,11 @@
         )
     }
     ```
+
+    #### `Comment:`
+    1. :gem:必须要说明的是这里所有的 function 都需要带 return。
+    2. :gem::gem::gem:useEffect 的用法说明，它相当于 componentDidMount，[] 代表如果想执行`只运行一次的 effect`（仅在组件挂载和卸载时执行），可以传递一个空数组（[]）作为第二个参数。这就告诉 React 你的 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行。
+    3. :gem::gem::gem:返回的 unsubscribe 实际上是一个 function，react 会在 unMount 的时候运行它。
 
 2. Wrap the app in AuthProvider.
 
@@ -336,11 +341,12 @@
 1. 设定 contextAPI 的步骤：
 
     - 引用 useContext
-    - 使用 createContext 生成 context。(AuthContext)
-    - 使用 useContext 和 context 生成 function。(useAuth)
-    - 建立一个 component.(AuthProvider)
+    - 使用 createContext 生成 context。(MyContext)
+    - 使用 useContext 和 context 生成 function。(useMyContext)
+    - 建立一个 component.(MyProvider)
     - 可以在组件内添加 state 和 function。
-    - 在组件最后使用生成的 context。
+    - 设定 value。
+    - 在组件最后使用生成的 context。(MyContext.Provider)
 
     - :gem::gem::gem:__`常用范本`__:
 
@@ -376,7 +382,7 @@
 
 2. 在上面的设置做好之后，后面需要做的事情是在 MyProvider 中添加 state 或者 function，甚至 useEffect hook。
 
-3. 组件使用 context 的方法：
+3. :gem:组件使用 context 的方法：
 
     ```js
     import { useAuth } from '../contexts/AuthContext';
@@ -459,6 +465,12 @@
     }
     ```
 
+    #### `Comment:`
+    1. useRef 的应用，目前知道是在表格中使用。
+    2. useHistory 的应用，是 react-router-dom 的一个组件，可以快速引用 `history` 值。
+    3. setError 和 setLoading 的前后置空和赋值过程，比较严谨。
+    4. Bootstrap 的 Alert 和 setError 配合使用。
+
 
 2. Sign in component.
 
@@ -521,6 +533,15 @@
         )
     }
     ```
+
+    #### `Comment:`
+    1. useRef 的应用，目前知道是在表格中使用。
+    2. useHistory 的应用，是 react-router-dom 的一个组件，可以快速引用 `history` 值。
+    3. setError 和 setLoading 的前后置空和赋值过程，比较严谨。
+    4. Bootstrap 的 Alert 和 setError 配合使用。
+    5. :gem:这里引出一个问题，<Link> 和 history.push() 都能起到跳转页面的作用，但应该会有不同，比如说 Link 跳转的页面刷新后回归初始页，而 history 不会。
+    6. loading 值与 disable 一并使用，可以防止重复 submit。
+
 
 3. Dashboard component.
 
@@ -626,6 +647,9 @@
         )
     }
     ```
+
+    #### `Comment:`
+    1. setMessage 和 setError 的作用一样，都是配合 Alert 使用。
     
 5. Update profile component.
 
@@ -710,7 +734,26 @@
     ```
 
 #### `Comment:`
-1. 
+1. 本章最难点，使用 promise.all 处理两个 promise:
+```js
+const promises = [];
+
+if (emailRef.current.value !== currentUser.email) {
+    promises.push(updateEmail(emailRef.current.value));
+}
+if (passwordRef.current.value) {
+    promises.push(updatePassword(passwordRef.current.value));
+}
+
+Promise.all(promises)
+    .then(() => {
+        history.push('/')
+    }).catch(err => {
+        setError(`Failed to update account.`)
+    }).finally(() => {
+        setLoading(false);
+    });
+```
 
 ### <span id="15.4">`Step4: Add react-router-dom and private route.`</span>
 
@@ -781,7 +824,28 @@
     ```
 
 #### `Comment:`
-1. 
+1. path 和 exact path 的区别，path 可以代替之后出现的子路线，比如说：
+```js
+<Route path='/route-1' component={componentA} />
+<Route path='/route-1/sub-1' component={componentB} />
+```
+
+2. 在上面的情况下是无论如何都进入不到 `/route-1/sub-1` 的，而是全部转到 `/route-1`。
+3. :gem::gem:解决方法:
+
+    - 改变顺序：
+    ```js
+    <Route path='/route-1/sub-1' component={componentB} />
+    <Route path='/route-1' component={componentA} />
+    ```
+
+    - 使用 exact
+    ```js
+    <Route exact path='/route-1' component={componentA} />
+    <Route path='/route-1/sub-1' component={componentB} />
+    ```
+
+4. PrivateRoute 的设置是本章最有价值的点，这里使用的是 HOC 的方法，之后可以在很多例子中使用。
 
 __`本章用到的全部资料：`__
 

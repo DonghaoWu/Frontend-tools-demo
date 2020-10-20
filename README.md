@@ -68,4 +68,4 @@ kill -9 <PID>
 
 - [Part 15 - Firebase auth, Context API, bootstrap. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Firebase-ContextAPI-Auth/Firebase-ContextAPI-AUTH.md)
     - __`Code base: NEW`__ 
-    - __`Key Words: .`__
+    - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password.`__
