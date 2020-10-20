@@ -88,6 +88,7 @@
 - [15.2 Set up contextAPI.](#15.2)
 - [15.3 Add components.](#15.3)
 - [15.4 Add react-router-dom and private route.](#15.4)
+- [15.5 Deploy on heroku.](#15.5)
 
 ------------------------------------------------------------
 
@@ -846,6 +847,40 @@ Promise.all(promises)
     ```
 
 4. PrivateRoute 的设置是本章最有价值的点，这里使用的是 HOC 的方法，之后可以在很多例子中使用。
+
+### <span id="15.5">`Step5: Deploy on heroku.`</span>
+
+- #### Click here: [BACK TO CONTENT](#15.0)
+
+1. `Delete` yarn.lock file.
+
+2. Add a script in package.json
+
+    ```diff
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+    +   "heroku-postbuild": "npm install && npm run build"
+    }
+    ```
+
+3. Deploy on Heroku - <In app root directory>:
+
+    ```bash
+    $ git init
+    $ heroku login
+    $ heroku create <your app name>
+    $ heroku git:remote -a <your app name>
+    $ git add .
+    $ git commit -m'something'
+    $ git push heroku master --force
+    ```
+
+4. Allow deploy url in Firebase.
+
+5. Add env variables in heroku setting.
 
 __`本章用到的全部资料：`__
 
