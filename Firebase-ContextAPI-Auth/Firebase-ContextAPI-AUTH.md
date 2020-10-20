@@ -854,11 +854,40 @@ Promise.all(promises)
 
 1. `Delete` yarn.lock file.
 
-2. Add a script in package.json
+2. Install dependency.
+
+    ```bash
+    $ npm i express
+    ```
+
+3. Add server.js file
+
+    ```js
+    const express = require('express');
+    const path = require('path');
+
+    const app = express();
+
+    const port = process.env.PORT || 5000;
+
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, 'build')));
+        app.get('/', function (req, res) {
+            res.sendFile(path.join(__dirname, 'build', 'index.html'));
+        });
+    }
+
+    app.listen(port, error => {
+        if (error) throw error;
+        console.log('Server running on port ' + port);
+    });
+    ```
+
+4. Add a script in package.json
 
     ```diff
     "scripts": {
-        "start": "react-scripts start",
+    +   "start": "node server.js",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
@@ -866,7 +895,7 @@ Promise.all(promises)
     }
     ```
 
-3. Deploy on Heroku - <In app root directory>:
+5. Deploy on Heroku - <In app root directory>:
 
     ```bash
     $ git init
@@ -875,12 +904,20 @@ Promise.all(promises)
     $ heroku git:remote -a <your app name>
     $ git add .
     $ git commit -m'something'
-    $ git push heroku master --force
+    $ git push heroku main
     ```
 
-4. Allow deploy url in Firebase.
+6. Allow deploy domain in Firebase.
 
-5. Add env variables in heroku setting.
+    <p align="center">
+        <img src="../assets/fe-p15-09.png" width=90%>
+    </p>
+
+7. Add env variables in heroku setting.
+
+    <p align="center">
+        <img src="../assets/fe-p15-10.png" width=90%>
+    </p>
 
 __`本章用到的全部资料：`__
 
