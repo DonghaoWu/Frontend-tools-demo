@@ -1,6 +1,6 @@
 # Front end development tools (Part 15)
 
-### `Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password.`
+### `Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
