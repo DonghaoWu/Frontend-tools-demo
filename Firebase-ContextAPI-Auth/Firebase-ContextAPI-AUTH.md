@@ -14,12 +14,18 @@
 - firebase
 - bootstrap react-bootstrap
 - react-router-dom
+- express
 ------------------------------------------------------------
 
 #### `本章背景：`
 1. 本章有很多规范动作可以借鉴，同时也是一个快速建立 app auth 组件的教程。
 
 ------------------------------------------------------------
+
+#### `参考资料：`
+1. [https://www.youtube.com/watch?v=PKwu15ldZ7k](https://www.youtube.com/watch?v=PKwu15ldZ7k)
+
+2. [https://create-react-app.dev/docs/deployment/](https://create-react-app.dev/docs/deployment/)
 
 #### `APIs`:
 
@@ -919,9 +925,11 @@ Promise.all(promises)
         <img src="../assets/fe-p15-09.png" width=90%>
     </p>
 
+8. 参考资料：[https://create-react-app.dev/docs/deployment/](https://create-react-app.dev/docs/deployment/)
+
 __`本章用到的全部资料：`__
 
-- null
+- [https://create-react-app.dev/docs/deployment/](https://create-react-app.dev/docs/deployment/)
 
 - #### Click here: [BACK TO CONTENT](#15.0)
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
