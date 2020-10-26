@@ -67,7 +67,9 @@ kill -9 <PID>
     - __`Key Words: Store user cart data and orders data in Firestore, notifications feature, Firestore security rules, Redux-saga.`__
 
 - [Part 15 - Firebase auth, Context API, bootstrap. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Firebase-ContextAPI-Auth/Firebase-ContextAPI-AUTH.md)
-    - __`Code base: NEW`__ 
+    - __`Code base: NEW`__
+    - __`Doc Repo URL:`__[Firebase Auth demo doc](https://github.com/DonghaoWu/Frontend-tools-demo/tree/master/Firebase-ContextAPI-Auth)
+    - __`Deployed Repo URL:`__[Firebase Auth demo Heroku](https://github.com/DonghaoWu/auth-demo-heroku) 
     - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku, context pattern.`__
 
 - [Part 16 - Github API, Context API. :gem::gem:](https://github.com/DonghaoWu/github-finder-doc/blob/main/GithubAPI-ContextAPI.md)
