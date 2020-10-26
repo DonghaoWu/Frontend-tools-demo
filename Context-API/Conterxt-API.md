@@ -1,6 +1,6 @@
 # Front end development tools (Part 9)
 
-### `Key Words: React hooks, useContext, Provider context pattern.`
+### `Key Words: React hooks, useContext, context pattern， context API in class component.`
 
 - #### Click here: [BACK TO NAVIGASTION](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/README.md)
 
@@ -320,7 +320,7 @@ export default withRouter(Header);
 +        this.state = {
 +            currentUser: null,
 +        }
-+   }
++    }
 
 + <CurrentUserContext.Provider value={this.state.currentUser}>
 +       <Header />

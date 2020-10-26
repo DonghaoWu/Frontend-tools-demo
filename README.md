@@ -44,7 +44,7 @@ kill -9 <PID>
 
 - [Part 9 - Context API. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Context-API/Conterxt-API.md)
     - __`Code base: Part4`__ 
-    - __`Key Words: React hooks, useContext, Provider context pattern.`__
+    - __`Key Words: React hooks, useContext, context pattern， context API in class component.`__
 
 - [Part 10 - Graphql+Apollo (remote). :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/GraphQL-Apollo/GraphQL-Apollo(remote).md)
     - __`Code base: Part4`__ 
@@ -68,4 +68,10 @@ kill -9 <PID>
 
 - [Part 15 - Firebase auth, Context API, bootstrap. :gem::gem::gem:](https://github.com/DonghaoWu/Frontend-tools-demo/blob/master/Firebase-ContextAPI-Auth/Firebase-ContextAPI-AUTH.md)
     - __`Code base: NEW`__ 
-    - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku.`__
+    - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku, context pattern.`__
+
+- [Part 16 - Github API, Context API. :gem::gem:](https://github.com/DonghaoWu/github-finder-doc/blob/main/GithubAPI-ContextAPI.md)
+    - __`Code base: NEW`__ 
+    - __`Doc Repo URL:`__[Github finder doc](https://github.com/DonghaoWu/github-finder-doc)
+    - __`Deployed Repo URL:`__[Github finder netlify](https://github.com/DonghaoWu/github-finder-netlify)
+    - __`Key Words: React hooks, Github APi, Context patterns, react syntax(语法), netlify.`__
