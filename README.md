@@ -70,7 +70,7 @@ kill -9 <PID>
     - __`Code base: NEW`__
     - __`Doc Repo URL:`__[Firebase Auth demo doc](https://github.com/DonghaoWu/Frontend-tools-demo/tree/master/Firebase-ContextAPI-Auth)
     - __`Deployed Repo URL:`__[Firebase Auth demo Heroku](https://github.com/DonghaoWu/auth-demo-heroku) 
-    - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku, context pattern.`__
+    - __`Key Words: Firebase auth, context API 规范, PrivateRoute, useEffect, useRef, useHistory, Redirect, Firebase auth methods promise.all, dev mode & prod mode, forgot password, deploy CRA on heroku, context pattern, 纯前端APP的Heroku部署.`__
 
 - [Part 16 - Github API, Context API. :gem::gem:](https://github.com/DonghaoWu/github-finder-doc/blob/main/GithubAPI-ContextAPI.md)
     - __`Code base: NEW`__ 
