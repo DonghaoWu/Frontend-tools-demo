@@ -76,10 +76,15 @@ kill -9 <PID>
     - __`Code base: NEW`__ 
     - __`Doc Repo URL:`__[Github finder doc](https://github.com/DonghaoWu/github-finder-doc)
     - __`Deployed Repo URL:`__[Github finder netlify](https://github.com/DonghaoWu/github-finder-netlify)
-    - __`Key Words: Key Words: React hooks, Github APi, Context patterns, react syntax(语法), netlify, Github api update, convert curl to axios.`__
+    - __`Key Words: React hooks, Github APi, Context patterns, react syntax(语法), netlify, Github api update, convert curl to axios.`__
 
 - [Part 17 - Responsive design. :gem::gem::gem:](https://github.com/DonghaoWu/codeTyke-doc/blob/main/README.md)
     - __`Code base: NEW`__ 
     - __`Doc Repo URL:`__[codeTyke-doc](https://github.com/DonghaoWu/codeTyke-doc)
     - __`Deployed Repo URL:`__[codeTyke-heroku](https://github.com/DonghaoWu/codeTyke-heroku)
-    - __`Key Words: Key Words: React, responsive design, progress bar, multiple checkbox, processing bar, modal, heroku.`__
+    - __`Key Words: React, responsive design, progress bar, multiple checkbox, processing bar, modal, heroku.`__
+
+- [Part 18 - Create a google map clone with Mapbox. :gem:](https://github.com/DonghaoWu/googleMap-clone-doc/blob/main/README.md)
+    - __`Code base: NEW`__ 
+    - __`Doc Repo URL:`__[codeTyke-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
+    - __`Key Words: Mapbox.`__
