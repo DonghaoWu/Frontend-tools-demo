@@ -86,5 +86,5 @@ kill -9 <PID>
 
 - [Part 18 - Create a google map clone with Mapbox. :gem:](https://github.com/DonghaoWu/googleMap-clone-doc/blob/main/README.md)
     - __`Code base: NEW`__ 
-    - __`Doc Repo URL:`__[codeTyke-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
+    - __`Doc Repo URL:`__[googleMap-clone-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
     - __`Key Words: Mapbox.`__
