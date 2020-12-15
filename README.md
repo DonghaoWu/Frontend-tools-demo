@@ -88,3 +88,8 @@ kill -9 <PID>
     - __`Code base: NEW`__ 
     - __`Doc Repo URL:`__[googleMap-clone-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
     - __`Key Words: Mapbox.`__
+
+- [Part 18 - Google & NASA API :gem::gem:](https://github.com/DonghaoWu/natural-events-tracker-doc/blob/main/GoogleMap-NASA-API.md)
+    - __`Code base: NEW`__ 
+    - __`Doc Repo URL:`__[Natural-events-tracker-doc](https://github.com/DonghaoWu/natural-events-tracker-doc)
+    - __`Key Words: Google Cloud Platform API, NASA API, Deploy CRA on Heroku, Iconify, google-map-react.`__
