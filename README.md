@@ -89,7 +89,7 @@ kill -9 <PID>
     - __`Doc Repo URL:`__[googleMap-clone-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
     - __`Key Words: Mapbox.`__
 
-- [Part 19 - Google & NASA API :gem::gem:](https://github.com/DonghaoWu/natural-events-tracker-doc/blob/main/GoogleMap-NASA-API.md)
+- [Part 19 - Google & NASA API :gem::gem:](https://github.com/DonghaoWu/natural-events-tracker-doc-heroku/blob/main/GoogleMap-NASA-API.md)
     - __`Code base: NEW`__ 
-    - __`Doc Repo URL:`__[Natural-events-tracker-doc](https://github.com/DonghaoWu/natural-events-tracker-doc)
+    - __`Doc Repo URL:`__[Natural-events-tracker-doc](https://github.com/DonghaoWu/natural-events-tracker-doc-heroku)
     - __`Key Words: Google Cloud Platform API, NASA API, Deploy CRA on Heroku, Iconify, google-map-react.`__
