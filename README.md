@@ -84,9 +84,9 @@ kill -9 <PID>
     - __`Deployed Repo URL:`__[codeTyke-heroku](https://github.com/DonghaoWu/codeTyke-heroku)
     - __`Key Words: React, responsive design, progress bar, multiple checkbox, processing bar, modal, heroku.`__
 
-- [Part 18 - Create a google map clone with Mapbox. :gem:](https://github.com/DonghaoWu/googleMap-clone-doc/blob/main/README.md)
+- [Part 18 - Create a google map clone with Mapbox. :gem:](https://github.com/DonghaoWu/googleMap-clone-doc-githubio/blob/main/README.md)
     - __`Code base: NEW`__ 
-    - __`Doc Repo URL:`__[googleMap-clone-doc](https://github.com/DonghaoWu/googleMap-clone-doc)
+    - __`Doc Repo URL:`__[googleMap-clone-doc-githubio](https://github.com/DonghaoWu/googleMap-clone-doc-githubio)
     - __`Key Words: Mapbox.`__
 
 - [Part 19 - Google & NASA API :gem::gem:](https://github.com/DonghaoWu/natural-events-tracker-doc-heroku/blob/main/GoogleMap-NASA-API.md)
